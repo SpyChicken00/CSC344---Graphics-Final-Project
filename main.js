@@ -4,6 +4,9 @@ import { GUI } from '../modules/dat.gui.module.js';
 
 //TODO animation "Trick" Ideas - Rotate head around z axis 360 degrees, simplify to do "bounce effect"
 //TODO first person camera?
+
+
+//TEST 
 class RobotHead extends THREE.Object3D {
 	//textures
 	teeth = new THREE.TextureLoader().load('../pictures/teeth2.jpg' );
