@@ -1,3 +1,3 @@
-# ThreeJS-Robot
+# ThreeJS World Project
 
-A simple robot made in ThreeJS for CSC344 - Computer Graphics
+Creating a world and a fish tank with interactable fish
