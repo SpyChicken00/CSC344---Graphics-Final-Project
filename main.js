@@ -2,8 +2,7 @@ import * as THREE from '../modules/three.module.js';
 import { OrbitControls } from '../modules/OrbitControls.js';
 import { GUI } from '../modules/dat.gui.module.js';
 
-//TODO animation "Trick" Ideas - Rotate head around z axis 360 degrees, simplify to do "bounce effect"
-//TODO first person camera?
+//We should include our robots in the fish tank / world as easter eggs 
 
 
 //TEST 
@@ -522,7 +521,7 @@ document.body.appendChild( renderer.domElement );
 const scene = new THREE.Scene();
 const clock = new THREE.Clock();
 //add background to scene
-const bgTexture = new THREE.TextureLoader().load("../pictures/stars.jpg");
+const bgTexture = new THREE.TextureLoader().load("../pictures/underwater.jpg");
 bgTexture.minFilter = THREE.LinearFilter;
 scene.background = bgTexture;
 
@@ -651,11 +650,11 @@ robot.receiveShadow = true;
 
 //add to scene
 scene.add(floor); 
-scene.add(torusKnot);
-scene.add(deathstar);
-scene.add(sun);
-scene.add(lazer);
-scene.add(planet);
+//scene.add(torusKnot);
+//scene.add(deathstar);
+//scene.add(sun);
+//scene.add(lazer);
+//scene.add(planet);
 scene.add(robot);
 
 
