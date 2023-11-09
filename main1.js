@@ -4,8 +4,6 @@ import { GUI } from '../modules/dat.gui.module.js';
 
 //We should include our robots in the fish tank / world as easter eggs 
 
-
-//TEST 
 class RobotHead extends THREE.Object3D {
 	//textures
 	teeth = new THREE.TextureLoader().load('../pictures/teeth2.jpg' );
@@ -646,6 +644,9 @@ sun.position.y -= 10;
 robot.position.z -= 4;
 robot.position.y += 1.42;
 robot.receiveShadow = true;
+robot.scale.x = 0.3;
+robot.scale.y = 0.3;
+robot.scale.z = 0.3;
 
 
 //add to scene
