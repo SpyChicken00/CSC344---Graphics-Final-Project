@@ -1,3 +1,5 @@
+// Josh is a master baiter
+
 import * as THREE from '../modules/three.module.js';
 import { OrbitControls } from '../modules/OrbitControls.js';
 import { GUI } from '../modules/dat.gui.module.js';
