@@ -509,6 +509,24 @@ class Robot extends THREE.Object3D {
 		return this.robotArmRight;
 	}
 }
+
+class Lamp extends THREE.Object3D {
+	//materials
+	white = new THREE.MeshPhongMaterial( { color: 0xffffff , emissive: 0xffffff} );
+	//geometries 
+	sphere1 = new THREE.SphereGeometry( 0.5, 32, 32);
+	lightBall = new THREE.Mesh(drawSphereNew(1, 32, 32), this.white); 
+
+
+	constructor() {
+		super();
+
+		//transformations
+
+		//add to object
+		this.add(this.lightBall);
+	}
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //renderer
 const renderer = new THREE.WebGLRenderer({antialias: true});
@@ -593,7 +611,6 @@ var wallMaterial = new THREE.MeshPhongMaterial( { map: bricks, castShadow: true,
 const plane = new THREE.PlaneGeometry(30, 30, 1, 1 );
 const wall = new THREE.BoxGeometry(30, 20, 0.7);
 const wallTop = new THREE.BoxGeometry(30, 30, 0.7);
-
 //objects
 
 const floor = new THREE.Mesh(plane, floorMaterial);
@@ -644,6 +661,8 @@ wall1.receiveShadow = true;
 wall2.receiveShadow = true;
 wall3.receiveShadow = true;
 
+const lamp = new Lamp();
+//lamp.scale.x += 10;
 
 
 
@@ -656,6 +675,7 @@ scene.add(wall1);
 scene.add(wall2);
 scene.add(wall3);
 scene.add(ceiling);
+scene.add(lamp);	
 scene.add(robot);
 
 
