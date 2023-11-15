@@ -507,7 +507,7 @@ class Robot extends THREE.Object3D {
 		return this.robotArmRight;
 	}
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //renderer
 const renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -544,16 +544,16 @@ greenSpotlight.angle = 180* Math.PI/180;
 greenSpotlight.distance = 1000;
 
 //overhead spotlight
-redSpotlight.position.set(0, 7, 1);
+redSpotlight.position.set(0, 15, 1);
 redSpotlight.angle = 45 * Math.PI/180;
 redSpotlight.intensity = 100;
 redSpotlight.castShadow = true;
 redSpotlight.visible = false;
-redSpotlight.distance = 15;
+redSpotlight.distance = 50;
 
 dirLight.position.set(0, 1, 10);
 dirLight.castShadow = true;
-dirLight.visible = false;
+dirLight.visible = true;
 
 //sunlight
 pointLight.castShadow = true;
@@ -570,19 +570,13 @@ scene.add(greenSpotlight);
 scene.add(redSpotlight);
 
 //textures
-const texture = new THREE.TextureLoader().load('../pictures/checkerboard.jpg' );
-const spaceTexture = new THREE.TextureLoader().load('../pictures/stars.jpg' );
-const metalTexture = new THREE.TextureLoader().load('../pictures/metal1.jpg' );
-const planetTexture = new THREE.TextureLoader().load('../pictures/planet.jpg' );
-const planetNormal = new THREE.TextureLoader().load('../pictures/planetNormal.jpg');
-const sunTexture = new THREE.TextureLoader().load('../pictures/sun.jpg');
-const sunLight = new THREE.TextureLoader().load('../pictures/sunLight.jpg');
-const deathstarTexture = new THREE.TextureLoader().load('../pictures/deathstar.jpg');
-const ringsTexture = new THREE.TextureLoader().load('../pictures/rings.jpg');
+const texture = new THREE.TextureLoader().load('../pictures/floor.jpg' );
+const bricks = new THREE.TextureLoader().load('../pictures/wallpaper2.jpg' );
+
 
 //materials
 const material = new THREE.MeshPhongMaterial( { color: 0x00ff00, emissive: 0x00FF00, shininess: 90, specular: 0x00ee00, transparent: true, opacity: 0.95} );
-const material2 = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+const material2 = new THREE.MeshPhongMaterial( { color: 0xffffff } );
 const material3 = new THREE.MeshBasicMaterial( { color: 0xddffdd} );
 const material4 = new THREE.MeshBasicMaterial( { color: 0xaaccaa} );
 const material5 = new THREE.MeshPhongMaterial( { color: 0xfedcba, emissive: 0x990000, transparent: true, opacity: 0.9, shininess: 90, specular: 0x00ff00} );
@@ -590,26 +584,24 @@ const material6 = new THREE.MeshPhongMaterial( { color: 0xabcdef, transparent: t
 const material7 = new THREE.MeshLambertMaterial( { color: 0xfedcba, flatShading: true});
 const material8 = new THREE.MeshPhongMaterial( { color: 0x80fc66, emissive: 0x111111, shininess: 120, specular: 0xff0fff, transparent: true, opacity: 0.8});
 const material9 = new THREE.MeshLambertMaterial( { color: 0x00ff00});
-const spaceMaterial = new THREE.MeshPhongMaterial({map: spaceTexture, side: THREE.DoubleSide});
 var floorMaterial = new THREE.MeshPhongMaterial( { map: texture, castShadow: true, receiveShadow: true} );
-const metalMaterial = new THREE.MeshPhongMaterial({map: metalTexture})
-const planetMaterial = new THREE.MeshPhongMaterial({map: planetTexture, normalMap: planetNormal	})
-const sunMaterial = new THREE.MeshPhongMaterial({map: sunTexture, emissive: 0xFFA500, emissiveMap: sunLight, emissiveIntensity: 1})
-const deathstarMaterial= new THREE.MeshPhongMaterial({map: deathstarTexture})
+var wallMaterial = new THREE.MeshPhongMaterial( { map: bricks, castShadow: true, receiveShadow: true} );
 
 //geometries 
-const knot = new THREE.TorusKnotGeometry(3, 0.4, 64, 8, 6, 8); 
-var plane = new THREE.PlaneGeometry(25, 25, 1, 1 );
+const plane = new THREE.PlaneGeometry(30, 30, 1, 1 );
+const wall = new THREE.BoxGeometry(30, 20, 0.7);
+const wallTop = new THREE.BoxGeometry(30, 30, 0.7);
 
 //objects
-const deathstar = new THREE.Mesh(drawSphereNew(5, 64, 64), deathstarMaterial);
-const lazer = new THREE.Mesh(drawCylinderNew(0.1, 0.1, 50), material);
-const planet = new THREE.Mesh(drawSphereNew(25, 64, 64), planetMaterial);
-const sun = new THREE.Mesh(drawSphereNew(100, 64, 64), sunMaterial);
 
-const torusKnot = new THREE.Mesh(knot, material5);
 const floor = new THREE.Mesh(plane, floorMaterial);
+const ceiling = new THREE.Mesh(wallTop, material2);
+
+const wall1 = new THREE.Mesh(wall, wallMaterial);
+const wall2 = new THREE.Mesh(wall, wallMaterial);
+const wall3 = new THREE.Mesh(wall, wallMaterial);
 const robot = new Robot();
+
 
 //traverse robot to enable shadows on all objects
 robot.traverse(function( child ) { 
@@ -621,42 +613,56 @@ robot.traverse(function( child ) {
 
 
 //transformations
-torusKnot.position.z -= 20;
-torusKnot.castShadow = true;
 floor.material.side = THREE.DoubleSide;
 floor.rotation.x = 90 * Math.PI/180;
 floor.position.y -= 3;
 floor.receiveShadow = true;
-deathstar.position.z -= 60;
-deathstar.position.x -= 55;
-deathstar.position.y += 20;
-deathstar.rotation.y = 200 * Math.PI / 180;
-lazer.rotation.x = 70 * Math.PI / 180;
-lazer.rotation.z = -50 * Math.PI / 180;
-lazer.position.x -= 80;
-lazer.position.z -= 80;
-lazer.position.y += 15;
-planet.position.z -= 110;
-planet.position.x -= 110;
-sun.position.x += 100;
-sun.position.z -= 300;
-sun.position.y -= 10;
+
+ceiling.material.side = THREE.DoubleSide;
+ceiling.rotation.x = 90 * Math.PI/180;
+ceiling.position.y += 17;
+ceiling.receiveShadow = true;
+
+
 robot.position.z -= 4;
 robot.position.y += 1.42;
 robot.receiveShadow = true;
 robot.scale.x = 0.3;
 robot.scale.y = 0.3;
 robot.scale.z = 0.3;
+wall1.position.z -= 15;
+wall1.position.y += 7;
+wall2.rotation.y = 90 * Math.PI/180;
+wall2.position.x -= 15;
+wall2.position.y += 7;
+wall3.rotation.y = 90 * Math.PI/180;
+wall3.position.x += 15;
+wall3.position.y += 7;
+wall1.receiveShadow = true;
+wall2.receiveShadow = true;
+wall3.receiveShadow = true;
+
+
+
+
+
 
 
 //add to scene
 scene.add(floor); 
-//scene.add(torusKnot);
-//scene.add(deathstar);
-//scene.add(sun);
-//scene.add(lazer);
-//scene.add(planet);
+scene.add(wall1);
+scene.add(wall2);
+scene.add(wall3);
+scene.add(ceiling);
 scene.add(robot);
+
+
+//TODO
+/*c
+ideas for room - bed, dresser, table, chairs, 
+tv, couch, bookshelf, window, door, carpet, rug, lamp, fan, clock, mirror, picture
+FISHTANK - separate camera toggle for fishtank view 
+*/ 
 
 
 //gui robot parts
@@ -781,15 +787,7 @@ function onDocumentKeyDown(event) {
 };
 
 
-//enable all shadows
-/*
-scene.traverse( function( child ) { 
-    if ( child.type == 'Mesh') {
-        child.castShadow = true;
-        child.receiveShadow = true;
-    }
-} );
-*/
+
 
 
 animate();
