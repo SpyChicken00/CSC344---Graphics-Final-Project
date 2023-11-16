@@ -512,19 +512,42 @@ class Robot extends THREE.Object3D {
 
 class Lamp extends THREE.Object3D {
 	//materials
-	white = new THREE.MeshPhongMaterial( { color: 0xffffff , emissive: 0xffffff} );
+	shadeTexture = new THREE.TextureLoader().load("../pictures/lampshade.jpg");
+	white = new THREE.MeshPhongMaterial( { color: 0xfffcc3, transparent: true, opacity: 0.3});
+	gray = new THREE.MeshPhongMaterial( { color: 0xaaaaaa});
+	black = new THREE.MeshPhongMaterial( { color: 0x010101 , emissive: 0x111111, });
+	lampColor = new THREE.MeshPhongMaterial( {transparent: true, opacity: 0.97, map: this.shadeTexture, side: THREE.DoubleSide});
 	//geometries 
-	sphere1 = new THREE.SphereGeometry( 0.5, 32, 32);
-	lightBall = new THREE.Mesh(drawSphereNew(1, 32, 32), this.white); 
-
+	sphere1 = new THREE.SphereGeometry(1, 32, 32);
+	halfsphere = new THREE.SphereGeometry(3 ,32,32, 0.3,  Math.PI*2, 0, Math.PI * 0.5);
+	cylinder = new THREE.CylinderGeometry( 0.4, 0.4, 4, 32 );
+	//objects
+	lightBall = new THREE.Mesh(this.sphere1, this.white); 
+	lightBall2 = new THREE.Mesh(this.sphere1, this.white); 
+	shade = new THREE.Mesh(this.halfsphere, this.lampColor); 
+	ring = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.4, 0.5, 32), this.gray);
+	stem = new THREE.Mesh(this.cylinder, this.black);
 
 	constructor() {
 		super();
-
-		//transformations
-
+		//transformation
+		this.shade.scale.y = 1.3;
+		this.lightBall.position.y += 1.9;
+		this.lightBall.scale.y = 1.1;
+		this.lightBall.scale.x = 0.6;
+		this.lightBall.scale.z = 0.6;
+		this.lightBall2.position.y += 1.4;
+		this.lightBall2.scale.x = 0.9;
+		this.lightBall2.scale.y = 0.9;
+		this.lightBall2.scale.z = 0.9;
+		this.ring.position.y += 3;
+		this.stem.position.y += 5.3;
 		//add to object
+		this.add(this.stem);
+		this.add(this.shade);
+		this.add(this.ring);
 		this.add(this.lightBall);
+		this.add(this.lightBall2)
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -553,9 +576,13 @@ const controlsDefault = new OrbitControls(renderCamera, renderer.domElement );
 //lights
 var ambientLight = new THREE.AmbientLight( 0x333333, 0.5);
 var dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.2);
-var pointLight = new THREE.PointLight(0xFFA500, 100, 1000, 0.93);
+var lampLight = new THREE.PointLight(0xFFA500, 100, 1000, 2);
 const redSpotlight = new THREE.SpotLight(0xFFFFFF);
-const greenSpotlight = new THREE.SpotLight(0x00FF00);
+const greenSpotlight = new THREE.PointLight(0x00FF00);
+
+
+const pointLightHelper = new THREE.PointLightHelper(lampLight, 1);
+//scene.add(pointLightHelper);	
 
 //death star light
 greenSpotlight.position.set(-95, 15, -90);
@@ -564,7 +591,7 @@ greenSpotlight.angle = 180* Math.PI/180;
 greenSpotlight.distance = 1000;
 
 //overhead spotlight
-redSpotlight.position.set(0, 15, 1);
+redSpotlight.position.set(0, 10, 1);
 redSpotlight.angle = 45 * Math.PI/180;
 redSpotlight.intensity = 100;
 redSpotlight.castShadow = true;
@@ -576,22 +603,23 @@ dirLight.castShadow = true;
 dirLight.visible = true;
 
 //sunlight
-pointLight.castShadow = true;
-pointLight.shadow.mapSize.width = 4096
-pointLight.shadow.mapSize.height = 4096
-pointLight.shadow.camera.near = 0.5
-pointLight.shadow.camera.far = 1000
-pointLight.position.set(100, 10, -100)
+lampLight.castShadow = true;
+lampLight.shadow.mapSize.width = 4096
+lampLight.shadow.mapSize.height = 4096
+lampLight.shadow.camera.near = 0.5
+lampLight.shadow.camera.far = 1000
+lampLight.position.set(0, 12, 0)
 
 scene.add(dirLight);
 scene.add(ambientLight);
-scene.add(pointLight);
+scene.add(lampLight);
 scene.add(greenSpotlight);
 scene.add(redSpotlight);
 
 //textures
 const texture = new THREE.TextureLoader().load('../pictures/floor.jpg' );
 const bricks = new THREE.TextureLoader().load('../pictures/wallpaper2.jpg' );
+const rugmap = new THREE.TextureLoader().load('../pictures/rug1.jpg' );
 
 
 //materials
@@ -606,6 +634,7 @@ const material8 = new THREE.MeshPhongMaterial( { color: 0x80fc66, emissive: 0x11
 const material9 = new THREE.MeshLambertMaterial( { color: 0x00ff00});
 var floorMaterial = new THREE.MeshPhongMaterial( { map: texture, castShadow: true, receiveShadow: true} );
 var wallMaterial = new THREE.MeshPhongMaterial( { map: bricks, castShadow: true, receiveShadow: true} );
+var rugMaterial = new THREE.MeshPhongMaterial( { map: rugmap, castShadow: true, receiveShadow: true} );
 
 //geometries 
 const plane = new THREE.PlaneGeometry(30, 30, 1, 1 );
@@ -613,13 +642,16 @@ const wall = new THREE.BoxGeometry(30, 20, 0.7);
 const wallTop = new THREE.BoxGeometry(30, 30, 0.7);
 //objects
 
-const floor = new THREE.Mesh(plane, floorMaterial);
+const floor = new THREE.Mesh(wallTop, floorMaterial);
 const ceiling = new THREE.Mesh(wallTop, material2);
+const rug = new THREE.Mesh(new THREE.BoxGeometry(20, 20, 0.2), rugMaterial)
 
 const wall1 = new THREE.Mesh(wall, wallMaterial);
 const wall2 = new THREE.Mesh(wall, wallMaterial);
 const wall3 = new THREE.Mesh(wall, wallMaterial);
 const robot = new Robot();
+const lamp = new Lamp();
+
 
 
 //traverse robot to enable shadows on all objects
@@ -642,6 +674,11 @@ ceiling.rotation.x = 90 * Math.PI/180;
 ceiling.position.y += 17;
 ceiling.receiveShadow = true;
 
+rug.rotation.x = 90 * Math.PI/180;
+rug.position.y -= 2.73
+
+lamp.position.y += 10;
+
 
 robot.position.z -= 4;
 robot.position.y += 1.42;
@@ -661,8 +698,7 @@ wall1.receiveShadow = true;
 wall2.receiveShadow = true;
 wall3.receiveShadow = true;
 
-const lamp = new Lamp();
-//lamp.scale.x += 10;
+
 
 
 
@@ -670,6 +706,7 @@ const lamp = new Lamp();
 
 
 //add to scene
+scene.add(rug);
 scene.add(floor); 
 scene.add(wall1);
 scene.add(wall2);
@@ -730,13 +767,19 @@ const emissiveParams = {
 headFolder.addColor(emissiveParams, 'emissive')
 		   .onChange((value) =>  leftEye.material.emissive.set(value)).name("Eye Color");
 
+		
+//test params 
+const lampParams = {
+	visible: lampLight.visible,
+	emissive: lampLight.color.getHex(),
+}
 //toggle buttons
 headFolder.add(leftEye.material, 'wireframe').name("Wireframe Eyes");
 lightFolder.add(ambientLight, 'visible').name("Toggle Ambient Light");
 lightFolder.add(dirLight, 'visible').name("Toggle Directional Light");
 lightFolder.add(redSpotlight, 'visible').name("Toggle Spotlight");
-lightFolder.add(pointLight, 'visible').name("Toggle Sunlight");
-lightFolder.add(pointLight, 'intensity', 50, 2000).name("Sunlight Intensity");
+lightFolder.add(lampLight, 'visible').name("Toggle Lamplight");
+lightFolder.add(lampLight, 'intensity', 50, 2000).name("Lamplight Intensity");
 
 //keyboard controls
 var xSpeed = 0.05;
