@@ -550,6 +550,182 @@ class Lamp extends THREE.Object3D {
 		this.add(this.lightBall2)
 	}
 }
+
+class Bed extends THREE.Object3D {
+	//textures
+	pillowTexture = new THREE.TextureLoader().load("../pictures/pillowGreen.jpg");
+	pillowTexture2 = new THREE.TextureLoader().load("../pictures/fluffypillow.jpg");
+	pillowTexture3 = new THREE.TextureLoader().load("../pictures/leafpillow.jpg");
+	//materials
+	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
+	gray = new THREE.MeshPhongMaterial( {color: 0x999999});
+	red = new THREE.MeshPhongMaterial( {color: 0x7dc0f1});
+	cream = new THREE.MeshPhongMaterial( {color: 0xf9f3e7});
+	pillowMat = new THREE.MeshPhongMaterial({map: this.pillowTexture})
+	pillowMat2 = new THREE.MeshPhongMaterial({map: this.pillowTexture2})
+	pillowMat3 = new THREE.MeshPhongMaterial({map: this.pillowTexture3})
+	//geometries
+	cube = new THREE.BoxGeometry(1,2,1);
+	sphere1 = new THREE.SphereGeometry(1, 32, 32);
+	cylinder = new THREE.CylinderGeometry( 2.3, 2.3, 0.5, 32 );
+	//objects 
+	legBL = new THREE.Mesh(this.cube, this.brown);
+	legBR = new THREE.Mesh(this.cube, this.brown);
+	legTL = new THREE.Mesh(this.cube, this.brown);
+	legTR = new THREE.Mesh(this.cube, this.brown);
+	base = new THREE.Mesh(new THREE.BoxGeometry(5, 0.5, 10), this.gray);
+	blanket = new THREE.Mesh(new THREE.BoxGeometry(4.8, 1, 9.8), this.red);
+	pillow = new THREE.Mesh(this.sphere1, this.pillowMat);
+	pillow2 = new THREE.Mesh(this.sphere1, this.pillowMat);
+	pillow3 = new THREE.Mesh(this.sphere1, this.pillowMat3);
+	longPillow = new THREE.Mesh(this.sphere1, this.pillowMat2);
+	headboardBottom = new THREE.Mesh(new THREE.BoxGeometry(5,5, 0.5), this.brown);
+	headboardTop = new THREE.Mesh(this.cylinder, this.brown);
+	runner = new THREE.Mesh(new THREE.BoxGeometry(4.9, 1.2, 2.5), this.cream);
+	//mattress/blanket
+	//pillows
+
+	//headboard 
+	//squishmallow sphere/oval?
+
+
+
+
+	constructor() {
+		super();
+		//transformations
+		this.base.position.y += 1;
+		this.pillow.scale.z = 0.5;
+		this.pillow.position.y += 3.1;
+		this.pillow.position.z -= 3.8;
+		this.pillow.position.x -= 1;
+		this.pillow2.scale.z = 0.5;
+		this.pillow2.position.y += 3.1;
+		this.pillow2.position.z -= 3.8;
+		this.pillow2.position.x += 1;
+		this.pillow3.scale.z = 0.5;
+		this.pillow3.scale.x = 0.7;
+		this.pillow3.scale.y = 0.7;
+		this.pillow3.position.y += 2.9;
+		this.pillow3.position.z -= 3.5;
+		this.longPillow.scale.x = 2.5;
+		this.longPillow.scale.y = 1.3;
+		this.longPillow.scale.z = 0.7;
+		this.longPillow.position.y += 2.8;
+		this.longPillow.position.z -= 4.5;
+		this.blanket.position.y += 1.7;
+		this.runner.position.y += 1.7;
+		this.runner.position.z += 3.69;
+		this.headboardBottom.position.z -= 5;
+		this.headboardBottom.position.y += 1.9;
+		this.headboardTop.position.y += 3.5;
+		this.headboardTop.position.z -= 5;
+		this.headboardTop.rotation.x = 90 * Math.PI/180;
+
+		this.legBL.position.z += 4.4;
+		this.legBL.position.x -= 1.9;
+		this.legBR.position.z += 4.4;
+		this.legBR.position.x += 1.9;
+		this.legTL.position.z -= 4.4;
+		this.legTL.position.x -= 1.9;
+		this.legTR.position.z -= 4.4;
+		this.legTR.position.x += 1.9;
+
+		//add to object
+		this.add(this.legBL);
+		this.add(this.legBR);
+		this.add(this.legTL);
+		this.add(this.legTR);
+		this.add(this.base);
+		this.add(this.pillow);
+		this.add(this.pillow2)
+		this.add(this.pillow3);
+		this.add(this.longPillow);
+		this.add(this.blanket);
+		this.add(this.headboardBottom);
+		this.add(this.headboardTop);
+		this.add(this.runner);
+	}
+}
+
+
+class Dresser extends THREE.Object3D {
+
+	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
+
+	base = new THREE.Mesh(new THREE.BoxGeometry(10, 6.5, 4), this.brown);
+
+	constructor() {
+		super();
+
+		this.add(this.base)
+	}
+}
+
+class Nightstand extends THREE.Object3D {
+
+	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
+
+	base = new THREE.Mesh(new THREE.BoxGeometry(4, 6.5, 4), this.brown);
+
+	constructor() {
+		super();
+
+		this.add(this.base);
+	}
+}
+
+class Bookshelf extends THREE.Object3D {
+
+	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
+
+	base = new THREE.Mesh(new THREE.BoxGeometry(6, 15, 4), this.brown);
+
+	constructor() {
+		super();
+
+		this.add(this.base);
+	}
+}
+
+class Chest extends THREE.Object3D {
+
+	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
+
+	base = new THREE.Mesh(new THREE.BoxGeometry(7, 4, 4), this.brown);
+
+	constructor() {
+		super();
+
+		this.add(this.base);
+	}
+}
+
+class Desk extends THREE.Object3D {
+
+	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
+
+	base = new THREE.Mesh(new THREE.BoxGeometry(10, 6.5, 4), this.brown);
+
+	constructor() {
+		super();
+
+		this.add(this.base);
+	}
+}
+
+class Chair extends THREE.Object3D {
+
+	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
+
+	base = new THREE.Mesh(new THREE.BoxGeometry(7, 4, 4), this.brown);
+
+	constructor() {
+		super();
+
+		this.add(this.base);
+	}
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //renderer
 const renderer = new THREE.WebGLRenderer({antialias: true});
@@ -569,7 +745,7 @@ scene.background = bgTexture;
 //camera
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 camera.name = "DefaultCamera";
-camera.position.set(0,0,1);
+camera.position.set(0,7,23);
 var renderCamera = camera;
 const controlsDefault = new OrbitControls(renderCamera, renderer.domElement );
 
@@ -620,6 +796,8 @@ scene.add(redSpotlight);
 const texture = new THREE.TextureLoader().load('../pictures/floor.jpg' );
 const bricks = new THREE.TextureLoader().load('../pictures/wallpaper2.jpg' );
 const rugmap = new THREE.TextureLoader().load('../pictures/rug1.jpg' );
+const doormap = new THREE.TextureLoader().load('../pictures/door.png' );
+const windowmap1 = new THREE.TextureLoader().load('../pictures/window2crop.jpg' );
 
 
 //materials
@@ -632,9 +810,11 @@ const material6 = new THREE.MeshPhongMaterial( { color: 0xabcdef, transparent: t
 const material7 = new THREE.MeshLambertMaterial( { color: 0xfedcba, flatShading: true});
 const material8 = new THREE.MeshPhongMaterial( { color: 0x80fc66, emissive: 0x111111, shininess: 120, specular: 0xff0fff, transparent: true, opacity: 0.8});
 const material9 = new THREE.MeshLambertMaterial( { color: 0x00ff00});
-var floorMaterial = new THREE.MeshPhongMaterial( { map: texture, castShadow: true, receiveShadow: true} );
+var floorMaterial = new THREE.MeshPhongMaterial( { map: texture, castShadow: true, receiveShadow: true, color:0x999999} );
 var wallMaterial = new THREE.MeshPhongMaterial( { map: bricks, castShadow: true, receiveShadow: true} );
 var rugMaterial = new THREE.MeshPhongMaterial( { map: rugmap, castShadow: true, receiveShadow: true} );
+var doorMaterial = new THREE.MeshPhongMaterial( { map: doormap, castShadow: true, receiveShadow: true} );
+var windowMaterial1 = new THREE.MeshPhongMaterial( { map: windowmap1, castShadow: true, receiveShadow: true} );
 
 //geometries 
 const plane = new THREE.PlaneGeometry(30, 30, 1, 1 );
@@ -649,8 +829,18 @@ const rug = new THREE.Mesh(new THREE.BoxGeometry(20, 20, 0.2), rugMaterial)
 const wall1 = new THREE.Mesh(wall, wallMaterial);
 const wall2 = new THREE.Mesh(wall, wallMaterial);
 const wall3 = new THREE.Mesh(wall, wallMaterial);
+const door = new THREE.Mesh(new THREE.BoxGeometry(7, 15, 0.9), doorMaterial);
+const window1 = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 0.9), windowMaterial1);
+const window2 = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 0.9), windowMaterial1);
 const robot = new Robot();
 const lamp = new Lamp();
+const bed = new Bed();
+const dresser = new Dresser();
+const nightstand = new Nightstand();
+const bookshelf = new Bookshelf();
+const bookshelf2 = new Bookshelf();
+const chest = new Chest();
+const desk = new Desk();
 
 
 
@@ -677,11 +867,52 @@ ceiling.receiveShadow = true;
 rug.rotation.x = 90 * Math.PI/180;
 rug.position.y -= 2.73
 
-lamp.position.y += 10;
+door.rotation.y = 90 * Math.PI/180;
+door.position.x -= 15;
+door.position.y += 4.7;
+door.position.z += 10;
 
+window1.position.z -= 15;
+window1.position.y += 9;
+window1.position.x += 5;
 
-robot.position.z -= 4;
-robot.position.y += 1.42;
+window2.rotation.y = 90 * Math.PI/180;
+window2.position.y += 9;
+window2.position.x += 15;
+window2.position.z += 9;
+
+lamp.position.y += 11;
+lamp.scale.x = 0.8;
+lamp.scale.y = 0.8;
+lamp.scale.z = 0.8;
+bed.scale.x = 1.5
+bed.scale.z = 1.5
+bed.scale.y = 1.5
+bed.position.y -= 1.8;
+bed.position.x -= 10.5;
+bed.position.z -= 7;
+dresser.position.z -= 13
+dresser.position.x += 5;
+chest.position.x -= 10.5;
+chest.position.z += 2.5;
+chest.position.y -= 1;
+nightstand.position.z -= 13;
+nightstand.position.x -= 4;
+bookshelf.rotation.y = 90 * Math.PI/180;
+bookshelf.position.y += 4.3;
+bookshelf.position.x += 13;
+bookshelf.position.z -= 8.5;
+bookshelf2.rotation.y = 90 * Math.PI/180;
+bookshelf2.position.y += 4.3;
+bookshelf2.position.x += 13;
+bookshelf2.position.z -= 2;
+desk.rotation.y = 90 * Math.PI/180;
+desk.position.x += 13;
+desk.position.z += 9;
+
+robot.position.z -= 9;
+robot.position.y += 3;
+robot.position.x-= 10;
 robot.receiveShadow = true;
 robot.scale.x = 0.3;
 robot.scale.y = 0.3;
@@ -707,13 +938,27 @@ wall3.receiveShadow = true;
 
 //add to scene
 scene.add(rug);
+scene.add(door);
+scene.add(window1);
+scene.add(window2);
 scene.add(floor); 
 scene.add(wall1);
 scene.add(wall2);
 scene.add(wall3);
 scene.add(ceiling);
 scene.add(lamp);	
+scene.add(bed);
 scene.add(robot);
+scene.add(dresser);
+scene.add(nightstand);
+scene.add(bookshelf);
+scene.add(bookshelf2);
+scene.add(chest);
+scene.add(desk);
+
+//TODO add details to dresser, nightstand, bookshelf, and desk
+//TODO Decorations - chair, books/objects on shelves posters/pictures, tv, clock, desklamp, trash can, computer/laptop
+
 
 
 //TODO
@@ -721,6 +966,10 @@ scene.add(robot);
 ideas for room - bed, dresser, table, chairs, 
 tv, couch, bookshelf, window, door, carpet, rug, lamp, fan, clock, mirror, picture
 FISHTANK - separate camera toggle for fishtank view 
+
+
+
+
 */ 
 
 
@@ -768,11 +1017,6 @@ headFolder.addColor(emissiveParams, 'emissive')
 		   .onChange((value) =>  leftEye.material.emissive.set(value)).name("Eye Color");
 
 		
-//test params 
-const lampParams = {
-	visible: lampLight.visible,
-	emissive: lampLight.color.getHex(),
-}
 //toggle buttons
 headFolder.add(leftEye.material, 'wireframe').name("Wireframe Eyes");
 lightFolder.add(ambientLight, 'visible').name("Toggle Ambient Light");
@@ -917,4 +1161,174 @@ function drawSphereNew(radius, width, height) {
 	const sphere = new THREE.SphereGeometry(radius, width, height);
 	//sphere.translate(-3, -3, -2);
 	return sphere;
-}	
+
+
+	//HEART GEOMETRY
+/*
+const heartShape = new THREE.Shape();
+
+heartShape.moveTo( 25, 25 );
+heartShape.bezierCurveTo( 25, 25, 20, 0, 0, 0 );
+heartShape.bezierCurveTo( - 30, 0, - 30, 35, - 30, 35 );
+heartShape.bezierCurveTo( - 30, 55, - 10, 77, 25, 95 );
+heartShape.bezierCurveTo( 60, 77, 80, 55, 80, 35 );
+heartShape.bezierCurveTo( 80, 35, 80, 0, 50, 0 );
+heartShape.bezierCurveTo( 35, 0, 25, 25, 25, 25 );
+
+const extrudeSettings = { 
+	depth: 8, 
+	bevelEnabled: true, 
+	bevelSegments: 2, 
+	steps: 2, 
+	bevelSize: 1, 
+	bevelThickness: 1 
+};
+
+const geometry = new THREE.ExtrudeGeometry( heartShape, extrudeSettings );
+
+const mesh = new THREE.Mesh( geometry, rugMaterial);
+
+mesh.scale.x = 0.1;
+mesh.scale.y = 0.1;
+mesh.scale.z = 0.1;
+scene.add(mesh);
+*/
+/*
+for (let i = 0; i < 4; i++) {
+	let r = 10;
+	let posX = (-5 + i) * 12.5;
+	let wireGeom = facetedBox(r, r, r, i * 0.5, true);
+	let wire = new THREE.LineSegments(
+	  wireGeom,
+	  new THREE.LineBasicMaterial({ color: Math.random() * 0x808080 + 0x808080 })
+	);
+	wire.position.x = posX;
+	scene.add(wire);
+  
+	let geom = facetedBox(r, r, r, i * 0.5, false);
+	let mesh = new THREE.Mesh(
+	  geom,
+	  new THREE.MeshStandardMaterial({
+		color: Math.random() * 0x808080 + 0x808080,
+		flatShading: true
+	  })
+	);
+	mesh.position.x = posX;
+	scene.add(mesh);
+  }
+
+  function facetedBox(w, h, d, f, isWireframed){
+    let hw = w * 0.5, hh = h * 0.5, hd = d * 0.5;
+    let vertices = [
+      // px
+      hw, hh - f, -hd + f,   // 0
+      hw, -hh + f, -hd + f,  // 1
+      hw, -hh + f, hd - f,   // 2
+      hw, hh - f, hd - f,    // 3
+      
+      // pz
+      hw - f, hh - f, hd,    // 4
+      hw - f, -hh + f, hd,   // 5
+      -hw + f, -hh + f, hd,  // 6
+      -hw + f, hh - f, hd,   // 7
+      
+      // nx
+      -hw, hh - f, hd - f,   // 8
+      -hw, -hh + f, hd - f,  // 9
+      -hw, -hh + f, -hd + f, // 10
+      -hw, hh - f, -hd + f,  // 11
+      
+      // nz
+      -hw + f, hh - f, -hd,  // 12
+      -hw + f, -hh + f, -hd, // 13
+      hw - f, -hh + f, -hd,  // 14
+      hw - f, hh - f, -hd,   // 15
+      
+      // py
+      hw - f, hh, -hd + f,   // 16
+      hw - f, hh, hd - f,    // 17
+      -hw + f, hh, hd - f,   // 18
+      -hw + f, hh, -hd + f,  // 19
+      
+      // ny
+      hw - f, -hh, -hd + f,  // 20
+      hw - f, -hh, hd - f,   // 21
+      -hw + f, -hh, hd - f,  // 22
+      -hw + f, -hh, -hd + f  // 23
+    ];
+    
+    let indices = [
+      0, 2, 1, 3, 2, 0,
+      4, 6, 5, 7, 6, 4,
+      8, 10, 9, 11, 10, 8,
+      12, 14, 13, 15, 14, 12,
+      16, 18, 17, 19, 18, 16,
+      20, 21, 22, 23, 20, 22,
+      
+      // link the sides
+      3, 5, 2, 4, 5, 3,
+      7, 9, 6, 8, 9, 7,
+      11, 13, 10, 12, 13, 11,
+      15, 1, 14, 0, 1, 15,
+      
+      // link the lids
+      // top
+      16, 3, 0, 17, 3, 16,
+      17, 7, 4, 18, 7, 17,
+      18, 11, 8, 19, 11, 18,
+      19, 15, 12, 16, 15, 19,
+      // bottom
+      1, 21, 20, 2, 21, 1,
+      5, 22, 21, 6, 22, 5,
+      9, 23, 22, 10, 23, 9,
+      13, 20, 23, 14, 20, 13,
+      
+      // corners
+      // top
+      3, 17, 4,
+      7, 18, 8,
+      11, 19, 12,
+      15, 16, 0,
+      // bottom
+      2, 5, 21,
+      6, 9, 22,
+      10, 13, 23,
+      14, 1, 20
+    ];
+    
+    let indicesWire = [
+      0, 1, 1, 2, 2, 3, 3, 0,
+      4, 5, 5, 6, 6, 7, 7, 4,
+      8, 9, 9, 10, 10, 11, 11, 8,
+      12, 13, 13, 14, 14, 15, 15, 12,
+      16, 17, 17, 18, 18, 19, 19, 16,
+      20, 21, 21, 22, 22, 23, 23, 20,
+      // link the sides
+      2, 5, 3, 4,     //px - pz
+      6, 9, 7, 8,     // pz - nx
+      10, 13, 11, 12, // nx - nz
+      15, 0, 14, 1,   // nz - px
+      
+      // link the lids
+      // top
+      16, 0, 17, 3,   // px
+      17, 4, 18, 7,   // pz
+      18, 8, 19, 11,  // nx
+      19, 12, 16, 15,  // nz
+      // bottom
+      20, 1, 21, 2,
+      21, 5, 22, 6,
+      22, 9, 23, 10,
+      23, 13, 20, 14
+    ];
+    
+    let geom = new THREE.BufferGeometry();
+    geom.setAttribute("position", new THREE.BufferAttribute(new Float32Array(vertices), 3));
+    geom.setIndex(isWireframed ? indicesWire : indices);
+    if (!isWireframed) geom.computeVertexNormals();
+    return geom;
+  }
+*/
+}
+
+
