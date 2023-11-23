@@ -132,7 +132,7 @@ class RobotHead extends THREE.Object3D {
 		this.add(this.spotLight.target);
 		this.spotLight.visible = false;		
 
-		this.robotCamera.position.z += 1;
+		this.robotCamera.position.z += 2;
 		this.cameraTarget.position.z += 3;
 		this.cameraTarget.position.y -= 1;
 		this.cameraTarget.visible = false;
@@ -648,30 +648,148 @@ class Bed extends THREE.Object3D {
 	}
 }
 
-
 class Dresser extends THREE.Object3D {
-
+	//materials
 	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
+	gold = new THREE.MeshPhongMaterial( {color: 0xf7c401});
 
+	sphere1 = new THREE.SphereGeometry(0.2, 32, 32);
+
+	//meshes
 	base = new THREE.Mesh(new THREE.BoxGeometry(10, 6.5, 4), this.brown);
+	top = new THREE.Mesh(new THREE.BoxGeometry(9.5, 2, 4.5), this.brown);
+	middle = new THREE.Mesh(new THREE.BoxGeometry(9.5, 2, 4.5), this.brown);
+	bottom = new THREE.Mesh(new THREE.BoxGeometry(9.5, 2, 4.5), this.brown);
+	ballTop = new THREE.Mesh(this.sphere1, this.gold);
+	ballMiddle = new THREE.Mesh(this.sphere1, this.gold);
+	ballBottom = new THREE.Mesh(this.sphere1, this.gold);
+
 
 	constructor() {
 		super();
+		this.top.position.y += 2.1;
+		this.bottom.position.y -= 2.1;
+		this.ballTop.position.z += 2.2;
+		this.ballTop.scale.x = 3;
+		this.ballTop.position.y += 2.2;
+		this.ballMiddle.position.z += 2.2;
+		this.ballMiddle.scale.x = 3;
+		this.ballBottom.position.z += 2.2;
+		this.ballBottom.scale.x = 3;
+		this.ballBottom.position.y -= 2.2;
 
 		this.add(this.base)
+		this.add(this.top)
+		this.add(this.middle)
+		this.add(this.bottom)
+		this.add(this.ballTop)
+		this.add(this.ballMiddle)
+		this.add(this.ballBottom)
+		
 	}
 }
 
 class Nightstand extends THREE.Object3D {
-
+	//textures
+	bookTexture = new THREE.TextureLoader().load("../pictures/book2.jpg");
+	bookTexture2 = new THREE.TextureLoader().load("../pictures/book1.jpg");
+	bookTexture3 = new THREE.TextureLoader().load("../pictures/books3.jpg");
+	bookTexture4 = new THREE.TextureLoader().load("../pictures/booktop.jpg");
+	alarmTexture = new THREE.TextureLoader().load("../pictures/alarmclock.jpg");
+	//materials
+	bookMat1 = new THREE.MeshPhongMaterial({map: this.bookTexture});
+	bookMat2 = new THREE.MeshPhongMaterial({map: this.bookTexture2});
+	bookMat3 = new THREE.MeshPhongMaterial({map: this.bookTexture3});
+	bookMat4 = new THREE.MeshPhongMaterial({map: this.bookTexture4});
+	alarmMat = new THREE.MeshPhongMaterial({map: this.alarmTexture});
 	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
+	gray = new THREE.MeshPhongMaterial( {color: 0x222222});
+	gold = new THREE.MeshPhongMaterial( {color: 0xf7c401});
 
-	base = new THREE.Mesh(new THREE.BoxGeometry(4, 6.5, 4), this.brown);
+	//right, left, top, bottom. front, back
+	bookMats = [this.bookMat1, this.bookMat1, this.bookMat2, this.bookMat1, this.bookMat2, this.bookMat1];
+	bookMats2 = [this.bookMat1, this.bookMat1, this.bookMat1, this.bookMat1, this.bookMat1, this.bookMat1];
+	bookMats3 = [this.bookMat3, this.bookMat3, this.bookMat4, this.bookMat3, this.bookMat3, this.bookMat3];
+	//geometries
+	sphere1 = new THREE.SphereGeometry(0.2, 32, 32);
+
+	//meshes
+	base = new THREE.Mesh(new THREE.BoxGeometry(4, 5.5, 1), this.brown);
+	drawer = new THREE.Mesh(new THREE.BoxGeometry(4, 1, 4.3), this.brown);
+	drawerBottom = new THREE.Mesh(new THREE.BoxGeometry(4, 1, 4.3), this.brown);
+	drawerSide = new THREE.Mesh(new THREE.BoxGeometry(0.5, 5.5, 4.3), this.brown);
+	drawerSideR = new THREE.Mesh(new THREE.BoxGeometry(0.5, 5.5, 4.3), this.brown);
+	ball = new THREE.Mesh(this.sphere1, this.gold);
+	book = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.25, 1.7), this.bookMats);
+	book2 = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2, 0.25), this.bookMats2);
+	bookBox = new THREE.Mesh(new THREE.BoxGeometry(2.5, 2, 2), this.bookMats3);
+
+	//clock
+	clockBase = new THREE.Mesh(new THREE.BoxGeometry(2, 1, 1), this.gray); 
+	clockFace = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.8, 0.1), this.alarmMat);
 
 	constructor() {
 		super();
+		this.base.position.z -= 1.65
+		this.drawer.position.y += 3;
+		this.drawerBottom.position.y -= 2.2;
+		this.ball.position.y += 3;
+		this.ball.position.z += 2.2;
+		this.book.position.y += 0.05;
+		this.book2.position.y += 1;
+		this.book2.rotation.y = 15 * Math.PI/180;
+		this.bookBox.position.y -= 1;
+		this.drawerSide.position.x -= 1.75;
+		this.drawerSideR.position.x += 1.75;
+		this.clockBase.position.y += 3.6;
+		this.clockBase.rotation.x = 50 * Math.PI/180;
+		this.clockFace.position.z+= 0.4;
+		this.clockFace.position.y += 3.9;
+		this.clockFace.rotation.x = 320 * Math.PI/180;
+		const clock = new THREE.Group();
+		clock.add(this.clockBase);
+		clock.add(this.clockFace);
+		clock.position.z -= 0.5
+		clock.position.x -= 0.2
+		clock.position.y += 0.2
+		clock.rotation.x = 10 * Math.PI/180;
+
+		this.add(this.book);
+		this.add(this.book2)
+		this.add(this.bookBox);
+		this.add(this.drawerBottom)
+		this.add(this.drawer);
+		this.add(this.drawerSide);
+		this.add(this.drawerSideR);
+		this.add(this.ball);
+		this.add(this.base);
+		this.add(clock);
+	}
+}
+
+class Chest extends THREE.Object3D {
+	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
+	gray = new THREE.MeshPhongMaterial( { color: 0x333333});
+	gold = new THREE.MeshPhongMaterial( {color: 0xf7c401});
+	cylinder = new THREE.CylinderGeometry( 2, 2, 7, 32 );
+
+	base = new THREE.Mesh(new THREE.BoxGeometry(7, 3.5, 4), this.brown);
+	top = new THREE.Mesh(this.cylinder, this.brown);
+	open = new THREE.Mesh(new THREE.BoxGeometry(7.1, 0.5, 4.1), this.gray);
+	latch = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.6, 0.6), this.gold);
+
+	constructor() {
+		super();
+		this.top.rotation.z = 90 * Math.PI/180;
+		this.top.position.y += 1.5;
+		this.open.position.y += 1.5;
+		this.latch.position.z += 2.2;
+		this.latch.position.y += 1.5
 
 		this.add(this.base);
+		this.add(this.top);
+		this.add(this.open);
+		this.add(this.latch)
 	}
 }
 
@@ -688,18 +806,7 @@ class Bookshelf extends THREE.Object3D {
 	}
 }
 
-class Chest extends THREE.Object3D {
 
-	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
-
-	base = new THREE.Mesh(new THREE.BoxGeometry(7, 4, 4), this.brown);
-
-	constructor() {
-		super();
-
-		this.add(this.base);
-	}
-}
 
 class Desk extends THREE.Object3D {
 
@@ -745,14 +852,17 @@ scene.background = bgTexture;
 //camera
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 camera.name = "DefaultCamera";
+//DEFAULT CAMERA FOR ROOM POSITION
 camera.position.set(0,7,23);
+//camera.position.set(0,2,6);
 var renderCamera = camera;
 const controlsDefault = new OrbitControls(renderCamera, renderer.domElement );
 
 //lights
 var ambientLight = new THREE.AmbientLight( 0x333333, 0.5);
 var dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.2);
-var lampLight = new THREE.PointLight(0xFFA500, 100, 1000, 2);
+//var lampLight = new THREE.PointLight(0xFFA500, 100, 1000, 2);
+var lampLight = new THREE.PointLight(0xDDDDDD, 100, 1000, 2);
 const redSpotlight = new THREE.SpotLight(0xFFFFFF);
 const greenSpotlight = new THREE.PointLight(0x00FF00);
 
@@ -798,6 +908,11 @@ const bricks = new THREE.TextureLoader().load('../pictures/wallpaper2.jpg' );
 const rugmap = new THREE.TextureLoader().load('../pictures/rug1.jpg' );
 const doormap = new THREE.TextureLoader().load('../pictures/door.png' );
 const windowmap1 = new THREE.TextureLoader().load('../pictures/window2crop.jpg' );
+const postermap1 = new THREE.TextureLoader().load('../pictures/poster1.jpg' );
+const postermap2 = new THREE.TextureLoader().load('../pictures/poster2.jpg' );
+const postermap3 = new THREE.TextureLoader().load('../pictures/poster3.webp' );
+const postermap4 = new THREE.TextureLoader().load('../pictures/poster4.jpg' );
+const postermap5 = new THREE.TextureLoader().load('../pictures/fishboat.jpg' );
 
 
 //materials
@@ -815,6 +930,11 @@ var wallMaterial = new THREE.MeshPhongMaterial( { map: bricks, castShadow: true,
 var rugMaterial = new THREE.MeshPhongMaterial( { map: rugmap, castShadow: true, receiveShadow: true} );
 var doorMaterial = new THREE.MeshPhongMaterial( { map: doormap, castShadow: true, receiveShadow: true} );
 var windowMaterial1 = new THREE.MeshPhongMaterial( { map: windowmap1, castShadow: true, receiveShadow: true} );
+var posterMaterial1 = new THREE.MeshPhongMaterial( { map: postermap1, castShadow: true, receiveShadow: true} );
+var posterMaterial2 = new THREE.MeshPhongMaterial( { map: postermap2, castShadow: true, receiveShadow: true} );
+var posterMaterial3 = new THREE.MeshPhongMaterial( { map: postermap3, castShadow: true, receiveShadow: true} );
+var posterMaterial4 = new THREE.MeshPhongMaterial( { map: postermap4, castShadow: true, receiveShadow: true} );
+var posterMaterial5 = new THREE.MeshPhongMaterial( { map: postermap5, castShadow: true, receiveShadow: true} );
 
 //geometries 
 const plane = new THREE.PlaneGeometry(30, 30, 1, 1 );
@@ -825,6 +945,11 @@ const wallTop = new THREE.BoxGeometry(30, 30, 0.7);
 const floor = new THREE.Mesh(wallTop, floorMaterial);
 const ceiling = new THREE.Mesh(wallTop, material2);
 const rug = new THREE.Mesh(new THREE.BoxGeometry(20, 20, 0.2), rugMaterial)
+const poster1 = new THREE.Mesh(new THREE.BoxGeometry(7, 10, 0.2), posterMaterial1)
+const poster2 = new THREE.Mesh(new THREE.BoxGeometry(7, 10, 0.2), posterMaterial2)
+const poster3 = new THREE.Mesh(new THREE.BoxGeometry(3, 4, 0.2), posterMaterial3)
+const poster4 = new THREE.Mesh(new THREE.BoxGeometry(7, 10, 0.2), posterMaterial4)
+const poster5 = new THREE.Mesh(new THREE.BoxGeometry(3, 4, 0.2), posterMaterial5)
 
 const wall1 = new THREE.Mesh(wall, wallMaterial);
 const wall2 = new THREE.Mesh(wall, wallMaterial);
@@ -841,8 +966,6 @@ const bookshelf = new Bookshelf();
 const bookshelf2 = new Bookshelf();
 const chest = new Chest();
 const desk = new Desk();
-
-
 
 //traverse robot to enable shadows on all objects
 robot.traverse(function( child ) { 
@@ -866,6 +989,30 @@ ceiling.receiveShadow = true;
 
 rug.rotation.x = 90 * Math.PI/180;
 rug.position.y -= 2.73
+
+poster1.position.x -= 14.6;
+poster1.position.y += 9.5;
+poster1.position.z -= 9.3;
+poster1.rotation.y = 90 * Math.PI/180;
+poster1.rotation.z = 359 * Math.PI/180;
+
+poster2.position.x -= 14.6;
+poster2.position.y += 8.5;
+poster2.position.z += 1;
+poster2.rotation.y = 90 * Math.PI/180;
+poster2.rotation.z = 1 * Math.PI/180;
+
+poster3.position.z -= 14.6;
+poster3.position.x -= 3.5; 
+poster3.position.y += 8.5;
+
+poster4.position.z -= 14.6;
+poster4.position.x -= 10.5;
+poster4.position.y += 11.5;
+
+poster5.position.z -= 14.6;
+poster5.position.x -= 3.5; 
+poster5.position.y += 13.5;
 
 door.rotation.y = 90 * Math.PI/180;
 door.position.x -= 15;
@@ -893,15 +1040,20 @@ bed.position.x -= 10.5;
 bed.position.z -= 7;
 dresser.position.z -= 13
 dresser.position.x += 5;
+dresser.position.y += 0.5;
 chest.position.x -= 10.5;
 chest.position.z += 2.5;
 chest.position.y -= 1;
 nightstand.position.z -= 13;
 nightstand.position.x -= 4;
-bookshelf.rotation.y = 90 * Math.PI/180;
+
+// bookshelf.rotation.y = 90 * Math.PI/180;
 bookshelf.position.y += 4.3;
-bookshelf.position.x += 13;
-bookshelf.position.z -= 8.5;
+//TEMP REMOVE THIS ONE
+bookshelf.position.z += 2
+//TEMP REMOVE THIS ONE
+// bookshelf.position.x += 13;
+// bookshelf.position.z -= 8.5;
 bookshelf2.rotation.y = 90 * Math.PI/180;
 bookshelf2.position.y += 4.3;
 bookshelf2.position.x += 13;
@@ -937,6 +1089,11 @@ wall3.receiveShadow = true;
 
 
 //add to scene
+scene.add(poster1)
+scene.add(poster2)
+scene.add(poster3)
+scene.add(poster4)
+scene.add(poster5)
 scene.add(rug);
 scene.add(door);
 scene.add(window1);
@@ -957,7 +1114,7 @@ scene.add(chest);
 scene.add(desk);
 
 //TODO add details to dresser, nightstand, bookshelf, and desk
-//TODO Decorations - chair, books/objects on shelves posters/pictures, tv, clock, desklamp, trash can, computer/laptop
+//TODO Decorations - chair, books/objects on shelves posters/pictures, tv, desklamp, trash can, computer/laptop, led lights around ceiling
 
 
 
@@ -1023,7 +1180,12 @@ lightFolder.add(ambientLight, 'visible').name("Toggle Ambient Light");
 lightFolder.add(dirLight, 'visible').name("Toggle Directional Light");
 lightFolder.add(redSpotlight, 'visible').name("Toggle Spotlight");
 lightFolder.add(lampLight, 'visible').name("Toggle Lamplight");
-lightFolder.add(lampLight, 'intensity', 50, 2000).name("Lamplight Intensity");
+lightFolder.add(lampLight, 'intensity', 50, 2000).name("Light Intensity");
+const colorParams = {
+	color: lampLight.color.getHex()
+};
+lightFolder.addColor(colorParams, 'color')
+.onChange((value) =>  lampLight.color.set(value)).name("Light Color");
 
 //keyboard controls
 var xSpeed = 0.05;
