@@ -797,12 +797,35 @@ class Bookshelf extends THREE.Object3D {
 
 	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
 
-	base = new THREE.Mesh(new THREE.BoxGeometry(6, 15, 4), this.brown);
+	//base = new THREE.Mesh(new THREE.BoxGeometry(6, 15, 4), this.brown);
+	top = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
+	bottom = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
+	back = new THREE.Mesh(new THREE.BoxGeometry(6, 14, 1), this.brown);
+	left = new THREE.Mesh(new THREE.BoxGeometry(0.5, 14, 4), this.brown);
+	right = new THREE.Mesh(new THREE.BoxGeometry(0.5, 14, 4), this.brown);
+	bottomShelf = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
+	topShelf = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
+	middleShelf = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
 
 	constructor() {
 		super();
 
-		this.add(this.base);
+		this.top.position.y += 6.75;
+		this.bottom.position.y -= 6.75;
+		this.back.position.z -= 1.5;
+		this.left.position.x -= 3;
+		this.right.position.x += 3;
+		this.bottomShelf.position.y -= 3.5;
+		this.topShelf.position.y += 3.5;
+
+		this.add(this.bottom);
+		this.add(this.top);
+		this.add(this.back);
+		this.add(this.left)
+		this.add(this.right);
+		this.add(this.bottomShelf)
+		this.add(this.topShelf)
+		this.add(this.middleShelf)
 	}
 }
 
@@ -928,13 +951,13 @@ const material9 = new THREE.MeshLambertMaterial( { color: 0x00ff00});
 var floorMaterial = new THREE.MeshPhongMaterial( { map: texture, castShadow: true, receiveShadow: true, color:0x999999} );
 var wallMaterial = new THREE.MeshPhongMaterial( { map: bricks, castShadow: true, receiveShadow: true} );
 var rugMaterial = new THREE.MeshPhongMaterial( { map: rugmap, castShadow: true, receiveShadow: true} );
-var doorMaterial = new THREE.MeshPhongMaterial( { map: doormap, castShadow: true, receiveShadow: true} );
-var windowMaterial1 = new THREE.MeshPhongMaterial( { map: windowmap1, castShadow: true, receiveShadow: true} );
-var posterMaterial1 = new THREE.MeshPhongMaterial( { map: postermap1, castShadow: true, receiveShadow: true} );
-var posterMaterial2 = new THREE.MeshPhongMaterial( { map: postermap2, castShadow: true, receiveShadow: true} );
-var posterMaterial3 = new THREE.MeshPhongMaterial( { map: postermap3, castShadow: true, receiveShadow: true} );
-var posterMaterial4 = new THREE.MeshPhongMaterial( { map: postermap4, castShadow: true, receiveShadow: true} );
-var posterMaterial5 = new THREE.MeshPhongMaterial( { map: postermap5, castShadow: true, receiveShadow: true} );
+var doorMaterial = new THREE.MeshPhongMaterial( { map: doormap} );
+var windowMaterial1 = new THREE.MeshPhongMaterial( { map: windowmap1,} );
+var posterMaterial1 = new THREE.MeshPhongMaterial( { map: postermap1} );
+var posterMaterial2 = new THREE.MeshPhongMaterial( { map: postermap2} );
+var posterMaterial3 = new THREE.MeshPhongMaterial( { map: postermap3} );
+var posterMaterial4 = new THREE.MeshPhongMaterial( { map: postermap4} );
+var posterMaterial5 = new THREE.MeshPhongMaterial( { map: postermap5} );
 
 //geometries 
 const plane = new THREE.PlaneGeometry(30, 30, 1, 1 );
@@ -1054,7 +1077,10 @@ bookshelf.position.z += 2
 //TEMP REMOVE THIS ONE
 // bookshelf.position.x += 13;
 // bookshelf.position.z -= 8.5;
-bookshelf2.rotation.y = 90 * Math.PI/180;
+//const mirrorBookshelf = new THREE.Object3D();
+//mirrorBookshelf.add(bookshelf2);
+//mirrorBookshelf.applyMatrix(new THREE.Matrix4().makeScale(-1, 1, 1));
+bookshelf2.rotation.y = 270 * Math.PI/180;
 bookshelf2.position.y += 4.3;
 bookshelf2.position.x += 13;
 bookshelf2.position.z -= 2;
@@ -1114,7 +1140,7 @@ scene.add(chest);
 scene.add(desk);
 
 //TODO add details to dresser, nightstand, bookshelf, and desk
-//TODO Decorations - chair, books/objects on shelves posters/pictures, tv, desklamp, trash can, computer/laptop, led lights around ceiling
+//TODO Decorations - chair, books/objects on shelves posters/pictures desklamp, trash can, computer/laptop, led lights around ceiling
 
 
 
