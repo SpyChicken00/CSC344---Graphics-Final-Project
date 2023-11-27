@@ -155,9 +155,6 @@ class Sand extends THREE.Object3D {
 	}
 }
 
-const tank = new Tank(new THREE.Vector3(0, 0, 0));
-scene.add(tank);
-
 class RobotHead extends THREE.Object3D {
 	//textures
 	teeth = new THREE.TextureLoader().load('../pictures/teeth2.jpg' );
@@ -1023,6 +1020,9 @@ const clock = new THREE.Clock();
 const bgTexture = new THREE.TextureLoader().load("../pictures/underwater.jpg");
 bgTexture.minFilter = THREE.LinearFilter;
 scene.background = bgTexture;
+
+const tank = new Tank(new THREE.Vector3(0, 0, 0));
+scene.add(tank);
 
 //camera
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
