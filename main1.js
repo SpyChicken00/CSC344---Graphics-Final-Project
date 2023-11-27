@@ -1019,10 +1019,11 @@ const clock = new THREE.Clock();
 //add background to scene
 const bgTexture = new THREE.TextureLoader().load("../pictures/underwater.jpg");
 bgTexture.minFilter = THREE.LinearFilter;
-scene.background = bgTexture;
+// scene.background = bgTexture;
+scene.background = new THREE.Color(0xFFFFFF);
 
-const tank = new Tank(new THREE.Vector3(0, 0, 0));
-tank.scale.set(0.1, 0.1, 0.1);
+const tank = new Tank(new THREE.Vector3(0, -5, 0));
+// tank.scale.set(0.025, 0.025, 0.025);
 scene.add(tank);
 
 //camera
@@ -1446,7 +1447,7 @@ function animate() {
 	requestAnimationFrame(animate);
 
 	// sink nemo
-	if (!tank.getNemo().shouldFloat) tank.getNemo().position.y -= 0.25;
+	if (!tank.getNemo().shouldFloat) tank.getNemo().position.y -= 0.5;
 
 	tank.sandOscillation();
 
