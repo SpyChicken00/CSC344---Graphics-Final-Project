@@ -14,16 +14,16 @@ class Tank extends THREE.Object3D {
 		super();
 
 		// dimensions
-		this.width = 150;
-		this.height = 100;
-		this.depth = 100;
+		this.width = 15;
+		this.height = 10;
+		this.depth = 10;
 
 		// wireframe fish tank
 		const tankG = new THREE.BoxGeometry(this.width, this.height, this.depth);
 		const tankEdgesG = new THREE.EdgesGeometry(tankG)
 		const tankM = new THREE.LineBasicMaterial({
 			color: 0x000000,
-			linewidth: 2
+			linewidth: 0.2
 		});
 		const tankEdges = new THREE.LineSegments(tankEdgesG, tankM);
 		this.add(tankEdges);
@@ -40,7 +40,7 @@ class Tank extends THREE.Object3D {
 			side: THREE.DoubleSide
 		})
 		const water = new THREE.Mesh(waterG, waterM);
-		water.position.y -= 5;
+		water.position.y -= 0.5;
 		this.add(water);
 
 		// positions the tank
@@ -58,8 +58,8 @@ class Tank extends THREE.Object3D {
 		// tells if nemo should not sink
 		this.nemo.shouldFloat = false;
 		// makes the sand for the fish tank
-		this.sand = new Sand(332, 748);
-		this.sand.position.set(-0.1, -this.height/2 + 0.3, 0);
+		this.sand = new Sand(33.2, 74.8);
+		this.sand.position.set(-0.01, -this.height/2 + 0.03, 0);
 		this.add(this.sand);
 	}
 
@@ -110,8 +110,8 @@ class Sand extends THREE.Object3D {
 				// calculates the coordinates
 				// and adds them to the array
 				positions[i] = ix * 0.3; // x
-				positions[i + 1] = (Math.cos(iy * 0.15) * 1) + 1; // y
-				positions[i + 2] = -(iy * 0.2 - ((this.AMOUNTZ * 0.2) / 2)); // z
+				positions[i + 1] = (Math.cos(iy * 0.15) * 0.1) + 0.1; // y
+				positions[i + 2] = -(iy * 0.02 - ((this.AMOUNTZ * 0.02) / 2)); // z
 
 				// increments the array placeholder by 3
 				// because there were 3 coordinates added
@@ -124,7 +124,7 @@ class Sand extends THREE.Object3D {
 		sandG.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 		const sandM = new THREE.PointsMaterial({
 			color: 0xffaabc,
-			size: 0.6
+			size: 0.06
 		});
 		this.sand = new THREE.Points(sandG, sandM);
 		this.sand.rotation.y = 90 * Math.PI/180;
@@ -140,7 +140,7 @@ class Sand extends THREE.Object3D {
 		// changes the y-coordinate of each particle
 		for (let ix = 0; ix < this.AMOUNTX; ix++) {
 			for (let iy = 0; iy < this.AMOUNTZ; iy++) {
-				positions[i + 1] = (Math.cos((iy + this.count) * 0.15) * 1) + 1;
+				positions[i + 1] = (Math.cos((iy + this.count) * 0.15) * 0.1) + 0.1;
 
 				// increments the array placeholder by 3 again
 				i += 3;
@@ -1485,27 +1485,27 @@ function animate() {
 // assures that nemo cannot leave the fish tank
 function boundaryAssurance() {
 	// x-boundary
-	if (tank.getNemo().position.x < -tank.getWidth()/2+2) {
-		tank.getNemo().position.x = -tank.getWidth()/2+2;
+	if (tank.getNemo().position.x < -tank.getWidth()/2+0.2) {
+		tank.getNemo().position.x = -tank.getWidth()/2+0.2;
 	}
-	else if (tank.getNemo().position.x > tank.getWidth()/2-2) {
+	else if (tank.getNemo().position.x > tank.getWidth()/2-0.2) {
 		tank.getNemo().position.x = tank.getWidth()/2-2;
 	}
 
 	// y-boundary
-	if (tank.getNemo().position.y < -tank.getHeight()/2+12) {
-		tank.getNemo().position.y = -tank.getHeight()/2+12;
+	if (tank.getNemo().position.y < -tank.getHeight()/2+1.2) {
+		tank.getNemo().position.y = -tank.getHeight()/2+1.2;
 	}
-	else if (tank.getNemo().position.y > tank.getHeight()/2-12) {
-		tank.getNemo().position.y = tank.getHeight()/2-12;
+	else if (tank.getNemo().position.y > tank.getHeight()/2-1.2) {
+		tank.getNemo().position.y = tank.getHeight()/2-1.2;
 	}
 
 	// z-boundary
-	if (tank.getNemo().position.z < -tank.getDepth()/2+2) {
-		tank.getNemo().position.z = -tank.getDepth()/2+2;
+	if (tank.getNemo().position.z < -tank.getDepth()/2+0.2) {
+		tank.getNemo().position.z = -tank.getDepth()/2+0.2;
 	}
-	else if (tank.getNemo().position.z > tank.getDepth()/2-2) {
-		tank.getNemo().position.z = tank.getDepth()/2-2;
+	else if (tank.getNemo().position.z > tank.getDepth()/2-0.2) {
+		tank.getNemo().position.z = tank.getDepth()/2-0.2;
 	}
 }
 
@@ -1514,20 +1514,20 @@ document.onkeydown = function() {
 	const key = event.key;
 
 	if (!isPov && key == 'w') {
-		tank.getNemo().position.z -= 1;
+		tank.getNemo().position.z -= 0.1;
 	}
 	else if (!isPov && key == 'a') {
-		tank.getNemo().position.x -= 1;
+		tank.getNemo().position.x -= 0.1;
 	}
 	else if (!isPov && key == 's') {
-		tank.getNemo().position.z += 1;
+		tank.getNemo().position.z += 0.1;
 	}
 	else if (!isPov && key == 'd') {
-		tank.getNemo().position.x += 1;
+		tank.getNemo().position.x += 0.1;
 	}
 	else if (!isPov && key == ' ') {
 		tank.getNemo().shouldFloat = true;
-		tank.getNemo().position.y += 1;
+		tank.getNemo().position.y += 0.1;
 	}
 }
 
