@@ -1022,6 +1022,7 @@ bgTexture.minFilter = THREE.LinearFilter;
 scene.background = bgTexture;
 
 const tank = new Tank(new THREE.Vector3(0, 0, 0));
+tank.scale.set(0.1, 0.1, 0.1);
 scene.add(tank);
 
 //camera
