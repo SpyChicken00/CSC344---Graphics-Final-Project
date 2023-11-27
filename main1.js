@@ -1482,6 +1482,33 @@ function animate() {
 	renderer.render( scene, renderCamera);
 }
 
+// assures that nemo cannot leave the fish tank
+function boundaryAssurance() {
+	// x-boundary
+	if (tank.getNemo().position.x < -tank.getWidth()/2+2) {
+		tank.getNemo().position.x = -tank.getWidth()/2+2;
+	}
+	else if (tank.getNemo().position.x > tank.getWidth()/2-2) {
+		tank.getNemo().position.x = tank.getWidth()/2-2;
+	}
+
+	// y-boundary
+	if (tank.getNemo().position.y < -tank.getHeight()/2+12) {
+		tank.getNemo().position.y = -tank.getHeight()/2+12;
+	}
+	else if (tank.getNemo().position.y > tank.getHeight()/2-12) {
+		tank.getNemo().position.y = tank.getHeight()/2-12;
+	}
+
+	// z-boundary
+	if (tank.getNemo().position.z < -tank.getDepth()/2+2) {
+		tank.getNemo().position.z = -tank.getDepth()/2+2;
+	}
+	else if (tank.getNemo().position.z > tank.getDepth()/2-2) {
+		tank.getNemo().position.z = tank.getDepth()/2-2;
+	}
+}
+
 // keyboard controls
 document.onkeydown = function() {
 	const key = event.key;
