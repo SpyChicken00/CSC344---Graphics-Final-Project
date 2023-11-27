@@ -1330,11 +1330,11 @@ const headFolder = robotFolder.addFolder("Head");
 const leftArmFolder = robotFolder.addFolder("Left Arm");
 const rightArmFolder = robotFolder.addFolder("Right Arm");
 const lightFolder = robotFolder.addFolder("Lights");
-robotFolder.open();
-headFolder.open();
-leftArmFolder.open()
-rightArmFolder.open();
-lightFolder.open();
+// robotFolder.open();
+// headFolder.open();
+// leftArmFolder.open()
+// rightArmFolder.open();
+// lightFolder.open();
 //sliders
 leftArmFolder.add(robotHandL.rotation, 'y', 0, Math.PI * 4).name("Rotate Left Hand");
 leftArmFolder.add(robotLowerArmL.rotation, 'x', Math.PI * -0.25, Math.PI * 0.25).name("Rotate Left Elbow");
