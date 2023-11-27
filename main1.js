@@ -151,7 +151,7 @@ class Sand extends THREE.Object3D {
 		this.sand.geometry.attributes.position.needsUpdate = true;
 
 		// increases the count to make the oscillation work
-		this.count += 0.5;
+		this.count += 1;
 	}
 }
 
