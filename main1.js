@@ -29,7 +29,7 @@ class Tank extends THREE.Object3D {
 		this.add(tankEdges);
 
 		// adds the water
-		const waterG = new THREE.BoxGeometry(this.width, this.height-10, this.depth);
+		const waterG = new THREE.BoxGeometry(this.width, this.height-0.10, this.depth);
 		const waterM = new THREE.MeshBasicMaterial({
 			color: 0xACEBFF, 
 			// light: 0xCFF4FF 
@@ -47,7 +47,7 @@ class Tank extends THREE.Object3D {
 		this.position.copy(position);
 
 		// adds the camera fish
-		const nemoG = new THREE.SphereGeometry(2);
+		const nemoG = new THREE.SphereGeometry(0.2);
 		const nemoM = new THREE.MeshBasicMaterial({
 			color: 0xEA4700
 		});
