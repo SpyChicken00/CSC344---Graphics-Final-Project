@@ -783,7 +783,7 @@ class Chest extends THREE.Object3D {
 		this.top.rotation.z = 90 * Math.PI/180;
 		this.top.position.y += 1.5;
 		this.open.position.y += 1.5;
-		this.latch.position.z += 2.2;
+		this.latch.position.z += 2;
 		this.latch.position.y += 1.5
 
 		this.add(this.base);
@@ -794,6 +794,42 @@ class Chest extends THREE.Object3D {
 }
 
 class Bookshelf extends THREE.Object3D {
+
+	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
+
+	//base = new THREE.Mesh(new THREE.BoxGeometry(6, 15, 4), this.brown);
+	top = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
+	bottom = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
+	back = new THREE.Mesh(new THREE.BoxGeometry(6, 14, 1), this.brown);
+	left = new THREE.Mesh(new THREE.BoxGeometry(0.5, 14, 4), this.brown);
+	right = new THREE.Mesh(new THREE.BoxGeometry(0.5, 14, 4), this.brown);
+	bottomShelf = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
+	topShelf = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
+	middleShelf = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
+
+	constructor() {
+		super();
+
+		this.top.position.y += 6.75;
+		this.bottom.position.y -= 6.75;
+		this.back.position.z -= 1.5;
+		this.left.position.x -= 3;
+		this.right.position.x += 3;
+		this.bottomShelf.position.y -= 3.5;
+		this.topShelf.position.y += 3.5;
+
+		this.add(this.bottom);
+		this.add(this.top);
+		this.add(this.back);
+		this.add(this.left)
+		this.add(this.right);
+		this.add(this.bottomShelf)
+		this.add(this.topShelf)
+		this.add(this.middleShelf)
+	}
+}
+
+class Bookshelf2 extends THREE.Object3D {
 
 	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
 
@@ -856,6 +892,18 @@ class Chair extends THREE.Object3D {
 		this.add(this.base);
 	}
 }
+
+class Fishtank extends THREE.Object3D {
+	water = new THREE.MeshPhongMaterial( {color: 0x22dddd, transparent: true, opacity: 0.5});
+
+	tank = new THREE.Mesh(new THREE.BoxGeometry(6, 3, 4), this.water);
+
+	constructor() {
+		super();
+
+		this.add(this.tank);
+	}
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //renderer
 const renderer = new THREE.WebGLRenderer({antialias: true});
@@ -868,8 +916,9 @@ document.body.appendChild( renderer.domElement );
 const scene = new THREE.Scene();
 const clock = new THREE.Clock();
 //add background to scene
+// const bgTexture = new THREE.TextureLoader().load("../pictures/clouds.jpg");
 const bgTexture = new THREE.TextureLoader().load("../pictures/underwater.jpg");
-bgTexture.minFilter = THREE.LinearFilter;
+///bgTexture.minFilter = THREE.LinearFilter;
 scene.background = bgTexture;
 
 //camera
@@ -885,7 +934,7 @@ const controlsDefault = new OrbitControls(renderCamera, renderer.domElement );
 var ambientLight = new THREE.AmbientLight( 0x333333, 0.5);
 var dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.2);
 //var lampLight = new THREE.PointLight(0xFFA500, 100, 1000, 2);
-var lampLight = new THREE.PointLight(0xDDDDDD, 100, 1000, 2);
+var lampLight = new THREE.PointLight(0xDDDDDD, 300 , 1000, 2);
 const redSpotlight = new THREE.SpotLight(0xFFFFFF);
 const greenSpotlight = new THREE.PointLight(0x00FF00);
 
@@ -961,7 +1010,7 @@ var posterMaterial5 = new THREE.MeshPhongMaterial( { map: postermap5} );
 
 //geometries 
 const plane = new THREE.PlaneGeometry(30, 30, 1, 1 );
-const wall = new THREE.BoxGeometry(30, 20, 0.7);
+const wall = new THREE.BoxGeometry(30, 20.6, 0.72	);
 const wallTop = new THREE.BoxGeometry(30, 30, 0.7);
 //objects
 
@@ -986,9 +1035,10 @@ const bed = new Bed();
 const dresser = new Dresser();
 const nightstand = new Nightstand();
 const bookshelf = new Bookshelf();
-const bookshelf2 = new Bookshelf();
+const bookshelf2 = new Bookshelf2();
 const chest = new Chest();
 const desk = new Desk();
+const fishtank = new Fishtank();
 
 //traverse robot to enable shadows on all objects
 robot.traverse(function( child ) { 
@@ -1069,17 +1119,21 @@ chest.position.z += 2.5;
 chest.position.y -= 1;
 nightstand.position.z -= 13;
 nightstand.position.x -= 4;
+fishtank.position.z -= 13;
+fishtank.position.y += 5.3;
+fishtank.position.x += 5.5;
 
-// bookshelf.rotation.y = 90 * Math.PI/180;
+
 bookshelf.position.y += 4.3;
 //TEMP REMOVE THIS ONE
 bookshelf.position.z += 2
 //TEMP REMOVE THIS ONE
-// bookshelf.position.x += 13;
-// bookshelf.position.z -= 8.5;
-//const mirrorBookshelf = new THREE.Object3D();
-//mirrorBookshelf.add(bookshelf2);
-//mirrorBookshelf.applyMatrix(new THREE.Matrix4().makeScale(-1, 1, 1));
+
+
+bookshelf.position.x += 13;
+bookshelf.position.z -= 8.5;
+bookshelf.rotation.y = 270	 * Math.PI/180;
+
 bookshelf2.rotation.y = 270 * Math.PI/180;
 bookshelf2.position.y += 4.3;
 bookshelf2.position.x += 13;
@@ -1138,6 +1192,7 @@ scene.add(bookshelf);
 scene.add(bookshelf2);
 scene.add(chest);
 scene.add(desk);
+scene.add(fishtank);
 
 //TODO add details to dresser, nightstand, bookshelf, and desk
 //TODO Decorations - chair, books/objects on shelves posters/pictures desklamp, trash can, computer/laptop, led lights around ceiling
