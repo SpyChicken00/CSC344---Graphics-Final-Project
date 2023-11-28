@@ -1,10 +1,157 @@
-// Josh is a master baiter
-
 import * as THREE from '../modules/three.module.js';
 import { OrbitControls } from '../modules/OrbitControls.js';
 import { GUI } from '../modules/dat.gui.module.js';
 
-//We should include our robots in the fish tank / world as easter eggs 
+//We should include our robots in the fish tank / world as easter eggs
+
+var isPov = false;
+
+// creates the tank class
+class Tank extends THREE.Object3D {
+	constructor(position) {
+		super();
+
+		// dimensions
+		this.width = 150;
+		this.height = 100;
+		this.depth = 100;
+
+		// wireframe fish tank
+		const tankG = new THREE.BoxGeometry(this.width, this.height, this.depth);
+		const tankEdgesG = new THREE.EdgesGeometry(tankG)
+		const tankM = new THREE.LineBasicMaterial({
+			color: 0x000000,
+			linewidth: 2
+		});
+		const tankEdges = new THREE.LineSegments(tankEdgesG, tankM);
+		this.add(tankEdges);
+
+		// adds the water
+		const waterG = new THREE.BoxGeometry(this.width, this.height-10, this.depth);
+		const waterM = new THREE.MeshBasicMaterial({
+			color: 0xACEBFF, 
+			// light: 0xCFF4FF 
+			// medium: 0xACEBFF
+			// darker: 0x91E5FF 
+			opacity: 0.4, 
+			transparent: true,
+			side: THREE.DoubleSide
+		})
+		const water = new THREE.Mesh(waterG, waterM);
+		water.position.y -= 5;
+		this.add(water);
+
+		// positions the tank
+		this.position.copy(position);
+
+		// adds the camera fish
+		const nemoG = new THREE.SphereGeometry(2);
+		const nemoM = new THREE.MeshBasicMaterial({
+			color: 0xEA4700
+		});
+		this.nemo = new THREE.Mesh(nemoG, nemoM);
+		this.nemo.position.set(0, 0, 0);
+		this.add(this.nemo);
+
+		// tells if nemo should not sink
+		this.nemo.shouldFloat = false;
+		// makes the sand for the fish tank
+		this.sand = new Sand(332, 748);
+		this.sand.position.set(-0.1, -this.height/2 + 0.3, 0);
+		this.add(this.sand);
+	}
+
+	getWidth() {
+		return this.width;
+	}
+
+	getHeight() {
+		return this.height;
+	}
+
+	getDepth() {
+		return this.depth;
+	}
+
+	getNemo() {
+		return this.nemo;
+	}
+
+	sandOscillation() {
+		this.sand.oscillation();
+	}
+}
+
+class Sand extends THREE.Object3D {
+	constructor(x, z) {
+		// calls the constructor for THREE.Object3D
+		super();
+
+		// counter for the oscillation function
+		this.count = 0;
+
+		// the amount of particles in the x and y directions
+		this.AMOUNTX = x;
+		this.AMOUNTZ = z;
+
+		// the total number of particles is the x amount * the z amount
+		const numParticles = this.AMOUNTX * this.AMOUNTZ;
+
+		// numParticles is the number of particles of just the top layer
+		// it is multiplied by 3 because it hold the x, y, z coordinates separately
+		const positions = new Float32Array(numParticles * 3);
+
+		// the array placeholder
+		let i = 0;
+		for (let ix = -this.AMOUNTX/2; ix < this.AMOUNTX/2; ix++) {
+			for (let iy = 0; iy < this.AMOUNTZ; iy++) { 
+				// calculates the coordinates
+				// and adds them to the array
+				positions[i] = ix * 0.3; // x
+				positions[i + 1] = (Math.cos(iy * 0.15) * 1) + 1; // y
+				positions[i + 2] = -(iy * 0.2 - ((this.AMOUNTZ * 0.2) / 2)); // z
+
+				// increments the array placeholder by 3
+				// because there were 3 coordinates added
+				i += 3;
+			}
+		}
+
+		// creates a particle system using the position array
+		const sandG = new THREE.BufferGeometry();
+		sandG.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+		const sandM = new THREE.PointsMaterial({
+			color: 0xffaabc,
+			size: 0.6
+		});
+		this.sand = new THREE.Points(sandG, sandM);
+		this.sand.rotation.y = 90 * Math.PI/180;
+		this.add(this.sand);
+	}
+
+	oscillation() {
+		// grabs the positions array for the particles
+		const positions = this.sand.geometry.attributes.position.array;
+
+		// the array placeholder
+		let i = 0;
+		// changes the y-coordinate of each particle
+		for (let ix = 0; ix < this.AMOUNTX; ix++) {
+			for (let iy = 0; iy < this.AMOUNTZ; iy++) {
+				positions[i + 1] = (Math.cos((iy + this.count) * 0.15) * 1) + 1;
+
+				// increments the array placeholder by 3 again
+				i += 3;
+			}
+		}
+
+		// updates the particles' positions
+		this.sand.geometry.attributes.position.needsUpdate = true;
+
+		// increases the count to make the oscillation work
+		this.count += 1;
+	}
+}
 
 class RobotHead extends THREE.Object3D {
 	//textures
@@ -918,8 +1065,9 @@ const clock = new THREE.Clock();
 //add background to scene
 // const bgTexture = new THREE.TextureLoader().load("../pictures/clouds.jpg");
 const bgTexture = new THREE.TextureLoader().load("../pictures/underwater.jpg");
-///bgTexture.minFilter = THREE.LinearFilter;
 scene.background = bgTexture;
+bgTexture.minFilter = THREE.LinearFilter;
+
 
 //camera
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -1194,6 +1342,10 @@ scene.add(chest);
 scene.add(desk);
 scene.add(fishtank);
 
+const tank = new Tank(new THREE.Vector3(0, -5, 0));
+// tank.scale.set(0.025, 0.025, 0.025);
+scene.add(tank);
+
 //TODO add details to dresser, nightstand, bookshelf, and desk
 //TODO Decorations - chair, books/objects on shelves posters/pictures desklamp, trash can, computer/laptop, led lights around ceiling
 
@@ -1231,11 +1383,11 @@ const headFolder = robotFolder.addFolder("Head");
 const leftArmFolder = robotFolder.addFolder("Left Arm");
 const rightArmFolder = robotFolder.addFolder("Right Arm");
 const lightFolder = robotFolder.addFolder("Lights");
-robotFolder.open();
-headFolder.open();
-leftArmFolder.open()
-rightArmFolder.open();
-lightFolder.open();
+// robotFolder.open();
+// headFolder.open();
+// leftArmFolder.open()
+// rightArmFolder.open();
+// lightFolder.open();
 //sliders
 leftArmFolder.add(robotHandL.rotation, 'y', 0, Math.PI * 4).name("Rotate Left Hand");
 leftArmFolder.add(robotLowerArmL.rotation, 'x', Math.PI * -0.25, Math.PI * 0.25).name("Rotate Left Elbow");
@@ -1346,6 +1498,15 @@ animate();
 
 function animate() {
 	requestAnimationFrame(animate);
+
+	// sink nemo
+	if (!tank.getNemo().shouldFloat) tank.getNemo().position.y -= 0.5;
+
+	tank.sandOscillation();
+
+	// tank boundary assurance
+	boundaryAssurance();
+
 	robotHead.getSpotLight().target.updateMatrixWorld();
 	controlsDefault.update();
 	onWindowResize();
@@ -1374,6 +1535,59 @@ function animate() {
 	//animation idea - death star shoot lazer and particle explosion? 
 
 	renderer.render( scene, renderCamera);
+}
+
+// assures that nemo cannot leave the fish tank
+function boundaryAssurance() {
+	// x-boundary
+	if (tank.getNemo().position.x < -tank.getWidth()/2+2) {
+		tank.getNemo().position.x = -tank.getWidth()/2+2;
+	}
+	else if (tank.getNemo().position.x > tank.getWidth()/2-2) {
+		tank.getNemo().position.x = tank.getWidth()/2-2;
+	}
+
+	// y-boundary
+	if (tank.getNemo().position.y < -tank.getHeight()/2+12) {
+		tank.getNemo().position.y = -tank.getHeight()/2+12;
+	}
+	else if (tank.getNemo().position.y > tank.getHeight()/2-12) {
+		tank.getNemo().position.y = tank.getHeight()/2-12;
+	}
+
+	// z-boundary
+	if (tank.getNemo().position.z < -tank.getDepth()/2+2) {
+		tank.getNemo().position.z = -tank.getDepth()/2+2;
+	}
+	else if (tank.getNemo().position.z > tank.getDepth()/2-2) {
+		tank.getNemo().position.z = tank.getDepth()/2-2;
+	}
+}
+
+// keyboard controls
+document.onkeydown = function() {
+	const key = event.key;
+
+	if (!isPov && key == 'w') {
+		tank.getNemo().position.z -= 1;
+	}
+	else if (!isPov && key == 'a') {
+		tank.getNemo().position.x -= 1;
+	}
+	else if (!isPov && key == 's') {
+		tank.getNemo().position.z += 1;
+	}
+	else if (!isPov && key == 'd') {
+		tank.getNemo().position.x += 1;
+	}
+	else if (!isPov && key == ' ') {
+		tank.getNemo().shouldFloat = true;
+		tank.getNemo().position.y += 1;
+	}
+}
+
+document.onkeyup = function() {
+	tank.getNemo().shouldFloat = false;
 }
 
 function onWindowResize() {
