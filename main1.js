@@ -938,9 +938,32 @@ class Chest extends THREE.Object3D {
 
 class Bookshelf extends THREE.Object3D {
 
+	booktopTexture = new THREE.TextureLoader().load("../pictures/booktop.jpg");
+	bookfaceTexture = new THREE.TextureLoader().load("../pictures/book1.jpg");
+	bookfaceTexture2 = new THREE.TextureLoader().load("../pictures/book2.jpg");
+	bookspineTexture1 = new THREE.TextureLoader().load("../pictures/bookspine1.jpg");
+	bookspineTexture2 = new THREE.TextureLoader().load("../pictures/bookspine2.jpg");
+	bookspineTexture3 = new THREE.TextureLoader().load("../pictures/bookspine3.jpg");
+	bookspineTexture4 = new THREE.TextureLoader().load("../pictures/bookspine4.jpg");
+	bookspineTexture5 = new THREE.TextureLoader().load("../pictures/bookspine5.jpg");
+
+	booktop = new THREE.MeshPhongMaterial({map: this.booktopTexture});
+	bookface1 = new THREE.MeshPhongMaterial({map: this.bookfaceTexture}); 
+	bookface2 = new THREE.MeshPhongMaterial({map: this.bookfaceTexture2}); 
+	bookspine1 = new THREE.MeshPhongMaterial({map: this.bookspineTexture1});
+	bookspine2 = new THREE.MeshPhongMaterial({map: this.bookspineTexture2});
+	bookspine3 = new THREE.MeshPhongMaterial({map: this.bookspineTexture3});
+	bookspine4 = new THREE.MeshPhongMaterial({map: this.bookspineTexture4});
+	bookspine5 = new THREE.MeshPhongMaterial({map: this.bookspineTexture5});
 	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
 
-	//base = new THREE.Mesh(new THREE.BoxGeometry(6, 15, 4), this.brown);
+	//right, left, top, bottom. front, back
+	bookMats = [this.bookface1, this.bookspine1, this.booktop, this.bookspine1, this.bookspine1, this.bookspine1];
+	bookMats2 = [this.bookface1, this.bookspine1, this.booktop, this.bookspine1, this.bookspine2, this.bookspine2];
+	bookMats3 = [this.bookface1, this.bookspine1, this.booktop, this.bookspine1, this.bookspine3, this.bookspine3];
+	bookMats4 = [this.bookface2, this.bookspine1, this.booktop, this.bookspine1, this.bookspine4, this.bookspine4];
+	bookMats5 = [this.bookface1, this.bookspine1, this.booktop, this.bookspine1, this.bookspine5, this.bookspine5];
+
 	top = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
 	bottom = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
 	back = new THREE.Mesh(new THREE.BoxGeometry(6, 14, 1), this.brown);
@@ -949,6 +972,14 @@ class Bookshelf extends THREE.Object3D {
 	bottomShelf = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
 	topShelf = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
 	middleShelf = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
+
+	//books
+	book1 = new THREE.Mesh(new THREE.BoxGeometry(2.5, 2.8, 2), this.bookMats);
+	book2 = new THREE.Mesh(new THREE.BoxGeometry(4, 2.2, 2), this.bookMats2);
+	book3 = new THREE.Mesh(new THREE.BoxGeometry(2.5, 2.6, 1.9), this.bookMats3);
+	book4 = new THREE.Mesh(new THREE.BoxGeometry(4, 2.4, 1.9), this.bookMats4);
+	book5 = new THREE.Mesh(new THREE.BoxGeometry(4.6, 2.4, 2.2), this.bookMats5);
+
 
 	constructor() {
 		super();
@@ -969,12 +1000,52 @@ class Bookshelf extends THREE.Object3D {
 		this.add(this.bottomShelf)
 		this.add(this.topShelf)
 		this.add(this.middleShelf)
+
+		//books
+		this.book1.position.y += 1.4
+		this.book1.position.x -= 1.6
+		this.book2.position.y += 4.5;
+		this.book2.position.x += 1;
+		this.book3.position.y += 1.4
+		this.book3.position.x += 1;
+		this.book4.position.y -= 2.2;
+		this.book4.position.x -= 1.6;
+		this.book5.position.y -= 5.5;
+
+		this.add(this.book1)
+		this.add(this.book2)
+		this.add(this.book3)
+		this.add(this.book4)
+		this.add(this.book5);
 	}
 }
 
 class Bookshelf2 extends THREE.Object3D {
+	booktopTexture = new THREE.TextureLoader().load("../pictures/booktop.jpg");
+	bookfaceTexture = new THREE.TextureLoader().load("../pictures/book1.jpg");
+	bookfaceTexture2 = new THREE.TextureLoader().load("../pictures/book2.jpg");
+	bookspineTexture1 = new THREE.TextureLoader().load("../pictures/bookspine5.jpg");
+	bookspineTexture2 = new THREE.TextureLoader().load("../pictures/bookspine4.jpg");
+	bookspineTexture3 = new THREE.TextureLoader().load("../pictures/bookspine7.jpg");
+	bookspineTexture4 = new THREE.TextureLoader().load("../pictures/bookspine3.jpg");
+	bookspineTexture5 = new THREE.TextureLoader().load("../pictures/bookspine6.jpg");
 
+	booktop = new THREE.MeshPhongMaterial({map: this.booktopTexture});
+	bookface1 = new THREE.MeshPhongMaterial({map: this.bookfaceTexture}); 
+	bookface2 = new THREE.MeshPhongMaterial({map: this.bookfaceTexture2}); 
+	bookspine1 = new THREE.MeshPhongMaterial({map: this.bookspineTexture1});
+	bookspine2 = new THREE.MeshPhongMaterial({map: this.bookspineTexture2});
+	bookspine3 = new THREE.MeshPhongMaterial({map: this.bookspineTexture3});
+	bookspine4 = new THREE.MeshPhongMaterial({map: this.bookspineTexture4});
+	bookspine5 = new THREE.MeshPhongMaterial({map: this.bookspineTexture5});
 	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
+
+	//right, left, top, bottom. front, back
+	bookMats = [this.bookface1, this.bookspine1, this.booktop, this.bookspine1, this.bookspine1, this.bookspine1];
+	bookMats2 = [this.bookface1, this.bookspine1, this.booktop, this.bookspine1, this.bookspine2, this.bookspine2];
+	bookMats3 = [this.bookface1, this.bookspine1, this.booktop, this.bookspine1, this.bookspine3, this.bookspine3];
+	bookMats4 = [this.bookface2, this.bookspine1, this.booktop, this.bookspine1, this.bookspine4, this.bookspine4];
+	bookMats5 = [this.bookface1, this.bookspine1, this.booktop, this.bookspine1, this.bookspine5, this.bookspine5];
 
 	//base = new THREE.Mesh(new THREE.BoxGeometry(6, 15, 4), this.brown);
 	top = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
@@ -985,6 +1056,13 @@ class Bookshelf2 extends THREE.Object3D {
 	bottomShelf = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
 	topShelf = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
 	middleShelf = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 4), this.brown);
+
+	//books
+	book1 = new THREE.Mesh(new THREE.BoxGeometry(2.5, 2.8, 2), this.bookMats);
+	book2 = new THREE.Mesh(new THREE.BoxGeometry(4, 2.7, 2), this.bookMats2);
+	book3 = new THREE.Mesh(new THREE.BoxGeometry(2.5, 2.6, 1.9), this.bookMats3);
+	book4 = new THREE.Mesh(new THREE.BoxGeometry(5, 2.4, 1.9), this.bookMats4);
+	book5 = new THREE.Mesh(new THREE.BoxGeometry(5.5, 2.4, 2.2), this.bookMats5);
 
 	constructor() {
 		super();
@@ -1005,21 +1083,105 @@ class Bookshelf2 extends THREE.Object3D {
 		this.add(this.bottomShelf)
 		this.add(this.topShelf)
 		this.add(this.middleShelf)
+
+		//books
+		this.book1.position.y += 1.4
+		this.book1.position.x -= 1.6
+		this.book2.position.y += 5;
+		this.book2.position.x -= 1;
+		this.book3.position.y += 1.4
+		this.book3.position.x += 1;
+		this.book4.position.y -= 2.2;
+		this.book4.position.x -= 0.4;
+		this.book5.position.y -= 5.5;
+
+		this.add(this.book1)
+		this.add(this.book2)
+		this.add(this.book3)
+		this.add(this.book4)
+		this.add(this.book5);
 	}
 }
 
-
-
 class Desk extends THREE.Object3D {
+	computerTopTexture = new THREE.TextureLoader().load("../pictures/macScreen.jpeg");
+	computerBottomTexture = new THREE.TextureLoader().load("../pictures/macKeyboard.jpg");
+	pizzaboxTexture = new THREE.TextureLoader().load("../pictures/pizzabox.png");
 
 	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
+	black = new THREE.MeshPhongMaterial( {color: 0xFFFFFF});
+	black2 = new THREE.MeshPhongMaterial( {color: 0x010101});
+	gray = new THREE.MeshPhongMaterial( {color: 0xC0C0C0});
+	pizzacolor = new THREE.MeshPhongMaterial( {color: 0xe8e5d8});
+	trashMat = new THREE.MeshPhongMaterial({map: this.trashTexture})
+	computerTopMat = new THREE.MeshPhongMaterial({map: this.computerTopTexture})
+	computerBottomMat = new THREE.MeshPhongMaterial({map: this.computerBottomTexture})
+	computerTopMats = [this.gray, this.gray, this.gray, this.gray, this.computerTopMat, this.gray];
+	pizzaBoxMat = new THREE.MeshPhongMaterial({map: this.pizzaboxTexture})
 
-	base = new THREE.Mesh(new THREE.BoxGeometry(10, 6.5, 4), this.brown);
+
+	top = new THREE.Mesh(new THREE.BoxGeometry(10, 0.3, 4), this.brown); 
+	back = new THREE.Mesh(new THREE.BoxGeometry(10, 6.3, 0.3), this.brown);
+	left = new THREE.Mesh(new THREE.BoxGeometry(0.3, 6.3, 4.2), this.brown);
+	right = new THREE.Mesh(new THREE.BoxGeometry(0.3, 6.3, 4.2), this.brown);
+	trash = new THREE.Mesh(new THREE.BoxGeometry(2, 3, 2), this.black);
+	trashRing = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.2, 2.1), this.black2);
+	computerTop = new THREE.Mesh(new THREE.BoxGeometry(3, 2.3, 0.05), this.computerTopMats);
+	computerBottom = new THREE.Mesh(new THREE.BoxGeometry(3, 0.05, 2.3), this.computerBottomMat);
+	pizzaBox = new THREE.Mesh(new THREE.BoxGeometry(4, 0.25, 4), this.pizzaBoxMat);
 
 	constructor() {
 		super();
 
-		this.add(this.base);
+		//trashcan
+		this.trash.position.x -= 7;
+		this.trash.position.y -= 1.5;
+		this.trashRing.position.x -= 7;
+		this.trashRing.position.y -= 0.5;
+		const trashcan = new THREE.Group();
+		trashcan.add(this.trash);
+		trashcan.add(this.trashRing);
+
+
+		//computer
+		this.computerTop.position.y += 4.5;
+		this.computerTop.position.z -= 1.4;
+		this.computerTop.rotation.x = 345 * Math.PI/180;
+		this.computerBottom.position.y += 3.3;
+
+		const macbook = new THREE.Group();
+		macbook.position.x -= 0.5;
+		macbook.add(this.computerTop);
+		macbook.add(this.computerBottom);
+
+		//pizzaBox?
+		this.pizzaBox.position.y += 3.5;
+		this.pizzaBox.position.x += 4;
+		this.pizzaBox.position.z += 0.5
+		this.pizzaBox.rotation.y = 20 * Math.PI/180;
+		this.add(this.pizzaBox);
+
+		//plant or lamp or notebook?
+
+
+		//desk
+		this.top.position.y += 3;
+		this.back.position.z -= 2;
+		this.left.position.x -= 5;
+		this.left.position.z -= 0.05;
+		this.right.position.x += 5;
+		this.right.position.z += 0.05;
+
+		const desk = new THREE.Group();
+		desk.add(this.top);
+		desk.add(this.back);
+		desk.add(this.left)
+		desk.add(this.right)
+
+
+		this.add(desk);
+		this.add(macbook);
+		this.add(trashcan)
 	}
 }
 
@@ -1185,22 +1347,20 @@ class Room extends THREE.Object3D {
 		this.fishtank.position.x += 5.5;
 
 		this.bookshelf.position.y += 4.3;
-		//TEMP REMOVE THIS ONE
-		this.bookshelf.position.z += 2
-		//TEMP REMOVE THIS ONE
-
-
+		this.bookshelf2.position.y += 4.3;
 		this.bookshelf.position.x += 13;
 		this.bookshelf.position.z -= 8.5;
 		this.bookshelf.rotation.y = 270	 * Math.PI/180;
-
 		this.bookshelf2.rotation.y = 270 * Math.PI/180;
-		this.bookshelf2.position.y += 4.3;
 		this.bookshelf2.position.x += 13;
 		this.bookshelf2.position.z -= 2;
-		this.desk.rotation.y = 90 * Math.PI/180;
-		this.desk.position.x += 13;
+
+		this.desk.rotation.y = 270 * Math.PI/180;
+		this.desk.position.x += 12.5;
 		this.desk.position.z += 9;
+
+		//FIX DESK POSITION
+		
 
 		this.robot.position.z -= 9;
 		this.robot.position.y += 3;
