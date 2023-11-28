@@ -1051,6 +1051,222 @@ class Fishtank extends THREE.Object3D {
 		this.add(this.tank);
 	}
 }
+
+class Room extends THREE.Object3D {
+
+	texture = new THREE.TextureLoader().load('../pictures/floor.jpg' );
+	bricks = new THREE.TextureLoader().load('../pictures/wallpaper2.jpg' );
+	rugmap = new THREE.TextureLoader().load('../pictures/rug1.jpg' );
+	doormap = new THREE.TextureLoader().load('../pictures/door.png' );
+	windowmap1 = new THREE.TextureLoader().load('../pictures/window2crop.jpg' );
+	postermap1 = new THREE.TextureLoader().load('../pictures/poster1.jpg' );
+	postermap2 = new THREE.TextureLoader().load('../pictures/poster2.jpg' );
+	postermap3 = new THREE.TextureLoader().load('../pictures/poster3.webp' );
+	postermap4 = new THREE.TextureLoader().load('../pictures/poster4.jpg' );
+	postermap5 = new THREE.TextureLoader().load('../pictures/fishboat.jpg' );
+
+	floorMaterial = new THREE.MeshPhongMaterial( { map: this.texture, castShadow: true, receiveShadow: true, color:0x999999} );
+	wallMaterial = new THREE.MeshPhongMaterial( { map: this.bricks, castShadow: true, receiveShadow: true} );
+	material2 = new THREE.MeshPhongMaterial( { color: 0xffffff } );
+	rugMaterial = new THREE.MeshPhongMaterial( { map: this.rugmap, castShadow: true, receiveShadow: true} );
+	doorMaterial = new THREE.MeshPhongMaterial( { map: this.doormap} );
+	windowMaterial1 = new THREE.MeshPhongMaterial( { map: this.windowmap1,} );
+	posterMaterial1 = new THREE.MeshPhongMaterial( { map: this.postermap1} );
+	posterMaterial2 = new THREE.MeshPhongMaterial( { map: this.postermap2} );
+	posterMaterial3 = new THREE.MeshPhongMaterial( { map: this.postermap3} );
+	posterMaterial4 = new THREE.MeshPhongMaterial( { map: this.postermap4} );
+	posterMaterial5 = new THREE.MeshPhongMaterial( { map: this.postermap5} );
+
+	wall = new THREE.BoxGeometry(30, 20.6, 0.72	);
+	wallTop = new THREE.BoxGeometry(30, 30, 0.7);
+
+	//objects
+	floor = new THREE.Mesh(this.wallTop, this.floorMaterial);
+	ceiling = new THREE.Mesh(this.wallTop, this.material2);
+	rug = new THREE.Mesh(new THREE.BoxGeometry(20, 20, 0.2), this.rugMaterial)
+	poster1 = new THREE.Mesh(new THREE.BoxGeometry(7, 10, 0.2), this.posterMaterial1)
+	poster2 = new THREE.Mesh(new THREE.BoxGeometry(7, 10, 0.2), this.posterMaterial2)
+	poster3 = new THREE.Mesh(new THREE.BoxGeometry(3, 4, 0.2), this.posterMaterial3)
+	poster4 = new THREE.Mesh(new THREE.BoxGeometry(7, 10, 0.2), this.posterMaterial4)
+	poster5 = new THREE.Mesh(new THREE.BoxGeometry(3, 4, 0.2), this.posterMaterial5)
+
+	wall1 = new THREE.Mesh(this.wall, this.wallMaterial);
+	wall2 = new THREE.Mesh(this.wall, this.wallMaterial);
+	wall3 = new THREE.Mesh(this.wall, this.wallMaterial);
+	door = new THREE.Mesh(new THREE.BoxGeometry(7, 15, 0.9), this.doorMaterial);
+	window1 = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 0.9), this.windowMaterial1);
+	window2 = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 0.9), this.windowMaterial1);
+	robot = new Robot();
+	lamp = new Lamp();
+	bed = new Bed();
+	dresser = new Dresser();
+	nightstand = new Nightstand();
+	bookshelf = new Bookshelf();
+	bookshelf2 = new Bookshelf2();
+	chest = new Chest();
+	desk = new Desk();
+	fishtank = new Fishtank();
+
+	//lights
+	lampLight = new THREE.PointLight(0xDDDDDD, 300 , 1000, 2);
+	
+
+
+	constructor() {
+		super()
+
+		//transformations
+		this.floor.rotation.x = 90 * Math.PI/180;
+		this.floor.position.y -= 3;
+		this.floor.receiveShadow = true;
+
+		this.ceiling.material.side = THREE.DoubleSide;
+		this.ceiling.rotation.x = 90 * Math.PI/180;
+		this.ceiling.position.y += 17;
+		this.ceiling.receiveShadow = true;
+
+		
+		this.rug.rotation.x = 90 * Math.PI/180;
+		this.rug.position.y -= 2.73
+
+		this.poster1.position.x -= 14.6;
+		this.poster1.position.y += 9.5;
+		this.poster1.position.z -= 9.3;
+		this.poster1.rotation.y = 90 * Math.PI/180;
+		this.poster1.rotation.z = 359 * Math.PI/180;
+
+		this.poster2.position.x -= 14.6;
+		this.poster2.position.y += 8.5;
+		this.poster2.position.z += 1;
+		this.poster2.rotation.y = 90 * Math.PI/180;
+		this.poster2.rotation.z = 1 * Math.PI/180;
+
+		this.poster3.position.z -= 14.6;
+		this.poster3.position.x -= 3.5; 
+		this.poster3.position.y += 8.5;
+
+		this.poster4.position.z -= 14.6;
+		this.poster4.position.x -= 10.5;
+		this.poster4.position.y += 11.5;
+
+		this.poster5.position.z -= 14.6;
+		this.poster5.position.x -= 3.5; 
+		this.poster5.position.y += 13.5;
+
+		this.door.rotation.y = 90 * Math.PI/180;
+		this.door.position.x -= 15;
+		this.door.position.y += 4.7;
+		this.door.position.z += 10;
+
+		this.window1.position.z -= 15;
+		this.window1.position.y += 9;
+		this.window1.position.x += 5;
+
+		this.window2.rotation.y = 90 * Math.PI/180;
+		this.window2.position.y += 9;
+		this.window2.position.x += 15;
+		this.window2.position.z += 9;
+
+		this.lamp.position.y += 11;
+		this.lamp.scale.x = 0.8;
+		this.lamp.scale.y = 0.8;
+		this.lamp.scale.z = 0.8;
+		this.bed.scale.x = 1.5
+		this.bed.scale.z = 1.5
+		this.bed.scale.y = 1.5
+		this.bed.position.y -= 1.8;
+		this.bed.position.x -= 10.5;
+		this.bed.position.z -= 7;
+		this.dresser.position.z -= 13
+		this.dresser.position.x += 5;
+		this.dresser.position.y += 0.5;
+		this.chest.position.x -= 10.5;
+		this.chest.position.z += 2.5;
+		this.chest.position.y -= 1;
+		this.nightstand.position.z -= 13;
+		this.nightstand.position.x -= 4;
+		this.fishtank.position.z -= 13;
+		this.fishtank.position.y += 5.3;
+		this.fishtank.position.x += 5.5;
+
+		this.bookshelf.position.y += 4.3;
+		//TEMP REMOVE THIS ONE
+		this.bookshelf.position.z += 2
+		//TEMP REMOVE THIS ONE
+
+
+		this.bookshelf.position.x += 13;
+		this.bookshelf.position.z -= 8.5;
+		this.bookshelf.rotation.y = 270	 * Math.PI/180;
+
+		this.bookshelf2.rotation.y = 270 * Math.PI/180;
+		this.bookshelf2.position.y += 4.3;
+		this.bookshelf2.position.x += 13;
+		this.bookshelf2.position.z -= 2;
+		this.desk.rotation.y = 90 * Math.PI/180;
+		this.desk.position.x += 13;
+		this.desk.position.z += 9;
+
+		this.robot.position.z -= 9;
+		this.robot.position.y += 3;
+		this.robot.position.x-= 10;
+		this.robot.receiveShadow = true;
+		this.robot.scale.x = 0.3;
+		this.robot.scale.y = 0.3;
+		this.robot.scale.z = 0.3;
+		this.wall1.position.z -= 15;
+		this.wall1.position.y += 7;
+		this.wall2.rotation.y = 90 * Math.PI/180;
+		this.wall2.position.x -= 15;
+		this.wall2.position.y += 7;
+		this.wall3.rotation.y = 90 * Math.PI/180;
+		this.wall3.position.x += 15;
+		this.wall3.position.y += 7;
+		this.wall1.receiveShadow = true;
+		this.wall2.receiveShadow = true;
+		this.wall3.receiveShadow = true;
+
+		this.lampLight.castShadow = true;
+		this.lampLight.shadow.mapSize.width = 4096
+		this.lampLight.shadow.mapSize.height = 4096
+		this.lampLight.shadow.camera.near = 0.5
+		this.lampLight.shadow.camera.far = 1000
+		this.lampLight.position.set(0, 12, 0)
+
+
+
+		//add to object
+		this.add(this.poster1)
+		this.add(this.poster2)
+		this.add(this.poster3)
+		this.add(this.poster4)
+		this.add(this.poster5)
+		this.add(this.rug);
+		this.add(this.door);
+		this.add(this.window1);
+		this.add(this.window2);
+		this.add(this.floor); 
+		this.add(this.wall1);
+		this.add(this.wall2);
+		this.add(this.wall3);
+		this.add(this.ceiling);
+		this.add(this.lamp);	
+		this.add(this.bed);
+		this.add(this.robot);
+		this.add(this.dresser);
+		this.add(this.nightstand);
+		this.add(this.bookshelf);
+		this.add(this.bookshelf2);
+		this.add(this.chest);
+		this.add(this.desk);
+		this.add(this.fishtank);
+		this.add(this.lampLight);
+	}
+
+	getLampLight() {
+		return this.lampLight;
+	}
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //renderer
 const renderer = new THREE.WebGLRenderer({antialias: true});
@@ -1082,12 +1298,12 @@ const controlsDefault = new OrbitControls(renderCamera, renderer.domElement );
 var ambientLight = new THREE.AmbientLight( 0x333333, 0.5);
 var dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.2);
 //var lampLight = new THREE.PointLight(0xFFA500, 100, 1000, 2);
-var lampLight = new THREE.PointLight(0xDDDDDD, 300 , 1000, 2);
+//var lampLight = new THREE.PointLight(0xDDDDDD, 300 , 1000, 2);
 const redSpotlight = new THREE.SpotLight(0xFFFFFF);
 const greenSpotlight = new THREE.PointLight(0x00FF00);
 
 
-const pointLightHelper = new THREE.PointLightHelper(lampLight, 1);
+//const pointLightHelper = new THREE.PointLightHelper(lampLight, 1);
 //scene.add(pointLightHelper);	
 
 //death star light
@@ -1109,16 +1325,16 @@ dirLight.castShadow = true;
 dirLight.visible = true;
 
 //sunlight
-lampLight.castShadow = true;
-lampLight.shadow.mapSize.width = 4096
-lampLight.shadow.mapSize.height = 4096
-lampLight.shadow.camera.near = 0.5
-lampLight.shadow.camera.far = 1000
-lampLight.position.set(0, 12, 0)
+// lampLight.castShadow = true;
+// lampLight.shadow.mapSize.width = 4096
+// lampLight.shadow.mapSize.height = 4096
+// lampLight.shadow.camera.near = 0.5
+// lampLight.shadow.camera.far = 1000
+// lampLight.position.set(0, 12, 0)
 
+//scene.add(lampLight);
 scene.add(dirLight);
 scene.add(ambientLight);
-scene.add(lampLight);
 scene.add(greenSpotlight);
 scene.add(redSpotlight);
 
@@ -1187,6 +1403,8 @@ const bookshelf2 = new Bookshelf2();
 const chest = new Chest();
 const desk = new Desk();
 const fishtank = new Fishtank();
+
+const room = new Room();
 
 //traverse robot to enable shadows on all objects
 robot.traverse(function( child ) { 
@@ -1312,39 +1530,43 @@ wall3.receiveShadow = true;
 
 
 
-
-
-
-
-//add to scene
-scene.add(poster1)
-scene.add(poster2)
-scene.add(poster3)
-scene.add(poster4)
-scene.add(poster5)
-scene.add(rug);
-scene.add(door);
-scene.add(window1);
-scene.add(window2);
-scene.add(floor); 
-scene.add(wall1);
-scene.add(wall2);
-scene.add(wall3);
-scene.add(ceiling);
-scene.add(lamp);	
-scene.add(bed);
-scene.add(robot);
-scene.add(dresser);
-scene.add(nightstand);
-scene.add(bookshelf);
-scene.add(bookshelf2);
-scene.add(chest);
-scene.add(desk);
-scene.add(fishtank);
+//room.position.z += 60;
+room.scale.x = 3;
+room.scale.y = 3;
+room.scale.z = 3;
+scene.add(room);
 
 const tank = new Tank(new THREE.Vector3(0, -5, 0));
-// tank.scale.set(0.025, 0.025, 0.025);
+tank.position.z -= 20;
 scene.add(tank);
+
+//add to scene
+// scene.add(poster1)
+// scene.add(poster2)
+// scene.add(poster3)
+// scene.add(poster4)
+// scene.add(poster5)
+// scene.add(rug);
+// scene.add(door);
+// scene.add(window1);
+// scene.add(window2);
+// scene.add(floor); 
+// scene.add(wall1);
+// scene.add(wall2);
+// scene.add(wall3);
+// scene.add(ceiling);
+// scene.add(lamp);	
+// scene.add(bed);
+// scene.add(robot);
+// scene.add(dresser);
+// scene.add(nightstand);
+// scene.add(bookshelf);
+// scene.add(bookshelf2);
+// scene.add(chest);
+// scene.add(desk);
+// scene.add(fishtank);
+
+
 
 //TODO add details to dresser, nightstand, bookshelf, and desk
 //TODO Decorations - chair, books/objects on shelves posters/pictures desklamp, trash can, computer/laptop, led lights around ceiling
@@ -1406,7 +1628,8 @@ const emissiveParams = {
 headFolder.addColor(emissiveParams, 'emissive')
 		   .onChange((value) =>  leftEye.material.emissive.set(value)).name("Eye Color");
 
-		
+	
+var lampLight = room.getLampLight();
 //toggle buttons
 headFolder.add(leftEye.material, 'wireframe').name("Wireframe Eyes");
 lightFolder.add(ambientLight, 'visible').name("Toggle Ambient Light");
