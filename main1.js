@@ -2,10 +2,6 @@ import * as THREE from '../modules/three.module.js';
 import { OrbitControls } from '../modules/OrbitControls.js';
 import { GUI } from '../modules/dat.gui.module.js';
 
-//We should include our robots in the fish tank / world as easter eggs
-
-var isPov = false;
-
 // creates the tank class
 class Tank extends THREE.Object3D {
 	constructor(position) {
@@ -1108,9 +1104,8 @@ class Room extends THREE.Object3D {
 	fishtank = new Fishtank();
 
 	//lights
-	lampLight = new THREE.PointLight(0xDDDDDD, 300 , 1000, 2);
-	
-
+	//lampLight = new THREE.PointLight(0xDDDDDD, 300 , 1000, 2);  -- scale 1 intensity
+	lampLight = new THREE.PointLight(0xDDDDDD, 2800, 1000, 2); 
 
 	constructor() {
 		super()
@@ -1266,6 +1261,10 @@ class Room extends THREE.Object3D {
 	getLampLight() {
 		return this.lampLight;
 	}
+
+	getRobot() {
+		return this.robot;
+	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //renderer
@@ -1289,7 +1288,7 @@ bgTexture.minFilter = THREE.LinearFilter;
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 camera.name = "DefaultCamera";
 //DEFAULT CAMERA FOR ROOM POSITION
-camera.position.set(0,7,23);
+camera.position.set(0,20,130);
 //camera.position.set(0,2,6);
 var renderCamera = camera;
 const controlsDefault = new OrbitControls(renderCamera, renderer.domElement );
@@ -1300,17 +1299,11 @@ var dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.2);
 //var lampLight = new THREE.PointLight(0xFFA500, 100, 1000, 2);
 //var lampLight = new THREE.PointLight(0xDDDDDD, 300 , 1000, 2);
 const redSpotlight = new THREE.SpotLight(0xFFFFFF);
-const greenSpotlight = new THREE.PointLight(0x00FF00);
+
 
 
 //const pointLightHelper = new THREE.PointLightHelper(lampLight, 1);
 //scene.add(pointLightHelper);	
-
-//death star light
-greenSpotlight.position.set(-95, 15, -90);
-greenSpotlight.intensity = 300;
-greenSpotlight.angle = 180* Math.PI/180;
-greenSpotlight.distance = 1000;
 
 //overhead spotlight
 redSpotlight.position.set(0, 10, 1);
@@ -1324,266 +1317,32 @@ dirLight.position.set(0, 1, 10);
 dirLight.castShadow = true;
 dirLight.visible = true;
 
-//sunlight
-// lampLight.castShadow = true;
-// lampLight.shadow.mapSize.width = 4096
-// lampLight.shadow.mapSize.height = 4096
-// lampLight.shadow.camera.near = 0.5
-// lampLight.shadow.camera.far = 1000
-// lampLight.position.set(0, 12, 0)
 
-//scene.add(lampLight);
-scene.add(dirLight);
-scene.add(ambientLight);
-scene.add(greenSpotlight);
-scene.add(redSpotlight);
-
-//textures
-const texture = new THREE.TextureLoader().load('../pictures/floor.jpg' );
-const bricks = new THREE.TextureLoader().load('../pictures/wallpaper2.jpg' );
-const rugmap = new THREE.TextureLoader().load('../pictures/rug1.jpg' );
-const doormap = new THREE.TextureLoader().load('../pictures/door.png' );
-const windowmap1 = new THREE.TextureLoader().load('../pictures/window2crop.jpg' );
-const postermap1 = new THREE.TextureLoader().load('../pictures/poster1.jpg' );
-const postermap2 = new THREE.TextureLoader().load('../pictures/poster2.jpg' );
-const postermap3 = new THREE.TextureLoader().load('../pictures/poster3.webp' );
-const postermap4 = new THREE.TextureLoader().load('../pictures/poster4.jpg' );
-const postermap5 = new THREE.TextureLoader().load('../pictures/fishboat.jpg' );
-
-
-//materials
-const material = new THREE.MeshPhongMaterial( { color: 0x00ff00, emissive: 0x00FF00, shininess: 90, specular: 0x00ee00, transparent: true, opacity: 0.95} );
-const material2 = new THREE.MeshPhongMaterial( { color: 0xffffff } );
-const material3 = new THREE.MeshBasicMaterial( { color: 0xddffdd} );
-const material4 = new THREE.MeshBasicMaterial( { color: 0xaaccaa} );
-const material5 = new THREE.MeshPhongMaterial( { color: 0xfedcba, emissive: 0x990000, transparent: true, opacity: 0.9, shininess: 90, specular: 0x00ff00} );
-const material6 = new THREE.MeshPhongMaterial( { color: 0xabcdef, transparent: true, opacity: 0.7} );
-const material7 = new THREE.MeshLambertMaterial( { color: 0xfedcba, flatShading: true});
-const material8 = new THREE.MeshPhongMaterial( { color: 0x80fc66, emissive: 0x111111, shininess: 120, specular: 0xff0fff, transparent: true, opacity: 0.8});
-const material9 = new THREE.MeshLambertMaterial( { color: 0x00ff00});
-var floorMaterial = new THREE.MeshPhongMaterial( { map: texture, castShadow: true, receiveShadow: true, color:0x999999} );
-var wallMaterial = new THREE.MeshPhongMaterial( { map: bricks, castShadow: true, receiveShadow: true} );
-var rugMaterial = new THREE.MeshPhongMaterial( { map: rugmap, castShadow: true, receiveShadow: true} );
-var doorMaterial = new THREE.MeshPhongMaterial( { map: doormap} );
-var windowMaterial1 = new THREE.MeshPhongMaterial( { map: windowmap1,} );
-var posterMaterial1 = new THREE.MeshPhongMaterial( { map: postermap1} );
-var posterMaterial2 = new THREE.MeshPhongMaterial( { map: postermap2} );
-var posterMaterial3 = new THREE.MeshPhongMaterial( { map: postermap3} );
-var posterMaterial4 = new THREE.MeshPhongMaterial( { map: postermap4} );
-var posterMaterial5 = new THREE.MeshPhongMaterial( { map: postermap5} );
-
-//geometries 
-const plane = new THREE.PlaneGeometry(30, 30, 1, 1 );
-const wall = new THREE.BoxGeometry(30, 20.6, 0.72	);
-const wallTop = new THREE.BoxGeometry(30, 30, 0.7);
 //objects
-
-const floor = new THREE.Mesh(wallTop, floorMaterial);
-const ceiling = new THREE.Mesh(wallTop, material2);
-const rug = new THREE.Mesh(new THREE.BoxGeometry(20, 20, 0.2), rugMaterial)
-const poster1 = new THREE.Mesh(new THREE.BoxGeometry(7, 10, 0.2), posterMaterial1)
-const poster2 = new THREE.Mesh(new THREE.BoxGeometry(7, 10, 0.2), posterMaterial2)
-const poster3 = new THREE.Mesh(new THREE.BoxGeometry(3, 4, 0.2), posterMaterial3)
-const poster4 = new THREE.Mesh(new THREE.BoxGeometry(7, 10, 0.2), posterMaterial4)
-const poster5 = new THREE.Mesh(new THREE.BoxGeometry(3, 4, 0.2), posterMaterial5)
-
-const wall1 = new THREE.Mesh(wall, wallMaterial);
-const wall2 = new THREE.Mesh(wall, wallMaterial);
-const wall3 = new THREE.Mesh(wall, wallMaterial);
-const door = new THREE.Mesh(new THREE.BoxGeometry(7, 15, 0.9), doorMaterial);
-const window1 = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 0.9), windowMaterial1);
-const window2 = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 0.9), windowMaterial1);
-const robot = new Robot();
-const lamp = new Lamp();
-const bed = new Bed();
-const dresser = new Dresser();
-const nightstand = new Nightstand();
-const bookshelf = new Bookshelf();
-const bookshelf2 = new Bookshelf2();
-const chest = new Chest();
-const desk = new Desk();
-const fishtank = new Fishtank();
-
 const room = new Room();
-
-//traverse robot to enable shadows on all objects
-robot.traverse(function( child ) { 
-    if ( child.type == 'Mesh' ) {
-        child.castShadow = true;
-        child.receiveShadow = true;
-    }
-} );
-
+const robot = room.getRobot();
+const tank = new Tank(new THREE.Vector3(0, -5, 0));
 
 //transformations
-floor.material.side = THREE.DoubleSide;
-floor.rotation.x = 90 * Math.PI/180;
-floor.position.y -= 3;
-floor.receiveShadow = true;
-
-ceiling.material.side = THREE.DoubleSide;
-ceiling.rotation.x = 90 * Math.PI/180;
-ceiling.position.y += 17;
-ceiling.receiveShadow = true;
-
-rug.rotation.x = 90 * Math.PI/180;
-rug.position.y -= 2.73
-
-poster1.position.x -= 14.6;
-poster1.position.y += 9.5;
-poster1.position.z -= 9.3;
-poster1.rotation.y = 90 * Math.PI/180;
-poster1.rotation.z = 359 * Math.PI/180;
-
-poster2.position.x -= 14.6;
-poster2.position.y += 8.5;
-poster2.position.z += 1;
-poster2.rotation.y = 90 * Math.PI/180;
-poster2.rotation.z = 1 * Math.PI/180;
-
-poster3.position.z -= 14.6;
-poster3.position.x -= 3.5; 
-poster3.position.y += 8.5;
-
-poster4.position.z -= 14.6;
-poster4.position.x -= 10.5;
-poster4.position.y += 11.5;
-
-poster5.position.z -= 14.6;
-poster5.position.x -= 3.5; 
-poster5.position.y += 13.5;
-
-door.rotation.y = 90 * Math.PI/180;
-door.position.x -= 15;
-door.position.y += 4.7;
-door.position.z += 10;
-
-window1.position.z -= 15;
-window1.position.y += 9;
-window1.position.x += 5;
-
-window2.rotation.y = 90 * Math.PI/180;
-window2.position.y += 9;
-window2.position.x += 15;
-window2.position.z += 9;
-
-lamp.position.y += 11;
-lamp.scale.x = 0.8;
-lamp.scale.y = 0.8;
-lamp.scale.z = 0.8;
-bed.scale.x = 1.5
-bed.scale.z = 1.5
-bed.scale.y = 1.5
-bed.position.y -= 1.8;
-bed.position.x -= 10.5;
-bed.position.z -= 7;
-dresser.position.z -= 13
-dresser.position.x += 5;
-dresser.position.y += 0.5;
-chest.position.x -= 10.5;
-chest.position.z += 2.5;
-chest.position.y -= 1;
-nightstand.position.z -= 13;
-nightstand.position.x -= 4;
-fishtank.position.z -= 13;
-fishtank.position.y += 5.3;
-fishtank.position.x += 5.5;
-
-
-bookshelf.position.y += 4.3;
-//TEMP REMOVE THIS ONE
-bookshelf.position.z += 2
-//TEMP REMOVE THIS ONE
-
-
-bookshelf.position.x += 13;
-bookshelf.position.z -= 8.5;
-bookshelf.rotation.y = 270	 * Math.PI/180;
-
-bookshelf2.rotation.y = 270 * Math.PI/180;
-bookshelf2.position.y += 4.3;
-bookshelf2.position.x += 13;
-bookshelf2.position.z -= 2;
-desk.rotation.y = 90 * Math.PI/180;
-desk.position.x += 13;
-desk.position.z += 9;
-
-robot.position.z -= 9;
-robot.position.y += 3;
-robot.position.x-= 10;
-robot.receiveShadow = true;
-robot.scale.x = 0.3;
-robot.scale.y = 0.3;
-robot.scale.z = 0.3;
-wall1.position.z -= 15;
-wall1.position.y += 7;
-wall2.rotation.y = 90 * Math.PI/180;
-wall2.position.x -= 15;
-wall2.position.y += 7;
-wall3.rotation.y = 90 * Math.PI/180;
-wall3.position.x += 15;
-wall3.position.y += 7;
-wall1.receiveShadow = true;
-wall2.receiveShadow = true;
-wall3.receiveShadow = true;
-
-
-
-
-//room.position.z += 60;
+room.position.z += 60;
 room.scale.x = 3;
 room.scale.y = 3;
 room.scale.z = 3;
-scene.add(room);
 
-const tank = new Tank(new THREE.Vector3(0, -5, 0));
-tank.position.z -= 20;
-scene.add(tank);
+tank.position.z -= 60;
 
 //add to scene
-// scene.add(poster1)
-// scene.add(poster2)
-// scene.add(poster3)
-// scene.add(poster4)
-// scene.add(poster5)
-// scene.add(rug);
-// scene.add(door);
-// scene.add(window1);
-// scene.add(window2);
-// scene.add(floor); 
-// scene.add(wall1);
-// scene.add(wall2);
-// scene.add(wall3);
-// scene.add(ceiling);
-// scene.add(lamp);	
-// scene.add(bed);
-// scene.add(robot);
-// scene.add(dresser);
-// scene.add(nightstand);
-// scene.add(bookshelf);
-// scene.add(bookshelf2);
-// scene.add(chest);
-// scene.add(desk);
-// scene.add(fishtank);
+scene.add(dirLight);
+scene.add(ambientLight);
+scene.add(redSpotlight);
 
-
+scene.add(room);
+scene.add(tank);
 
 //TODO add details to dresser, nightstand, bookshelf, and desk
 //TODO Decorations - chair, books/objects on shelves posters/pictures desklamp, trash can, computer/laptop, led lights around ceiling
-
-
-
-//TODO
-/*c
-ideas for room - bed, dresser, table, chairs, 
-tv, couch, bookshelf, window, door, carpet, rug, lamp, fan, clock, mirror, picture
-FISHTANK - separate camera toggle for fishtank view 
-
-
-
-
-*/ 
-
+//TODO fish tank camera
+//TODO include our robots in the fish tank / world as easter eggs
 
 //gui robot parts
 const robotHead = robot.getRobotHead();
@@ -1636,13 +1395,18 @@ lightFolder.add(ambientLight, 'visible').name("Toggle Ambient Light");
 lightFolder.add(dirLight, 'visible').name("Toggle Directional Light");
 lightFolder.add(redSpotlight, 'visible').name("Toggle Spotlight");
 lightFolder.add(lampLight, 'visible').name("Toggle Lamplight");
-lightFolder.add(lampLight, 'intensity', 50, 2000).name("Light Intensity");
+lightFolder.add(lampLight, 'intensity', 500, 8000).name("Light Intensity");
 const colorParams = {
 	color: lampLight.color.getHex()
 };
 lightFolder.addColor(colorParams, 'color')
 .onChange((value) =>  lampLight.color.set(value)).name("Light Color");
 
+
+//animations variables 
+var isPov = false;
+
+/*
 //keyboard controls
 var xSpeed = 0.05;
 var ySpeed = 0.05;
@@ -1709,13 +1473,8 @@ function onDocumentKeyDown(event) {
 		//headspin animation, make rotate value 0 to start
 		zValue = 0
 	}
-
-	
 };
-
-
-
-
+*/
 
 animate();
 
@@ -1734,6 +1493,7 @@ function animate() {
 	controlsDefault.update();
 	onWindowResize();
 	
+	/*
 	//animation check
 	//flip
 	if (zValue == 124) {
@@ -1754,8 +1514,7 @@ function animate() {
 		yValue += 2
 		clock.getElapsedTime(1);
 	}
-
-	//animation idea - death star shoot lazer and particle explosion? 
+	*/
 
 	renderer.render( scene, renderCamera);
 }
@@ -1842,173 +1601,6 @@ function drawSphereNew(radius, width, height) {
 	//sphere.translate(-3, -3, -2);
 	return sphere;
 
-
-	//HEART GEOMETRY
-/*
-const heartShape = new THREE.Shape();
-
-heartShape.moveTo( 25, 25 );
-heartShape.bezierCurveTo( 25, 25, 20, 0, 0, 0 );
-heartShape.bezierCurveTo( - 30, 0, - 30, 35, - 30, 35 );
-heartShape.bezierCurveTo( - 30, 55, - 10, 77, 25, 95 );
-heartShape.bezierCurveTo( 60, 77, 80, 55, 80, 35 );
-heartShape.bezierCurveTo( 80, 35, 80, 0, 50, 0 );
-heartShape.bezierCurveTo( 35, 0, 25, 25, 25, 25 );
-
-const extrudeSettings = { 
-	depth: 8, 
-	bevelEnabled: true, 
-	bevelSegments: 2, 
-	steps: 2, 
-	bevelSize: 1, 
-	bevelThickness: 1 
-};
-
-const geometry = new THREE.ExtrudeGeometry( heartShape, extrudeSettings );
-
-const mesh = new THREE.Mesh( geometry, rugMaterial);
-
-mesh.scale.x = 0.1;
-mesh.scale.y = 0.1;
-mesh.scale.z = 0.1;
-scene.add(mesh);
-*/
-/*
-for (let i = 0; i < 4; i++) {
-	let r = 10;
-	let posX = (-5 + i) * 12.5;
-	let wireGeom = facetedBox(r, r, r, i * 0.5, true);
-	let wire = new THREE.LineSegments(
-	  wireGeom,
-	  new THREE.LineBasicMaterial({ color: Math.random() * 0x808080 + 0x808080 })
-	);
-	wire.position.x = posX;
-	scene.add(wire);
-  
-	let geom = facetedBox(r, r, r, i * 0.5, false);
-	let mesh = new THREE.Mesh(
-	  geom,
-	  new THREE.MeshStandardMaterial({
-		color: Math.random() * 0x808080 + 0x808080,
-		flatShading: true
-	  })
-	);
-	mesh.position.x = posX;
-	scene.add(mesh);
-  }
-
-  function facetedBox(w, h, d, f, isWireframed){
-    let hw = w * 0.5, hh = h * 0.5, hd = d * 0.5;
-    let vertices = [
-      // px
-      hw, hh - f, -hd + f,   // 0
-      hw, -hh + f, -hd + f,  // 1
-      hw, -hh + f, hd - f,   // 2
-      hw, hh - f, hd - f,    // 3
-      
-      // pz
-      hw - f, hh - f, hd,    // 4
-      hw - f, -hh + f, hd,   // 5
-      -hw + f, -hh + f, hd,  // 6
-      -hw + f, hh - f, hd,   // 7
-      
-      // nx
-      -hw, hh - f, hd - f,   // 8
-      -hw, -hh + f, hd - f,  // 9
-      -hw, -hh + f, -hd + f, // 10
-      -hw, hh - f, -hd + f,  // 11
-      
-      // nz
-      -hw + f, hh - f, -hd,  // 12
-      -hw + f, -hh + f, -hd, // 13
-      hw - f, -hh + f, -hd,  // 14
-      hw - f, hh - f, -hd,   // 15
-      
-      // py
-      hw - f, hh, -hd + f,   // 16
-      hw - f, hh, hd - f,    // 17
-      -hw + f, hh, hd - f,   // 18
-      -hw + f, hh, -hd + f,  // 19
-      
-      // ny
-      hw - f, -hh, -hd + f,  // 20
-      hw - f, -hh, hd - f,   // 21
-      -hw + f, -hh, hd - f,  // 22
-      -hw + f, -hh, -hd + f  // 23
-    ];
-    
-    let indices = [
-      0, 2, 1, 3, 2, 0,
-      4, 6, 5, 7, 6, 4,
-      8, 10, 9, 11, 10, 8,
-      12, 14, 13, 15, 14, 12,
-      16, 18, 17, 19, 18, 16,
-      20, 21, 22, 23, 20, 22,
-      
-      // link the sides
-      3, 5, 2, 4, 5, 3,
-      7, 9, 6, 8, 9, 7,
-      11, 13, 10, 12, 13, 11,
-      15, 1, 14, 0, 1, 15,
-      
-      // link the lids
-      // top
-      16, 3, 0, 17, 3, 16,
-      17, 7, 4, 18, 7, 17,
-      18, 11, 8, 19, 11, 18,
-      19, 15, 12, 16, 15, 19,
-      // bottom
-      1, 21, 20, 2, 21, 1,
-      5, 22, 21, 6, 22, 5,
-      9, 23, 22, 10, 23, 9,
-      13, 20, 23, 14, 20, 13,
-      
-      // corners
-      // top
-      3, 17, 4,
-      7, 18, 8,
-      11, 19, 12,
-      15, 16, 0,
-      // bottom
-      2, 5, 21,
-      6, 9, 22,
-      10, 13, 23,
-      14, 1, 20
-    ];
-    
-    let indicesWire = [
-      0, 1, 1, 2, 2, 3, 3, 0,
-      4, 5, 5, 6, 6, 7, 7, 4,
-      8, 9, 9, 10, 10, 11, 11, 8,
-      12, 13, 13, 14, 14, 15, 15, 12,
-      16, 17, 17, 18, 18, 19, 19, 16,
-      20, 21, 21, 22, 22, 23, 23, 20,
-      // link the sides
-      2, 5, 3, 4,     //px - pz
-      6, 9, 7, 8,     // pz - nx
-      10, 13, 11, 12, // nx - nz
-      15, 0, 14, 1,   // nz - px
-      
-      // link the lids
-      // top
-      16, 0, 17, 3,   // px
-      17, 4, 18, 7,   // pz
-      18, 8, 19, 11,  // nx
-      19, 12, 16, 15,  // nz
-      // bottom
-      20, 1, 21, 2,
-      21, 5, 22, 6,
-      22, 9, 23, 10,
-      23, 13, 20, 14
-    ];
-    
-    let geom = new THREE.BufferGeometry();
-    geom.setAttribute("position", new THREE.BufferAttribute(new Float32Array(vertices), 3));
-    geom.setIndex(isWireframed ? indicesWire : indices);
-    if (!isWireframed) geom.computeVertexNormals();
-    return geom;
-  }
-*/
 }
 
 
