@@ -17,7 +17,7 @@ class Tank extends THREE.Object3D {
 		const tankEdgesG = new THREE.EdgesGeometry(tankG)
 		const tankM = new THREE.LineBasicMaterial({
 			color: 0x000000,
-			linewidth: 0.5
+			linewidth: 0.75
 		});
 		const tankEdges = new THREE.LineSegments(tankEdgesG, tankM);
 		this.add(tankEdges);
