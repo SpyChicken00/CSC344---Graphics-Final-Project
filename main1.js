@@ -1152,7 +1152,7 @@ class Desk extends THREE.Object3D {
 		macbook.add(this.computerBottom);
 
 		//pizzaBox
-		this.pizzaBox.position.y += 3.5;
+		this.pizzaBox.position.y += 3.25;
 		this.pizzaBox.position.x += 4;
 		this.pizzaBox.position.z += 0.5
 		this.pizzaBox.rotation.y = 20 * Math.PI/180;
@@ -1189,15 +1189,23 @@ class Chair extends THREE.Object3D {
 
 	gray = new THREE.MeshPhongMaterial( {color: 0x777777});
 	black = new THREE.MeshPhongMaterial( {color: 0x010101});
+	chairMat = new THREE.MeshPhongMaterial({map: this.chairTexture})
 
 	sphere = new THREE.SphereGeometry(2, 32, 32);
+	smallsphere = new THREE.SphereGeometry(0.4, 32, 32);
 
-	base = new THREE.Mesh(new THREE.BoxGeometry(7, 4, 4), this.gray);
-	back = new THREE.Mesh(this.sphere, this.gray);
+	base = new THREE.Mesh(new THREE.BoxGeometry(7, 4, 4), this.chairMat);
+	back = new THREE.Mesh(this.sphere, this.chairMat);
 	backpost = new THREE.Mesh(new THREE.BoxGeometry(0.5, 2.5, 0.5), this.black);
-	bottompost = new THREE.Mesh(new THREE.BoxGeometry(0.5, 2, 0.5), this.black);
-	bottom = new THREE.Mesh(this.sphere, this.gray);
+	bottompost = new THREE.Mesh(new THREE.BoxGeometry(0.5, 2.5, 0.5), this.black);
+	bottom = new THREE.Mesh(this.sphere, this.chairMat);
 
+	chairleg1 = new THREE.Mesh(new THREE.BoxGeometry(0.5, 2, 0.5), this.black);
+	chairleg2 = new THREE.Mesh(new THREE.BoxGeometry(0.5, 2, 0.5), this.black);
+	chairleg3 = new THREE.Mesh(new THREE.BoxGeometry(0.5, 2, 0.5), this.black);
+	chairwheel1 = new THREE.Mesh(this.smallsphere, this.black);
+	chairwheel2 = new THREE.Mesh(this.smallsphere, this.black);
+	chairwheel3 = new THREE.Mesh(this.smallsphere, this.black);
 
 	constructor() {
 		super();
@@ -1206,19 +1214,44 @@ class Chair extends THREE.Object3D {
 		this.back.scale.x = 1.25
 		this.back.position.y += 3.5;
 		this.back.position.z -= 1.5
-
 		this.bottom.scale.y = 0.35
 		this.bottom.scale.x = 1.25
-
 		this.backpost.position.y += 1
 		this.backpost.position.z -= 1.5
 		this.bottompost.position.y -= 1
+		this.chairleg1.rotation.z = 55 * Math.PI/180;
+		this.chairleg1.rotation.x = 55 * Math.PI/180;
+		this.chairleg1.position.y -= 2.25;
+		this.chairleg1.position.x += 0.8
+		this.chairleg1.position.z -= 0.5
+		this.chairleg2.rotation.x = -55 * Math.PI/180;
+		this.chairleg2.position.y -= 2;
+		this.chairleg2.position.z += 0.6;
+		this.chairleg3.rotation.z = -55 * Math.PI/180;
+		this.chairleg3.rotation.x =  55 * Math.PI/180;
+		this.chairleg3.position.y -= 2.25;
+		this.chairleg3.position.x -= 0.8;
+		this.chairleg3.position.z -= 0.5;
+		this.chairwheel1.position.y -= 2.7;
+		this.chairwheel1.position.z += 1.5;
+		this.chairwheel2.position.y -= 2.7;
+		this.chairwheel2.position.z -= 1;
+		this.chairwheel2.position.x -= 1.9
+		this.chairwheel3.position.y -= 2.7;
+		this.chairwheel3.position.z -= 1;
+		this.chairwheel3.position.x += 1.9
 		
 		const chair = new THREE.Group();
 		chair.add(this.back);
 		chair.add(this.bottom);
 		chair.add(this.backpost);
 		chair.add(this.bottompost);
+		chair.add(this.chairleg1);
+		chair.add(this.chairleg2);
+		chair.add(this.chairleg3);
+		chair.add(this.chairwheel1);
+		chair.add(this.chairwheel2);
+		chair.add(this.chairwheel3);
 
 		chair.position.y += 1;
 		
@@ -1358,9 +1391,6 @@ class Room extends THREE.Object3D {
 		this.chest.position.y -= 1;
 		this.nightstand.position.z -= 13;
 		this.nightstand.position.x -= 4;
-		// this.fishtank.position.z -= 13;
-		// this.fishtank.position.y += 5.3;
-		// this.fishtank.position.x += 5.5;
 
 		this.bookshelf.position.y += 4.3;
 		this.bookshelf2.position.y += 4.3;
@@ -1377,7 +1407,8 @@ class Room extends THREE.Object3D {
 
 		this.chair.position.z += 8;
 		this.chair.rotation.y = 75 * Math.PI/180;
-		this.chair.position.x += 8;
+		this.chair.position.x += 10;
+		this.chair.position.y -= 0.5
 		
 
 		this.robot.position.z -= 9;
