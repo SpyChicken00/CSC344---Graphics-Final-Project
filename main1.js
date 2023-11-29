@@ -1154,14 +1154,14 @@ class Desk extends THREE.Object3D {
 		macbook.add(this.computerTop);
 		macbook.add(this.computerBottom);
 
-		//pizzaBox?
+		//pizzaBox
 		this.pizzaBox.position.y += 3.5;
 		this.pizzaBox.position.x += 4;
 		this.pizzaBox.position.z += 0.5
 		this.pizzaBox.rotation.y = 20 * Math.PI/180;
 		this.add(this.pizzaBox);
 
-		//plant or lamp or notebook?
+		//desklamp + family photo
 
 
 		//desk
@@ -1186,7 +1186,7 @@ class Desk extends THREE.Object3D {
 }
 
 class Chair extends THREE.Object3D {
-
+	//TODO FINISH CHAIR
 	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
 
 	base = new THREE.Mesh(new THREE.BoxGeometry(7, 4, 4), this.brown);
@@ -1499,8 +1499,7 @@ scene.add(redSpotlight);
 scene.add(room);
 scene.add(tank);
 
-//TODO add details to dresser, nightstand, bookshelf, and desk
-//TODO Decorations - chair, books/objects on shelves posters/pictures desklamp, trash can, computer/laptop, led lights around ceiling
+//TODO Decorations - chair, desklamp, led lights around ceiling
 //TODO fish tank camera
 //TODO include our robots in the fish tank / world as easter eggs
 
