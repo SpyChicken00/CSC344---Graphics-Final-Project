@@ -75,7 +75,7 @@ class Tank extends THREE.Object3D {
 	}
 
 	getNemoRadius() {
-		return this.getNemoRadius;
+		return this.nemoRadius;
 	}
 
 	sandOscillation() {
