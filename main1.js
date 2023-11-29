@@ -731,9 +731,6 @@ class Bed extends THREE.Object3D {
 	//headboard 
 	//squishmallow sphere/oval?
 
-
-
-
 	constructor() {
 		super();
 		//transformations
@@ -1186,31 +1183,48 @@ class Desk extends THREE.Object3D {
 }
 
 class Chair extends THREE.Object3D {
-	//TODO FINISH CHAIR
-	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
+	//TODO FINISH CHAIR - add cloth texture instead of gray? 
 
-	base = new THREE.Mesh(new THREE.BoxGeometry(7, 4, 4), this.brown);
+	chairTexture = new THREE.TextureLoader().load("../pictures/chaircloth.jpg");
 
-	constructor() {
-		super();
+	gray = new THREE.MeshPhongMaterial( {color: 0x777777});
+	black = new THREE.MeshPhongMaterial( {color: 0x010101});
 
-		this.add(this.base);
-	}
-}
+	sphere = new THREE.SphereGeometry(2, 32, 32);
 
-/*
-class Fishtank extends THREE.Object3D {
-	water = new THREE.MeshPhongMaterial( {color: 0x22dddd, transparent: true, opacity: 0.5});
+	base = new THREE.Mesh(new THREE.BoxGeometry(7, 4, 4), this.gray);
+	back = new THREE.Mesh(this.sphere, this.gray);
+	backpost = new THREE.Mesh(new THREE.BoxGeometry(0.5, 2.5, 0.5), this.black);
+	bottompost = new THREE.Mesh(new THREE.BoxGeometry(0.5, 2, 0.5), this.black);
+	bottom = new THREE.Mesh(this.sphere, this.gray);
 
-	tank = new THREE.Mesh(new THREE.BoxGeometry(6, 3, 4), this.water);
 
 	constructor() {
 		super();
 
-		this.add(this.tank);
+		this.back.scale.z = 0.35
+		this.back.scale.x = 1.25
+		this.back.position.y += 3.5;
+		this.back.position.z -= 1.5
+
+		this.bottom.scale.y = 0.35
+		this.bottom.scale.x = 1.25
+
+		this.backpost.position.y += 1
+		this.backpost.position.z -= 1.5
+		this.bottompost.position.y -= 1
+		
+		const chair = new THREE.Group();
+		chair.add(this.back);
+		chair.add(this.bottom);
+		chair.add(this.backpost);
+		chair.add(this.bottompost);
+
+		chair.position.y += 1;
+		
+		this.add(chair)
 	}
 }
-*/
 
 class Room extends THREE.Object3D {
 
@@ -1265,7 +1279,7 @@ class Room extends THREE.Object3D {
 	bookshelf2 = new Bookshelf2();
 	chest = new Chest();
 	desk = new Desk();
-	// fishtank = new Fishtank();
+	chair = new Chair();
 
 	//lights
 	//lampLight = new THREE.PointLight(0xDDDDDD, 300 , 1000, 2);  -- scale 1 intensity
@@ -1361,7 +1375,9 @@ class Room extends THREE.Object3D {
 		this.desk.position.x += 12.5;
 		this.desk.position.z += 9;
 
-		//FIX DESK POSITION
+		this.chair.position.z += 8;
+		this.chair.rotation.y = 75 * Math.PI/180;
+		this.chair.position.x += 8;
 		
 
 		this.robot.position.z -= 9;
@@ -1416,6 +1432,7 @@ class Room extends THREE.Object3D {
 		this.add(this.bookshelf2);
 		this.add(this.chest);
 		this.add(this.desk);
+		this.add(this.chair);
 		// this.add(this.fishtank);
 		this.add(this.lampLight);
 	}
