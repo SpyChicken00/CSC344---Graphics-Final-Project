@@ -41,7 +41,8 @@ class Tank extends THREE.Object3D {
 		this.position.set(x, y, z);
 
 		// adds the camera fish
-		const nemoG = new THREE.SphereGeometry(0.5);
+		this.nemoRadius = 0.25;
+		const nemoG = new THREE.SphereGeometry(this.nemoRadius);
 		const nemoM = new THREE.MeshBasicMaterial({
 			color: 0xEA4700
 		});
@@ -52,8 +53,8 @@ class Tank extends THREE.Object3D {
 		// tells if nemo should not sink
 		this.nemo.shouldFloat = false;
 		// makes the sand for the fish tank
-		this.sand = new Sand(234, 448);
-		this.sand.position.set(0, -this.height/2 + 0.06, -0.2);
+		this.sand = new Sand(238, 448);
+		this.sand.position.set(0, -this.height/2 + 0.06, 0);
 		this.add(this.sand);
 	}
 
@@ -71,6 +72,10 @@ class Tank extends THREE.Object3D {
 
 	getNemo() {
 		return this.nemo;
+	}
+
+	getNemoRadius() {
+		return this.getNemoRadius;
 	}
 
 	sandOscillation() {
@@ -1699,28 +1704,29 @@ function animate() {
 
 // assures that nemo cannot leave the fish tank
 function boundaryAssurance() {
+	let rad = tank.getNemoRadius();
 	// x-boundary
-	if (tank.getNemo().position.x < -tank.getWidth()/2+0.5) {
-		tank.getNemo().position.x = -tank.getWidth()/2+0.5;
+	if (tank.getNemo().position.x < -tank.getWidth()/2+rad) {
+		tank.getNemo().position.x = -tank.getWidth()/2+rad;
 	}
-	else if (tank.getNemo().position.x > tank.getWidth()/2-0.5) {
-		tank.getNemo().position.x = tank.getWidth()/2-0.5;
+	else if (tank.getNemo().position.x > tank.getWidth()/2-rad) {
+		tank.getNemo().position.x = tank.getWidth()/2-rad;
 	}
 
 	// y-boundary
-	if (tank.getNemo().position.y < -tank.getHeight()/2+1.5) {
-		tank.getNemo().position.y = -tank.getHeight()/2+1.5;
+	if (tank.getNemo().position.y < -tank.getHeight()/2+1+rad) {
+		tank.getNemo().position.y = -tank.getHeight()/2+1+rad;
 	}
-	else if (tank.getNemo().position.y > tank.getHeight()/2-2.5) {
-		tank.getNemo().position.y = tank.getHeight()/2-2.5;
+	else if (tank.getNemo().position.y > tank.getHeight()/2-2-rad) {
+		tank.getNemo().position.y = tank.getHeight()/2-2-rad;
 	}
 
 	// z-boundary
-	if (tank.getNemo().position.z < -tank.getDepth()/2+0.5) {
-		tank.getNemo().position.z = -tank.getDepth()/2+0.5;
+	if (tank.getNemo().position.z < -tank.getDepth()/2+rad) {
+		tank.getNemo().position.z = -tank.getDepth()/2+rad;
 	}
-	else if (tank.getNemo().position.z > tank.getDepth()/2-0.5) {
-		tank.getNemo().position.z = tank.getDepth()/2-0.5;
+	else if (tank.getNemo().position.z > tank.getDepth()/2-rad) {
+		tank.getNemo().position.z = tank.getDepth()/2-rad;
 	}
 }
 
