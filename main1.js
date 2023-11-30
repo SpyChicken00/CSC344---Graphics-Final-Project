@@ -53,7 +53,7 @@ class Tank extends THREE.Object3D {
 		// tells if nemo should not sink
 		this.nemo.shouldFloat = false;
 		// makes the sand for the fish tank
-		this.sand = new Sand(238, 448);
+		this.sand = new Sand(this.depth/0.05-2, this.width/0.04-2);
 		this.sand.position.set(0, -this.height/2 + 0.06, 0);
 		this.add(this.sand);
 	}
