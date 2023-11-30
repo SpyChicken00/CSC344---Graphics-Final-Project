@@ -98,18 +98,22 @@ class Sand extends THREE.Object3D {
 		// the total number of particles is the x amount * the z amount
 		const numParticles = this.AMOUNTX * this.AMOUNTZ;
 
+		this.oscillation();
+	}
+
+	oscillation() {
 		// makes a position array without a fixed size
 		const uPosTemp = [];
 
 		for (let ix = -this.AMOUNTX/2; ix < this.AMOUNTX/2; ix++) {
 			for (let iz = 0; iz < this.AMOUNTZ; iz++) { 
 				let x = ix * 0.05;
-				let y = (Math.sin(iz * 0.15) * 0.2) + 0.2;
+				let y = (Math.cos((iz + this.count) * 0.15) * 0.2) + 0.2;
 				let z = -(iz * 0.04 - ((this.AMOUNTZ * 0.04) / 2));
 
 				// calculates the coordinates
 				// and adds them to the array
-				for (let iy = y; iy >= 0; iy -= 0.075) {
+				for (let iy = y; iy >= 0; iy -= 0.1) {
 					uPosTemp.push(x);
 					uPosTemp.push(iy);
 					uPosTemp.push(z);
@@ -128,6 +132,8 @@ class Sand extends THREE.Object3D {
 			uPositions[j] = uPosTemp[j];
 		}
 
+		this.clear();
+
 		// creates a particle system using the fixed size array
 		const sandG = new THREE.BufferGeometry();
 		sandG.setAttribute('position', new THREE.BufferAttribute(uPositions, 3));
@@ -135,13 +141,12 @@ class Sand extends THREE.Object3D {
 			color: 0xffaabc,
 			size: 0.1
 		})
-		const sand = new THREE.Points(sandG, sandM);
-		sand.rotation.y = 90 * Math.PI/180;
-		this.add(sand);
-	}
+		this.sand = new THREE.Points(sandG, sandM);
+		this.sand.rotation.y = 90 * Math.PI/180;
+		this.add(this.sand);
 
-	oscillation() {
-
+		// increases the count to make the oscillation work
+		this.count += 1;
 	}
 }
 
