@@ -98,6 +98,7 @@ class Sand extends THREE.Object3D {
 		// the total number of particles is the x amount * the z amount
 		const numParticles = this.AMOUNTX * this.AMOUNTZ;
 
+		// constructs the sand
 		this.oscillation();
 	}
 
@@ -105,19 +106,30 @@ class Sand extends THREE.Object3D {
 		// makes a position array without a fixed size
 		const uPosTemp = [];
 
+		// push all the pixels with the oscillating drape on the top
+		// then straight surfaces on the sides and bottom
 		for (let ix = -this.AMOUNTX/2; ix < this.AMOUNTX/2; ix++) {
 			for (let iz = 0; iz < this.AMOUNTZ; iz++) { 
 				let x = ix * 0.05;
 				let y = (Math.cos((iz + this.count) * 0.15) * 0.2) + 0.2;
 				let z = -(iz * 0.04 - ((this.AMOUNTZ * 0.04) / 2));
 
-				// calculates the coordinates
+				// calculates the coordinates for the top drape
 				// and adds them to the array
-				for (let iy = y; iy >= 0; iy -= 0.1) {
-					uPosTemp.push(x);
-					uPosTemp.push(iy);
-					uPosTemp.push(z);
+				uPosTemp.push(x);
+				uPosTemp.push(y);
+				uPosTemp.push(z);
+
+				// sides
+				if (ix == -this.AMOUNTX/2 || ix == this.AMOUNTX/2-1 || iz == 0 || iz == this.AMOUNTZ-1) {
+					for (let iy = y; iy >= 0; iy -= 0.1) {
+						uPosTemp.push(x);
+						uPosTemp.push(iy);
+						uPosTemp.push(z);
+					}
 				}
+
+				// bottom
 				uPosTemp.push(x);
 				uPosTemp.push(0);
 				uPosTemp.push(z);
@@ -132,6 +144,7 @@ class Sand extends THREE.Object3D {
 			uPositions[j] = uPosTemp[j];
 		}
 
+		// replaces the sand geometry every time
 		this.clear();
 
 		// creates a particle system using the fixed size array
