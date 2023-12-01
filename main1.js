@@ -574,18 +574,40 @@ class RobotLeg extends THREE.Object3D {
 	foot = new RobotFoot();
 	lowerLeg = new RobotLowerLeg();
 	upperLeg = new RobotLowerLeg();
+	leg = new THREE.Group();
+	lowerLegGroup = new THREE.Group();
+
+	gridHelper = new THREE.GridHelper( 100, 100 );
 	
 	constructor() {
 		super();
 		//transformations
 		this.upperLeg.position.y += 2.5;
+
+		this.lowerLeg.position.y -= 3.5;
+		this.foot.position.y -= 3.5;
+		this.lowerLeg.position.z += 0.6;
+		this.foot.position.z += 0.6;
+		this.upperLeg.position.y -= 3.5;
+		this.upperLeg.position.z += 0.6;
 		
 		//assign to group to set center of rotation?
-		const leg = new THREE.Group();
-		leg.add(this.foot)
-		leg.add(this.lowerLeg);
-		leg.add(this.upperLeg);
-		this.add(leg);
+		
+		//this.leg.add(this.foot)
+		//this.leg.add(this.lowerLeg);
+
+		this.lowerLegGroup.add(this.foot);
+		this.lowerLegGroup.add(this.lowerLeg);
+		this.leg.add(this.lowerLegGroup);
+		this.leg.add(this.upperLeg);
+		this.leg.position.y -= 2.1;
+		this.leg.position.z += 0.1;
+		this.add(this.leg);
+		//this.add(this.gridHelper)
+	}
+
+	getLowerLeg() {
+		return this.lowerLegGroup;
 	}
 }
 
@@ -596,6 +618,9 @@ class Robot extends THREE.Object3D {
 	robotArmLeft = new RobotArm();
 	robotLegLeft = new RobotLeg();
 	robotLegRight = new RobotLeg();
+	upperBody = new THREE.Group();
+
+	gridHelper = new THREE.GridHelper( 100, 100 );
 
 	constructor() {
 		super()
@@ -631,12 +656,43 @@ class Robot extends THREE.Object3D {
 		this.robotLegRight.position.y -= 4.3;
 		this.robotLegRight.position.z += 0.47;
 		this.robotLegRight.position.x -= 0.3;
+
+		this.robotHead.position.y += 1.8;
+		this.robotArmLeft.position.y += 1.8;
+		this.robotArmRight.position.y += 1.8;
+		this.robotBody.position.y += 1.8;
+		this.robotLegLeft.position.y += 2;
+		this.robotLegRight.position.y += 2;
+
+		this.robotLegLeft.position.y += 1.3;
+		this.robotLegLeft.position.z -= 0.5;
+		this.robotLegRight.position.y += 1.3;
+		this.robotLegRight.position.z -= 0.5;
+
+		this.robotLegLeft.position.y += 0.8;
+		this.robotLegRight.position.y += 0.8;
+		
+		this.upperBody.add(this.robotHead);
+		this.upperBody.add(this.robotBody);
+		this.upperBody.add(this.robotArmRight);
+		this.upperBody.add(this.robotArmLeft);
+
+		//this.upperBody.rotation.x = 45 * Math.PI/180;
+		//this.upperBody.position.y += 1.8;
+
+
+		//TODO get robot's quaterion value for sitting and standing, then use keyframes to animate between the two
+
+		
 		
 
-		this.add(this.robotHead);
-		this.add(this.robotBody);
-		this.add(this.robotArmRight);
-		this.add(this.robotArmLeft);
+		// this.add(this.robotHead);
+		// this.add(this.robotBody);
+		// this.add(this.robotArmRight);
+		// this.add(this.robotArmLeft);
+		
+		//this.add(this.gridHelper)
+		this.add(this.upperBody);
 		this.add(this.robotLegLeft);
 		this.add(this.robotLegRight);
 	}
@@ -655,6 +711,18 @@ class Robot extends THREE.Object3D {
 
 	getRobotArmR() {
 		return this.robotArmRight;
+	}
+
+	getUpperBody() {
+		return this.upperBody;
+	}
+
+	getRobotLegL() {
+		return this.robotLegLeft;
+	}
+
+	getRobotLegR() {
+		return this.robotLegRight;
 	}
 }
 
@@ -707,7 +775,8 @@ class Bed extends THREE.Object3D {
 	//materials
 	brown = new THREE.MeshPhongMaterial( {color: 0x2B1700});
 	gray = new THREE.MeshPhongMaterial( {color: 0x999999});
-	red = new THREE.MeshPhongMaterial( {color: 0x7dc0f1});
+	// red = new THREE.MeshPhongMaterial( {color: 0x7dc0f1});
+	red = new THREE.MeshPhongMaterial( {color: 0x31ab7d});
 	cream = new THREE.MeshPhongMaterial( {color: 0xf9f3e7});
 	pillowMat = new THREE.MeshPhongMaterial({map: this.pillowTexture})
 	pillowMat2 = new THREE.MeshPhongMaterial({map: this.pillowTexture2})
@@ -1319,12 +1388,22 @@ class Room extends THREE.Object3D {
 	desk = new Desk();
 	chair = new Chair();
 
+	originalQuat = new THREE.Quaternion();
+	newQuat = new THREE.Quaternion();
+	
+
 	//lights
 	//lampLight = new THREE.PointLight(0xDDDDDD, 300 , 1000, 2);  -- scale 1 intensity
 	lampLight = new THREE.PointLight(0xDDDDDD, 2800, 1000, 2); 
 
 	constructor() {
 		super()
+
+		//Original Robot Quaternion =  [0,0,0, 1]
+		this.originalQuat = this.robot.quaternion;
+		console.log(this.originalQuat.toJSON());
+
+ 
 
 		//transformations
 		this.floor.rotation.x = 90 * Math.PI/180;
@@ -1416,13 +1495,41 @@ class Room extends THREE.Object3D {
 		this.chair.position.y -= 0.5
 		
 
-		this.robot.position.z -= 9;
-		this.robot.position.y += 3;
-		this.robot.position.x-= 10;
-		this.robot.receiveShadow = true;
-		this.robot.scale.x = 0.3;
-		this.robot.scale.y = 0.3;
-		this.robot.scale.z = 0.3;
+		// this.robot.position.z -= 9;
+		this.robot.position.y += 1;
+		// this.robot.position.x-= 10;
+		// this.robot.receiveShadow = true;
+		// this.robot.scale.x = 0.3;
+		// this.robot.scale.y = 0.3;
+		// this.robot.scale.z = 0.3;
+		this.robot.scale.x = 1.5;
+		this.robot.scale.y = 1.5;
+		this.robot.scale.z = 1.5;
+
+
+		//sitting on bed, comment out to stand in middle 
+		this.robot.position.x -= 8;
+		this.robot.position.y += 1;
+		this.robot.position.z -= 3;
+		this.robot.getRobotLegL().getLowerLeg().rotation.x = 90 * Math.PI/180;
+		this.robot.getRobotLegR().getLowerLeg().rotation.x = 90 * Math.PI/180;
+		this.robot.getUpperBody().rotation.x = 90 * Math.PI/180;
+		this.robot.rotation.x = 270 * Math.PI/180;
+		this.robot.rotation.z = 90 * Math.PI/180;
+
+
+
+		//this.robot.rotation.x =  * Math.PI/180;
+		//this.robot.getRobotLegL().rotation.x = 270 * Math.PI/180;
+		//this.robot.getRobotLegL().getLowerLeg().rotation.x = 90 * Math.PI/180;
+
+		//[ 0.5000000000000001, -0.5000000000000001, -0.5, -0.5 ]
+		this.newQuat = this.robot.quaternion;
+		console.log(this.newQuat.toJSON());
+		
+
+
+
 		this.wall1.position.z -= 15;
 		this.wall1.position.y += 7;
 		this.wall2.rotation.y = 90 * Math.PI/180;
@@ -1479,6 +1586,14 @@ class Room extends THREE.Object3D {
 
 	getRobot() {
 		return this.robot;
+	}
+
+	getOriginal() {
+		return this.originalQuat;
+	}
+
+	getNew() {
+		return this.newQuat;
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1568,6 +1683,11 @@ const robotHandR = robotArmR.getRobotHand();
 const robotLowerArmR = robotArmR.getRobotLowerArm();
 const leftEye = robotHead.getLeftEye();
 const cameraTarget = robotHead.getCameraTarget();
+const upperBody = robot.getUpperBody();
+const robotLegLeft = robot.getRobotLegL();
+const robotLegRight = robot.getRobotLegR();
+const robotLowerLegLeft = robotLegLeft.getLowerLeg();
+const robotLowerLegRight = robotLegRight.getLowerLeg();
 
 //gui
 const gui = new GUI();
@@ -1575,9 +1695,12 @@ gui.getSaveObject();
 //folders
 const robotFolder = gui.addFolder("Robot");
 const headFolder = robotFolder.addFolder("Head");
+const upperBodyFolder = robotFolder.addFolder("Upper Body");
 const leftArmFolder = robotFolder.addFolder("Left Arm");
 const rightArmFolder = robotFolder.addFolder("Right Arm");
-const lightFolder = robotFolder.addFolder("Lights");
+const leftLegFolder = robotFolder.addFolder("Left Leg");
+const rightLegFolder = robotFolder.addFolder("Right Leg");
+const lightFolder = gui.addFolder("Lights");
 // robotFolder.open();
 // headFolder.open();
 // leftArmFolder.open()
@@ -1593,6 +1716,12 @@ rightArmFolder.add(robotArmR.rotation, 'x', 0, Math.PI * 4).name("Rotate Right A
 headFolder.add(robotHead.rotation, 'y', Math.PI * -2, Math.PI * 2).name("Shake Head");
 headFolder.add(robotHead.rotation, 'x', Math.PI * -0.13, Math.PI * 0.13).name("Nod Head");
 headFolder.add(robotHead.rotation, 'z', Math.PI * -2, Math.PI * 2).name("Rotate Head");
+upperBodyFolder.add(upperBody.rotation, 'x', Math.PI * -1, Math.PI * 1).name("Rotate Upper Body");
+leftLegFolder.add(robotLegLeft.rotation, 'x', Math.PI * -2, Math.PI * 2).name("Rotate Left Leg");
+leftLegFolder.add(robotLowerLegLeft.rotation, 'x', Math.PI * -2, Math.PI * 2).name("Rotate Lower Left Leg");
+rightLegFolder.add(robotLegRight.rotation, 'x', Math.PI * -2, Math.PI * 2).name("Rotate Right Leg");
+rightLegFolder.add(robotLowerLegRight.rotation, 'x', Math.PI * -2, Math.PI * 2).name("Rotate Lower Right Leg");
+
 
 //change eye color
 const emissiveParams = {
@@ -1690,6 +1819,50 @@ function onDocumentKeyDown(event) {
 };
 */
 
+//leyframe animation
+//import { NumberKeyframeTrack } from "three";
+
+// const times = [0, 3, 6];
+// const values = [0, 0, 0, 1, 0, 0.3, 0, 0.3, 0, 0.7071, 0, 0.7071];
+// //const values = [0, 0, 0, 1, 0, 0, 0, -1];
+
+// //const opacityKF = new THREE.NumberKeyframeTrack(".material.opacity", times, values);
+// const rotationKF = new THREE.QuaternionKeyframeTrack(".rotation", times, values);
+
+// const times1 = [0, 3, 6];
+// const values1 = [0, 1, 0, 2, 1, 2, 0, 1, 0];
+
+// const positionKF = new THREE.VectorKeyframeTrack(".position", times1, values1);
+
+// // just one track for now
+// //const tracks = [positionKF];
+// // use -1 to automatically calculate
+// // the length from the array of tracks
+// //const length = -1;
+
+// //const clip = new THREE.AnimationClip("slowmove", length, tracks);
+// const moveBlinkClip = new THREE.AnimationClip("move-n-blink", -1, [
+// 	positionKF,
+// 	//opacityKF,
+// 	//rotationKF
+//   ]);
+
+//   // create a normal, static mesh
+//   //const mesh = new Robot();
+//   //scene.add(mesh);
+  
+//   // turn it into an animated mesh by connecting it to a mixer
+//   const mixer = new THREE.AnimationMixer(room.getRobot());
+//   const action = mixer.clipAction(moveBlinkClip);
+//   // immediately set the animation to play
+//   //loop.updatables.push(mesh);
+//   action.play();	
+
+
+//TODO animation where robot turns head, raises hand and waves at fish tank
+//add gui button to trigger animation
+
+
 animate();
 
 function animate() {
@@ -1729,6 +1902,11 @@ function animate() {
 		clock.getElapsedTime(1);
 	}
 	*/
+
+	
+
+	// you must do this every frame
+	//	mixer.update(clock.getDelta());
 
 	renderer.render( scene, renderCamera);
 }
@@ -1817,5 +1995,6 @@ function drawSphereNew(radius, width, height) {
 	return sphere;
 
 }
+
 
 
