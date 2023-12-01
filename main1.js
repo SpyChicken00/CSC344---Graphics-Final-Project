@@ -53,8 +53,8 @@ class Tank extends THREE.Object3D {
 		// tells if nemo should not sink
 		this.nemo.shouldFloat = false;
 		// makes the sand for the fish tank
-		this.sand = new Sand(238, 448);
-		this.sand.position.set(0, -this.height/2 + 0.06, 0);
+		this.sand = new Sand(this.depth/0.05-2, this.width/0.04-2);
+		this.sand.position.set(0, -this.height/2 + 0.04, 0);
 		this.add(this.sand);
 	}
 
@@ -98,56 +98,65 @@ class Sand extends THREE.Object3D {
 		// the total number of particles is the x amount * the z amount
 		const numParticles = this.AMOUNTX * this.AMOUNTZ;
 
-		// numParticles is the number of particles of just the top layer
-		// it is multiplied by 3 because it hold the x, y, z coordinates separately
-		const positions = new Float32Array(numParticles * 3);
-
-		// the array placeholder
-		let i = 0;
-		for (let ix = -this.AMOUNTX/2; ix < this.AMOUNTX/2; ix++) {
-			for (let iy = 0; iy < this.AMOUNTZ; iy++) { 
-				// calculates the coordinates
-				// and adds them to the array
-				positions[i] = ix * 0.05; // x
-				positions[i + 1] = (Math.cos(iy * 0.15) * 0.2) + 0.2; // y
-				positions[i + 2] = -(iy * 0.04 - ((this.AMOUNTZ * 0.04) / 2)); // z
-
-				// increments the array placeholder by 3
-				// because there were 3 coordinates added
-				i += 3;
-			}
-		}
-
-		// creates a particle system using the position array
-		const sandG = new THREE.BufferGeometry();
-		sandG.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-		const sandM = new THREE.PointsMaterial({
-			color: 0xffaabc,
-			size: 0.1
-		});
-		this.sand = new THREE.Points(sandG, sandM);
-		this.sand.rotation.y = 90 * Math.PI/180;
-		this.add(this.sand);
+		// constructs the sand
+		this.oscillation();
 	}
 
 	oscillation() {
-		// grabs the positions array for the particles
-		const positions = this.sand.geometry.attributes.position.array;
+		// makes a position array without a fixed size
+		const uPosTemp = [];
 
-		// the array placeholder
-		let i = 0;
-		// changes the y-coordinate of each particle
-		for (let ix = 0; ix < this.AMOUNTX; ix++) {
-			for (let iy = 0; iy < this.AMOUNTZ; iy++) {
-				positions[i + 1] = (Math.cos((iy + this.count) * 0.15) * 0.2) + 0.2;
+		// push all the pixels with the oscillating drape on the top
+		// then straight surfaces on the sides and bottom
+		for (let ix = -this.AMOUNTX/2; ix < this.AMOUNTX/2; ix++) {
+			for (let iz = 0; iz < this.AMOUNTZ; iz++) { 
+				let x = ix * 0.05;
+				let y = (Math.cos((iz + this.count) * 0.15) * 0.2) + 0.2;
+				let z = -(iz * 0.04 - ((this.AMOUNTZ * 0.04) / 2));
 
-				// increments the array placeholder by 3 again
-				i += 3;
+				// calculates the coordinates for the top drape
+				// and adds them to the array
+				uPosTemp.push(x);
+				uPosTemp.push(y);
+				uPosTemp.push(z);
+
+				// sides
+				if (ix == -this.AMOUNTX/2 || ix == this.AMOUNTX/2-1 || iz == 0 || iz == this.AMOUNTZ-1) {
+					for (let iy = y; iy >= 0; iy -= 0.1) {
+						uPosTemp.push(x);
+						uPosTemp.push(iy);
+						uPosTemp.push(z);
+					}
+				}
+
+				// bottom
+				uPosTemp.push(x);
+				uPosTemp.push(0);
+				uPosTemp.push(z);
 			}
 		}
 
-		// updates the particles' positions
-		this.sand.geometry.attributes.position.needsUpdate = true;
+		// Particle Systems need fixed sized arrays
+		// so copy everything in the temporary array
+		// into the fixed size array
+		const uPositions = new Float32Array(uPosTemp.length);
+		for (let j = 0; j < uPosTemp.length; j++) {
+			uPositions[j] = uPosTemp[j];
+		}
+
+		// replaces the sand geometry every time
+		this.clear();
+
+		// creates a particle system using the fixed size array
+		const sandG = new THREE.BufferGeometry();
+		sandG.setAttribute('position', new THREE.BufferAttribute(uPositions, 3));
+		const sandM = new THREE.PointsMaterial({
+			color: 0xffaabc,
+			size: 0.1
+		})
+		this.sand = new THREE.Points(sandG, sandM);
+		this.sand.rotation.y = 90 * Math.PI/180;
+		this.add(this.sand);
 
 		// increases the count to make the oscillation work
 		this.count += 1;
