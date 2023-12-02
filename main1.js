@@ -122,7 +122,7 @@ class Sand extends THREE.Object3D {
 
 				// sides
 				if (ix == -this.AMOUNTX/2 || ix == this.AMOUNTX/2-1 || iz == 0 || iz == this.AMOUNTZ-1) {
-					for (let iy = y; iy >= 0; iy -= 0.1) {
+					for (let iy = y - 0.1; iy >= 0; iy -= 0.1) {
 						uPosTemp.push(x);
 						uPosTemp.push(iy);
 						uPosTemp.push(z);
