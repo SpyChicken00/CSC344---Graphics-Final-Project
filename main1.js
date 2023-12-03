@@ -1891,6 +1891,8 @@ function animate() {
 	boundaryAssurance();
 
 	robotHead.getSpotLight().target.updateMatrixWorld();
+	if (isPov) controlsDefault.enabled = false;
+	else controlsDefault.enabled = true;
 	controlsDefault.update();
 	onWindowResize();
 	
@@ -1928,28 +1930,29 @@ function animate() {
 // assures that nemo cannot leave the fish tank
 function boundaryAssurance() {
 	let rad = tank.getNemoRadius();
+	let buffer = 0.1;
 	// x-boundary
-	if (tank.getNemo().position.x < -tank.getWidth()/2+rad) {
-		tank.getNemo().position.x = -tank.getWidth()/2+rad;
+	if (tank.getNemo().position.x < -tank.getWidth()/2+rad+buffer) {
+		tank.getNemo().position.x = -tank.getWidth()/2+rad+buffer;
 	}
-	else if (tank.getNemo().position.x > tank.getWidth()/2-rad) {
-		tank.getNemo().position.x = tank.getWidth()/2-rad;
+	else if (tank.getNemo().position.x > tank.getWidth()/2-rad-buffer) {
+		tank.getNemo().position.x = tank.getWidth()/2-rad-buffer;
 	}
 
 	// y-boundary
-	if (tank.getNemo().position.y < -tank.getHeight()/2+1+rad) {
-		tank.getNemo().position.y = -tank.getHeight()/2+1+rad;
+	if (tank.getNemo().position.y < -tank.getHeight()/2+1+rad+buffer) {
+		tank.getNemo().position.y = -tank.getHeight()/2+1+rad+buffer;
 	}
-	else if (tank.getNemo().position.y > tank.getHeight()/2-2-rad) {
-		tank.getNemo().position.y = tank.getHeight()/2-2-rad;
+	else if (tank.getNemo().position.y > tank.getHeight()/2-2-rad-buffer) {
+		tank.getNemo().position.y = tank.getHeight()/2-2-rad-buffer;
 	}
 
 	// z-boundary
-	if (tank.getNemo().position.z < -tank.getDepth()/2+rad) {
-		tank.getNemo().position.z = -tank.getDepth()/2+rad;
+	if (tank.getNemo().position.z < -tank.getDepth()/2+rad+buffer) {
+		tank.getNemo().position.z = -tank.getDepth()/2+rad+buffer;
 	}
-	else if (tank.getNemo().position.z > tank.getDepth()/2-rad) {
-		tank.getNemo().position.z = tank.getDepth()/2-rad;
+	else if (tank.getNemo().position.z > tank.getDepth()/2-rad-buffer) {
+		tank.getNemo().position.z = tank.getDepth()/2-rad-buffer;
 	}
 }
 
