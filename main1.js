@@ -1628,6 +1628,7 @@ const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.inner
 camera.name = "DefaultCamera";
 //DEFAULT CAMERA FOR ROOM POSITION
 camera.position.set(0,20,130);
+const fishCamera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 //camera.position.set(0,2,6);
 var renderCamera = camera;
 const controlsDefault = new OrbitControls(renderCamera, renderer.domElement );
@@ -1880,7 +1881,11 @@ function animate() {
 	// sink nemo
 	if (!tank.getNemo().shouldFloat) tank.getNemo().position.y -= 0.05;
 
-	tank.sandOscillation();
+	// make fish camera follow the fish
+	fishCamera.position.copy(tank.getNemo().getWorldPosition(new THREE.Vector3()));
+	fishCamera.rotation.y = tank.getNemo().rotation.y;
+
+	// tank.sandOscillation();
 
 	// tank boundary assurance
 	boundaryAssurance();
@@ -1952,6 +1957,7 @@ function boundaryAssurance() {
 document.onkeydown = function() {
 	const key = event.key;
 
+	// controls for when the view is from the 3d camera
 	if (!isPov && key == 'w') {
 		tank.getNemo().position.z -= 0.1;
 	}
@@ -1964,9 +1970,34 @@ document.onkeydown = function() {
 	else if (!isPov && key == 'd') {
 		tank.getNemo().position.x += 0.1;
 	}
-	else if (!isPov && key == ' ') {
+	// controls for when the view is from nemo's pov
+	else if (isPov && key == 'w') {
+		tank.getNemo().position.z -= 0.1*Math.cos(tank.getNemo().rotation.y);
+		tank.getNemo().position.x -= 0.1*Math.sin(tank.getNemo().rotation.y);
+	}
+	else if (isPov && key == 'a') {
+		tank.getNemo().rotation.y += 2*Math.PI/180;
+	}
+	else if (isPov && key == 's') {
+		tank.getNemo().position.z += 0.1*Math.cos(tank.getNemo().rotation.y);
+		tank.getNemo().position.x += 0.1*Math.sin(tank.getNemo().rotation.y);
+	}
+	else if (isPov && key == 'd') {
+		tank.getNemo().rotation.y -= 2*Math.PI/180;
+	}
+	// make nemo float upwards
+	else if (key == ' ') {
 		tank.getNemo().shouldFloat = true;
 		tank.getNemo().position.y += 0.1;
+	}
+	// change views
+	else if (!isPov && key == 'c') {
+		isPov = true;
+		renderCamera = fishCamera;
+	}
+	else if (isPov && key == 'c') {
+		isPov = false;
+		renderCamera = camera;
 	}
 }
 
