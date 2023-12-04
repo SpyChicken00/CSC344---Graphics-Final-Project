@@ -50,6 +50,9 @@ class Tank extends THREE.Object3D {
 		// tells if nemo should sink
 		this.nemo.shouldFloat = false;
 
+		// tells if nemo's tail should be animated
+		this.nemo.shouldTailMove = false;
+
 		// makes the sand for the fish tank
 		this.sand = new Sand(this.depth/0.05-2, this.width/0.04-2);
 		this.sand.position.set(0, -this.height/2 + 0.04, 0);
@@ -273,15 +276,15 @@ class Fish1 extends THREE.Object3D {
 	  this.add(rightFinMesh);
   
 	  var tailFin1 = new THREE.BoxGeometry(1,3.5,.2);
-	  var tailFin1Mesh = new THREE.Mesh(tailFin1, material1);
-	  tailFin1Mesh.position.x = 7.4;
-	  this.add(tailFin1Mesh);
+	  this.tailFin1Mesh = new THREE.Mesh(tailFin1, material1);
+	  this.tailFin1Mesh.position.x = 7.4;
+	  this.add(this.tailFin1Mesh);
   
 	  var tailFin2 = new THREE.BoxGeometry(1,3.5,.2);
-	  var tailFin2Mesh = new THREE.Mesh(tailFin2, material1);
-	  tailFin2Mesh.position.x = 7.4;
-	  tailFin2Mesh.rotation.x = (90 * Math.PI) / 180;
-	  this.add(tailFin2Mesh);
+	  this.tailFin2Mesh = new THREE.Mesh(tailFin2, material1);
+	  this.tailFin2Mesh.position.x = 7.4;
+	  this.tailFin2Mesh.rotation.x = (90 * Math.PI) / 180;
+	  this.add(this.tailFin2Mesh);
   
   
 	  var jet = new THREE.CylinderGeometry(.2, .2, 2, 32);
@@ -298,12 +301,21 @@ class Fish1 extends THREE.Object3D {
 	  this.add(windUpMesh);
   
 	  var handle = new THREE.BoxGeometry(1.5,1,.1);
-	  var handleMesh = new THREE.Mesh(handle, material6);
-	  handleMesh.position.y = 4;
-	  handleMesh.position.x = 3;
-	  this.add(handleMesh);
+	  this.handleMesh = new THREE.Mesh(handle, material6);
+	  this.handleMesh.position.y = 4;
+	  this.handleMesh.position.x = 3;
+	  this.add(this.handleMesh);
   
 	  }
+	}
+
+	propellerAnimation() {
+		this.handleMesh.rotation.y += 20*Math.PI/180;
+	}
+
+	tailAnimation() {
+		this.tailFin1Mesh.rotation.x += 10*Math.PI/180;
+		this.tailFin2Mesh.rotation.x += 10*Math.PI/180;
 	}
   }
 
@@ -1883,9 +1895,9 @@ const nemoColor = {
 };
 nemoFolder.addColor(nemoColor, 'color')
 .onChange((value) =>  material1.color.set(value)).name("Color");
-nemoFolder.add(tank.getNemo().scale, 'x', 0, 0.25).name("Scale Width");
-nemoFolder.add(tank.getNemo().scale, 'y', 0, 0.25).name("Scale Height");
-nemoFolder.add(tank.getNemo().scale, 'z', 0, 0.25).name("Scale Depth");
+nemoFolder.add(tank.getNemo().scale, 'x', 0.025, 0.25).name("Scale Width");
+nemoFolder.add(tank.getNemo().scale, 'y', 0.025, 0.25).name("Scale Height");
+nemoFolder.add(tank.getNemo().scale, 'z', 0.025, 0.25).name("Scale Depth");
 nemoFolder.open();
 
 
@@ -2035,6 +2047,10 @@ function animate() {
 	requestAnimationFrame(animate);
 	let nemo = tank.getNemo();
 
+	// animate nemo
+	nemo.propellerAnimation();
+	if (nemo.shouldTailMove) nemo.tailAnimation();
+
 	// sink nemo
 	if (!tank.getNemo().shouldFloat) tank.getNemo().position.y -= 0.05;
 
@@ -2127,17 +2143,21 @@ document.onkeydown = function() {
 
 	// controls nemo's movements
 	if (key == 'w') {
+		nemo.shouldTailMove = true;
 		nemo.position.z -= 0.1*Math.cos(nemo.rotation.y + 90*Math.PI/180);
 		nemo.position.x -= 0.1*Math.sin(nemo.rotation.y + 90*Math.PI/180);
 	}
 	else if (key == 'a') {
+		nemo.shouldTailMove = true;
 		nemo.rotation.y += 2*Math.PI/180;
 	}
 	else if (key == 's') {
+		nemo.shouldTailMove = true;
 		nemo.position.z += 0.1*Math.cos(nemo.rotation.y + 90*Math.PI/180);
 		nemo.position.x += 0.1*Math.sin(nemo.rotation.y + 90*Math.PI/180);
 	}
 	else if (key == 'd') {
+		nemo.shouldTailMove = true;
 		nemo.rotation.y -= 2*Math.PI/180;
 	}
 	// make nemo float upwards
@@ -2157,7 +2177,10 @@ document.onkeydown = function() {
 }
 
 document.onkeyup = function() {
-	tank.getNemo().shouldFloat = false;
+	let nemo = tank.getNemo();
+
+	nemo.shouldFloat = false;
+	nemo.shouldTailMove = false;
 }
 
 function onWindowResize() {
