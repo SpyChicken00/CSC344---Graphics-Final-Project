@@ -44,18 +44,19 @@ class Tank extends THREE.Object3D {
 		// positions the tank
 		this.position.set(x, y, z);
 
-		// adds the camera fish
-		this.nemoRadius = 0.25;
-		const nemoG = new THREE.SphereGeometry(this.nemoRadius);
-		const nemoM = new THREE.MeshBasicMaterial({
-			color: 0xEA4700
-		});
-		this.nemo = new THREE.Mesh(nemoG, nemoM);
-		this.nemo.position.set(0, 0, 0);
+		// creates the camera fish (nemo)
+		this.nemo = new Fish1();
+		this.nemo.scale.x = 0.1;
+		this.nemo.scale.y = 0.1;
+		this.nemo.scale.z = 0.1;
 		this.add(this.nemo);
 
-		// tells if nemo should not sink
+		// tells if nemo should sink
 		this.nemo.shouldFloat = false;
+
+		// tells if nemo's tail should be animated
+		this.nemo.shouldTailMove = false;
+
 		// makes the sand for the fish tank
 		this.sand = new Sand(this.depth/0.05-2, this.width/0.04-2);
 		this.sand.position.set(0, -this.height/2 + 0.04, 0);
@@ -78,8 +79,8 @@ class Tank extends THREE.Object3D {
 		return this.nemo;
 	}
 
-	getNemoRadius() {
-		return this.nemoRadius;
+	getNemoSize() {
+		return new THREE.Box3().setFromObject(this.nemo).getSize(new THREE.Vector3());
 	}
 
 	sandOscillation() {
@@ -126,7 +127,7 @@ class Sand extends THREE.Object3D {
 
 				// sides
 				if (ix == -this.AMOUNTX/2 || ix == this.AMOUNTX/2-1 || iz == 0 || iz == this.AMOUNTZ-1) {
-					for (let iy = y; iy >= 0; iy -= 0.1) {
+					for (let iy = y - 0.1; iy >= 0; iy -= 0.1) {
 						uPosTemp.push(x);
 						uPosTemp.push(iy);
 						uPosTemp.push(z);
@@ -166,6 +167,161 @@ class Sand extends THREE.Object3D {
 		this.count += 1;
 	}
 }
+
+// fish materials and textures
+const material1 = new THREE.MeshPhongMaterial({ color: 0xFFB406, flatShading: false });
+const material2 = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, flatShading: false });
+const material3 = new THREE.MeshPhongMaterial({ color: 0x000000, flatShading: false });
+const material4 = new THREE.MeshPhongMaterial({ color: 0xBE4321, flatShading: false });
+const material5 = new THREE.MeshPhongMaterial({ color: 0xBE4321, flatShading: false });
+const material6 = new THREE.MeshPhongMaterial({ color: 0x9B9B9B, flatShading: false });
+const material7 = new THREE.MeshPhongMaterial({ color: 0x2F8899, transparent: true, opacity: 0.5, flatShading: false, side: THREE.DoubleSide });
+const material8 = new THREE.MeshPhongMaterial({ color: 0x7CEAFF, transparent: true, opacity: .95, flatShading: false, side: THREE.DoubleSide });
+const material9 = new THREE.MeshPhongMaterial({ color: 0x585858, flatShading: false });
+const material10 = new THREE.MeshPhongMaterial({ color: 0xCCCCCC, flatShading: false });
+const material11 = new THREE.MeshPhongMaterial({ color: 0x6F4521, flatShading: false });
+const material12 = new THREE.MeshPhongMaterial({ color: 0x6C6C6C, flatShading: false });
+const material13 = new THREE.MeshPhongMaterial({ color: 0xD0C347, flatShading: false });
+
+const textureLoader1 = new THREE.TextureLoader();
+const redScalesTexture = textureLoader1.load('redScales.jpeg');
+const redScalesMaterial = new THREE.MeshBasicMaterial({ map: redScalesTexture });
+
+const textureLoader2 = new THREE.TextureLoader();
+const blueGemTexture = textureLoader2.load('blueGem.jpeg');
+const blueGemMaterial = new THREE.MeshBasicMaterial({ map: blueGemTexture });
+
+const textureLoader3 = new THREE.TextureLoader();
+const rockTexture = textureLoader2.load('rockTxtr.png');
+const rockMaterial = new THREE.MeshBasicMaterial({ map: rockTexture });
+
+class Fish1 extends THREE.Object3D {
+	constructor() {
+	  super();
+	  //head
+	  {
+	  var mainHead = new THREE.CylinderGeometry(2, 2.5, 2, 32);
+	  var mainHeadMesh = new THREE.Mesh(mainHead, material1);
+	  mainHeadMesh.rotation.z =  Math.PI / 2;
+	  this.add(mainHeadMesh);
+  
+	  var frontHead = new THREE.SphereGeometry(2,32,32);
+	  var frontHeadMesh = new THREE.Mesh(frontHead, material1);
+	  frontHeadMesh.position.x = -.75;
+	  this.add(frontHeadMesh);
+	  }
+	  //eyes
+	  {
+	  var eye1 = new THREE.SphereGeometry(.5,32,32);
+	  var eye1Mesh = new THREE.Mesh(eye1, material3);
+	  eye1Mesh.position.x = -2.3;
+	  eye1Mesh.position.z = -1
+	  eye1Mesh.position.y = .5;
+	  this.add(eye1Mesh);
+  
+	  var eye2 = new THREE.SphereGeometry(.5,32,32);
+	  var eye2Mesh = new THREE.Mesh(eye1, material3);
+	  eye2Mesh.position.x = -2.3;
+	  eye2Mesh.position.z = 1
+	  eye2Mesh.position.y = .5;
+	  this.add(eye2Mesh);
+	  }
+	  //mouth
+	  {
+	  var mouth = new THREE.BoxGeometry(1,.1,1);
+	  var mouthMesh = new THREE.Mesh(mouth, material3);
+	  mouthMesh.position.x = -2.25;
+	  this.add(mouthMesh);
+	  }
+	  //body
+	  {
+	  var body1 = new THREE.CylinderGeometry(2.5,2.5, 1, 32);
+	  var body1Mesh = new THREE.Mesh(body1, material2);
+	  body1Mesh.rotation.z = Math.PI / 2;
+	  body1Mesh.position.x = 1.5;
+	  this.add(body1Mesh);
+  
+	  var body2 = new THREE.CylinderGeometry(2.5,2.5, 1.5, 32);
+	  var body2Mesh = new THREE.Mesh(body2, material1);
+	  body2Mesh.rotation.z = Math.PI / 2;
+	  body2Mesh.position.x = 2.75;
+	  this.add(body2Mesh);
+  
+	  var body3 = new THREE.CylinderGeometry(2.5,2.5, 1, 32);
+	  var body3Mesh = new THREE.Mesh(body3, material2);
+	  body3Mesh.rotation.z = Math.PI / 2;
+	  body3Mesh.position.x = 4;
+	  this.add(body3Mesh);
+  
+	  var body4 = new THREE.CylinderGeometry(2.5, 1, 2, 32);
+	  var body4Mesh = new THREE.Mesh(body4, material1);
+	  body4Mesh.rotation.z = Math.PI / 2;
+	  body4Mesh.position.x = 5.5;
+	  this.add(body4Mesh);
+  
+	  //fins
+	  var topFin = new THREE.BoxGeometry(2,2,.2);
+	  var topFinMesh = new THREE.Mesh(topFin, material1);
+	  topFinMesh.position.y = 2;
+	  topFinMesh.position.x = 0;
+	  topFinMesh.rotation.z = (15 * Math.PI) / 180;
+	  this.add(topFinMesh);
+  
+	  var leftFin = new THREE.BoxGeometry(1,.3,1.5);
+	  var leftFinMesh = new THREE.Mesh(leftFin, material1);
+	  leftFinMesh.position.z = 2.70;
+	  leftFinMesh.rotation.x = (15 * Math.PI) / 180;
+	  this.add(leftFinMesh);
+  
+	  var rightFin = new THREE.BoxGeometry(1,.3,1.5);
+	  var rightFinMesh = new THREE.Mesh(leftFin, material1);
+	  rightFinMesh.position.z = -2.70;
+	  rightFinMesh.rotation.x = (-15 * Math.PI) / 180;
+	  this.add(rightFinMesh);
+  
+	  var tailFin1 = new THREE.BoxGeometry(1,3.5,.2);
+	  this.tailFin1Mesh = new THREE.Mesh(tailFin1, material1);
+	  this.tailFin1Mesh.position.x = 7.4;
+	  this.add(this.tailFin1Mesh);
+  
+	  var tailFin2 = new THREE.BoxGeometry(1,3.5,.2);
+	  this.tailFin2Mesh = new THREE.Mesh(tailFin2, material1);
+	  this.tailFin2Mesh.position.x = 7.4;
+	  this.tailFin2Mesh.rotation.x = (90 * Math.PI) / 180;
+	  this.add(this.tailFin2Mesh);
+  
+  
+	  var jet = new THREE.CylinderGeometry(.2, .2, 2, 32);
+	  var jetMesh = new THREE.Mesh(jet, material6);
+	  jetMesh.position.y = -.02;
+	  jetMesh.position.x = 7;
+	  jetMesh.rotation.z = (90 * Math.PI) / 180;
+	  this.add(jetMesh);
+  
+	  var windUp = new THREE.CylinderGeometry(.2, .2, 2, 32);
+	  var windUpMesh = new THREE.Mesh(windUp, material6);
+	  windUpMesh.position.y = 3.5;
+	  windUpMesh.position.x = 3;
+	  this.add(windUpMesh);
+  
+	  var handle = new THREE.BoxGeometry(1.5,1,.1);
+	  this.handleMesh = new THREE.Mesh(handle, material6);
+	  this.handleMesh.position.y = 4;
+	  this.handleMesh.position.x = 3;
+	  this.add(this.handleMesh);
+  
+	  }
+	}
+
+	propellerAnimation() {
+		this.handleMesh.rotation.y += 20*Math.PI/180;
+	}
+
+	tailAnimation() {
+		this.tailFin1Mesh.rotation.x += 10*Math.PI/180;
+		this.tailFin2Mesh.rotation.x += 10*Math.PI/180;
+	}
+  }
 
 class RobotHead extends THREE.Object3D {
 	//textures
@@ -1634,6 +1790,7 @@ const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.inner
 camera.name = "DefaultCamera";
 //DEFAULT CAMERA FOR ROOM POSITION
 camera.position.set(0,20,130);
+const fishCamera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 //camera.position.set(0,2,6);
 var renderCamera = camera;
 const controlsDefault = new OrbitControls(renderCamera, renderer.domElement );
@@ -1734,6 +1891,18 @@ leftLegFolder.add(robotLegLeft.rotation, 'x', Math.PI * -2, Math.PI * 2).name("R
 leftLegFolder.add(robotLowerLegLeft.rotation, 'x', Math.PI * -2, Math.PI * 2).name("Rotate Lower Left Leg");
 rightLegFolder.add(robotLegRight.rotation, 'x', Math.PI * -2, Math.PI * 2).name("Rotate Right Leg");
 rightLegFolder.add(robotLowerLegRight.rotation, 'x', Math.PI * -2, Math.PI * 2).name("Rotate Lower Right Leg");
+
+// gui to manipulate nemo's color and size
+const nemoFolder = gui.addFolder("Nemo");
+const nemoColor = {
+	color: material1.color.getHex()
+};
+nemoFolder.addColor(nemoColor, 'color')
+.onChange((value) =>  material1.color.set(value)).name("Color");
+nemoFolder.add(tank.getNemo().scale, 'x', 0.025, 0.25).name("Scale Width");
+nemoFolder.add(tank.getNemo().scale, 'y', 0.025, 0.25).name("Scale Height");
+nemoFolder.add(tank.getNemo().scale, 'z', 0.025, 0.25).name("Scale Depth");
+nemoFolder.open();
 
 
 //change eye color
@@ -1884,11 +2053,22 @@ animate();
 
 function animate() {
 	requestAnimationFrame(animate);
+	let nemo = tank.getNemo();
+
+	// animate nemo
+	nemo.propellerAnimation();
+	if (nemo.shouldTailMove) nemo.tailAnimation();
 
 	// sink nemo
 	if (!tank.getNemo().shouldFloat) tank.getNemo().position.y -= 0.05;
 
-	tank.sandOscillation();
+	// make fish camera follow the fish
+	let nemoWorldPosition = tank.getNemo().getWorldPosition(new THREE.Vector3());
+	nemoWorldPosition.y -= tank.getNemoSize().y*0.5+0.3;
+	fishCamera.position.copy(nemoWorldPosition);
+	fishCamera.rotation.y = tank.getNemo().rotation.y + 90*Math.PI/180;
+
+	// tank.sandOscillation();
 
 	// tank boundary assurance
 	boundaryAssurance();
@@ -1898,6 +2078,8 @@ function animate() {
 	spinHead();
 
 	robotHead.getSpotLight().target.updateMatrixWorld();
+	if (isPov) controlsDefault.enabled = false;
+	else controlsDefault.enabled = true;
 	controlsDefault.update();
 	onWindowResize();
 	clock.getDelta();
@@ -1915,29 +2097,35 @@ function animate() {
 
 // assures that nemo cannot leave the fish tank
 function boundaryAssurance() {
-	let rad = tank.getNemoRadius();
+	let nemo = tank.getNemo();
+	let size = tank.getNemoSize();
+	let w = tank.getWidth();
+	let h = tank.getHeight();
+	let d = tank.getDepth();
+	let buffer = 0.1;
+
 	// x-boundary
-	if (tank.getNemo().position.x < -tank.getWidth()/2+rad) {
-		tank.getNemo().position.x = -tank.getWidth()/2+rad;
+	if (nemo.position.x < -w/2+size.x/2+buffer) {
+		nemo.position.x = -w/2+size.x/2+buffer;
 	}
-	else if (tank.getNemo().position.x > tank.getWidth()/2-rad) {
-		tank.getNemo().position.x = tank.getWidth()/2-rad;
+	else if (nemo.position.x > w/2-size.x/2-buffer) {
+		nemo.position.x = w/2-size.x/2-buffer;
 	}
 
 	// y-boundary
-	if (tank.getNemo().position.y < -tank.getHeight()/2+1+rad) {
-		tank.getNemo().position.y = -tank.getHeight()/2+1+rad;
+	if (nemo.position.y < -h/2+1+size.y/2+buffer) {
+		nemo.position.y = -h/2+1+size.y/2+buffer;
 	}
-	else if (tank.getNemo().position.y > tank.getHeight()/2-2-rad) {
-		tank.getNemo().position.y = tank.getHeight()/2-2-rad;
+	else if (nemo.position.y > h/2-2-size.y/2-buffer) {
+		nemo.position.y = h/2-2-size.y/2-buffer;
 	}
 
 	// z-boundary
-	if (tank.getNemo().position.z < -tank.getDepth()/2+rad) {
-		tank.getNemo().position.z = -tank.getDepth()/2+rad;
+	if (nemo.position.z < -d/2+size.x/2+buffer) {
+		nemo.position.z = -d/2+size.x/2+buffer;
 	}
-	else if (tank.getNemo().position.z > tank.getDepth()/2-rad) {
-		tank.getNemo().position.z = tank.getDepth()/2-rad;
+	else if (nemo.position.z > d/2-size.x/2-buffer) {
+		nemo.position.z = d/2-size.x/2-buffer;
 	}
 }
 
@@ -1947,27 +2135,48 @@ function boundaryAssurance() {
 const isPov = false;
 document.onkeydown = function() {
 	const key = event.key;
+	let nemo = tank.getNemo()
 
-	if (!isPov && key == 'w') {
-		tank.getNemo().position.z -= 0.1;
+	// controls nemo's movements
+	if (key == 'w') {
+		nemo.shouldTailMove = true;
+		nemo.position.z -= 0.1*Math.cos(nemo.rotation.y + 90*Math.PI/180);
+		nemo.position.x -= 0.1*Math.sin(nemo.rotation.y + 90*Math.PI/180);
 	}
-	else if (!isPov && key == 'a') {
-		tank.getNemo().position.x -= 0.1;
+	else if (key == 'a') {
+		nemo.shouldTailMove = true;
+		nemo.rotation.y += 2*Math.PI/180;
 	}
-	else if (!isPov && key == 's') {
-		tank.getNemo().position.z += 0.1;
+	else if (key == 's') {
+		nemo.shouldTailMove = true;
+		nemo.position.z += 0.1*Math.cos(nemo.rotation.y + 90*Math.PI/180);
+		nemo.position.x += 0.1*Math.sin(nemo.rotation.y + 90*Math.PI/180);
 	}
-	else if (!isPov && key == 'd') {
-		tank.getNemo().position.x += 0.1;
+	else if (key == 'd') {
+		nemo.shouldTailMove = true;
+		nemo.rotation.y -= 2*Math.PI/180;
 	}
-	else if (!isPov && key == ' ') {
-		tank.getNemo().shouldFloat = true;
-		tank.getNemo().position.y += 0.1;
+	// make nemo float upwards
+	else if (key == ' ') {
+		nemo.shouldFloat = true;
+		nemo.position.y += 0.1;
+	}
+	// change views
+	else if (!isPov && key == 'c') {
+		isPov = true;
+		renderCamera = fishCamera;
+	}
+	else if (isPov && key == 'c') {
+		isPov = false;
+		renderCamera = camera;
 	}
 }
 
 document.onkeyup = function() {
-	tank.getNemo().shouldFloat = false;
+	let nemo = tank.getNemo();
+
+	nemo.shouldFloat = false;
+	nemo.shouldTailMove = false;
 }
 
 function onWindowResize() {
