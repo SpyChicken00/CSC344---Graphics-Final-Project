@@ -47,9 +47,6 @@ class Tank extends THREE.Object3D {
 		this.nemo.scale.z = 0.1;
 		this.add(this.nemo);
 
-		// gets the bounding box for nemo
-		this.nemoSize = new THREE.Box3().setFromObject(this.nemo).getSize(new THREE.Vector3());
-
 		// tells if nemo should sink
 		this.nemo.shouldFloat = false;
 
@@ -76,7 +73,7 @@ class Tank extends THREE.Object3D {
 	}
 
 	getNemoSize() {
-		return this.nemoSize;
+		return new THREE.Box3().setFromObject(this.nemo).getSize(new THREE.Vector3());
 	}
 
 	sandOscillation() {
@@ -1879,6 +1876,18 @@ leftLegFolder.add(robotLowerLegLeft.rotation, 'x', Math.PI * -2, Math.PI * 2).na
 rightLegFolder.add(robotLegRight.rotation, 'x', Math.PI * -2, Math.PI * 2).name("Rotate Right Leg");
 rightLegFolder.add(robotLowerLegRight.rotation, 'x', Math.PI * -2, Math.PI * 2).name("Rotate Lower Right Leg");
 
+// gui to manipulate nemo's color and size
+const nemoFolder = gui.addFolder("Nemo");
+const nemoColor = {
+	color: material1.color.getHex()
+};
+nemoFolder.addColor(nemoColor, 'color')
+.onChange((value) =>  material1.color.set(value)).name("Color");
+nemoFolder.add(tank.getNemo().scale, 'x', 0, 0.25).name("Scale Width");
+nemoFolder.add(tank.getNemo().scale, 'y', 0, 0.25).name("Scale Height");
+nemoFolder.add(tank.getNemo().scale, 'z', 0, 0.25).name("Scale Depth");
+nemoFolder.open();
+
 
 //change eye color
 const emissiveParams = {
@@ -2024,13 +2033,14 @@ animate();
 
 function animate() {
 	requestAnimationFrame(animate);
+	let nemo = tank.getNemo();
 
 	// sink nemo
 	if (!tank.getNemo().shouldFloat) tank.getNemo().position.y -= 0.05;
 
 	// make fish camera follow the fish
 	let nemoWorldPosition = tank.getNemo().getWorldPosition(new THREE.Vector3());
-	nemoWorldPosition.y -= 0.75;
+	nemoWorldPosition.y -= tank.getNemoSize().y*0.5+0.3;
 	fishCamera.position.copy(nemoWorldPosition);
 	fishCamera.rotation.y = tank.getNemo().rotation.y + 90*Math.PI/180;
 
@@ -2086,53 +2096,54 @@ function boundaryAssurance() {
 	let buffer = 0.1;
 
 	// x-boundary
-	if (nemo.position.x < -w/2+size.x+buffer) {
-		nemo.position.x = -w/2+size.x+buffer;
+	if (nemo.position.x < -w/2+size.x/2+buffer) {
+		nemo.position.x = -w/2+size.x/2+buffer;
 	}
-	else if (nemo.position.x > w/2-size.x-buffer) {
-		nemo.position.x = w/2-size.x-buffer;
+	else if (nemo.position.x > w/2-size.x/2-buffer) {
+		nemo.position.x = w/2-size.x/2-buffer;
 	}
 
 	// y-boundary
-	if (nemo.position.y < -h/2+1+size.y+buffer) {
-		nemo.position.y = -h/2+1+size.y+buffer;
+	if (nemo.position.y < -h/2+1+size.y/2+buffer) {
+		nemo.position.y = -h/2+1+size.y/2+buffer;
 	}
-	else if (nemo.position.y > h/2-2-size.y-buffer) {
-		nemo.position.y = h/2-2-size.y-buffer;
+	else if (nemo.position.y > h/2-2-size.y/2-buffer) {
+		nemo.position.y = h/2-2-size.y/2-buffer;
 	}
 
 	// z-boundary
-	if (nemo.position.z < -d/2+size.x+buffer) {
-		nemo.position.z = -d/2+size.x+buffer;
+	if (nemo.position.z < -d/2+size.x/2+buffer) {
+		nemo.position.z = -d/2+size.x/2+buffer;
 	}
-	else if (nemo.position.z > d/2-size.x-buffer) {
-		nemo.position.z = d/2-size.x-buffer;
+	else if (nemo.position.z > d/2-size.x/2-buffer) {
+		nemo.position.z = d/2-size.x/2-buffer;
 	}
 }
 
 // keyboard controls
 document.onkeydown = function() {
 	const key = event.key;
+	let nemo = tank.getNemo()
 
 	// controls nemo's movements
 	if (key == 'w') {
-		tank.getNemo().position.z -= 0.1*Math.cos(tank.getNemo().rotation.y + 90*Math.PI/180);
-		tank.getNemo().position.x -= 0.1*Math.sin(tank.getNemo().rotation.y + 90*Math.PI/180);
+		nemo.position.z -= 0.1*Math.cos(nemo.rotation.y + 90*Math.PI/180);
+		nemo.position.x -= 0.1*Math.sin(nemo.rotation.y + 90*Math.PI/180);
 	}
 	else if (key == 'a') {
-		tank.getNemo().rotation.y += 2*Math.PI/180;
+		nemo.rotation.y += 2*Math.PI/180;
 	}
 	else if (key == 's') {
-		tank.getNemo().position.z += 0.1*Math.cos(tank.getNemo().rotation.y + 90*Math.PI/180);
-		tank.getNemo().position.x += 0.1*Math.sin(tank.getNemo().rotation.y + 90*Math.PI/180);
+		nemo.position.z += 0.1*Math.cos(nemo.rotation.y + 90*Math.PI/180);
+		nemo.position.x += 0.1*Math.sin(nemo.rotation.y + 90*Math.PI/180);
 	}
 	else if (key == 'd') {
-		tank.getNemo().rotation.y -= 2*Math.PI/180;
+		nemo.rotation.y -= 2*Math.PI/180;
 	}
 	// make nemo float upwards
 	else if (key == ' ') {
-		tank.getNemo().shouldFloat = true;
-		tank.getNemo().position.y += 0.1;
+		nemo.shouldFloat = true;
+		nemo.position.y += 0.1;
 	}
 	// change views
 	else if (!isPov && key == 'c') {
