@@ -2,6 +2,10 @@ import * as THREE from '../modules/three.module.js';
 import { OrbitControls } from '../modules/OrbitControls.js';
 import { GUI } from '../modules/dat.gui.module.js';
 
+//TODO Decorations - desklamp, led lights around ceiling
+//TODO fish tank camera
+//TODO include our robots in the fish tank / world as easter eggs
+
 // creates the tank class
 class Tank extends THREE.Object3D {
 	constructor(x, y, z) {
@@ -210,7 +214,7 @@ class RobotHead extends THREE.Object3D {
 	spotLight = new THREE.SpotLight(0xEDDF96);
 
 	//camera 
-	robotCamera= new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+	robotCamera= new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000 );
 	cameraTarget = new THREE.Mesh(drawSphereNew(0.3, 16, 16), this.eyeColor);
 
 
@@ -276,7 +280,7 @@ class RobotHead extends THREE.Object3D {
 
 		
 		this.spotLight.position.set(0, 3, 2);
-		this.spotLight.intensity = 100;
+		this.spotLight.intensity = 50000;
 		this.spotLight.angle = 30* Math.PI/180;
 		this.spotLight.distance = 15;
 
@@ -289,9 +293,11 @@ class RobotHead extends THREE.Object3D {
 		this.add(this.spotLight.target);
 		this.spotLight.visible = false;		
 
-		this.robotCamera.position.z += 2;
-		this.cameraTarget.position.z += 3;
-		this.cameraTarget.position.y -= 1;
+		//this.robotCamera.position.z += 0.5;
+		this.robotCamera.position.z += 0.3;
+		this.robotCamera.position.x -= 0.4;
+		this.cameraTarget.position.z += 10;
+		this.cameraTarget.position.y -= 10;
 		this.cameraTarget.visible = false;
 
 		//add to object
@@ -1678,10 +1684,6 @@ scene.add(redSpotlight);
 scene.add(room);
 scene.add(tank);
 
-//TODO Decorations - chair, desklamp, led lights around ceiling
-//TODO fish tank camera
-//TODO include our robots in the fish tank / world as easter eggs
-
 //gui robot parts
 const robotHead = robot.getRobotHead();
 const robotArmL = robot.getRobotArm();
@@ -1710,6 +1712,8 @@ const rightArmFolder = robotFolder.addFolder("Right Arm");
 const leftLegFolder = robotFolder.addFolder("Left Leg");
 const rightLegFolder = robotFolder.addFolder("Right Leg");
 const lightFolder = gui.addFolder("Lights");
+const cameraFolder = gui.addFolder("Camera");
+const interactionFolder = gui.addFolder("Interaction");
 // robotFolder.open();
 // headFolder.open();
 // leftArmFolder.open()
@@ -1753,124 +1757,128 @@ const colorParams = {
 };
 lightFolder.addColor(colorParams, 'color')
 .onChange((value) =>  lampLight.color.set(value)).name("Light Color");
+const settings = {
+	'wave at fish': function() {
+		animationValue1 = 0;
+		//waveAtFish();
+	},
 
+	'spin head': function() {
+		zValue = 0;
+	},
 
-//animations variables 
-var isPov = false;
-
-/*
-//keyboard controls
-var xSpeed = 0.05;
-var ySpeed = 0.05;
-
-//ANIMATION KEY VALUE
-let zValue = 126;
-let yValue = 126;
-
-document.addEventListener("keydown", onDocumentKeyDown, false);
-function onDocumentKeyDown(event) {
-    const keyCode = event.which;
-	//translate with wasd controls
-    if (keyCode == 82) {
-		//R - Up
-       // robot.position.y += ySpeed;
-	   robot.translateY(ySpeed);
-    } else if (keyCode == 70) {
-		//F- Down
-        robot.translateY(-ySpeed);
-    } else if (keyCode == 65) {
-		//A - Left
-        robot.translateX(-xSpeed);
-    } else if (keyCode == 68) {
-		//D- Right
-        robot.translateX(xSpeed);
-    } else if (keyCode == 87) {
-		//W- Foward
-       // robot.position.z += xSpeed;
-	   robot.translateZ(xSpeed);
-    } else if (keyCode == 83) {
-		//S - Backwards
-        //robot.position.z -= xSpeed;
-		robot.translateZ(-xSpeed);
-    } else if (keyCode == 32) {
-		//Space- reset position
-    	robot.position.set(0, 1.5, -4);
-    } else if (keyCode == 81) {
-		//Q - rotate counterclockwise
-		//robot.rotation.y += xSpeed;
-		robot.rotateY(xSpeed);
-	} else if (keyCode == 69) {
-		//E - rotate clockwise
-		//robot.rotation.y -= xSpeed;
-		robot.rotateY(-xSpeed);
-	} else if (keyCode == 67) {
+	//not working grrr
+	'robot light' : function() {
 		//C- control light 
 		if (robotHead.getSpotLight().visible == true) {
 			robotHead.getSpotLight().visible = false;
+			console.log("false")
 		}
 		else {
 			robotHead.getSpotLight().visible = true;
+			console.log("true")
 		}
-	} else if (keyCode == 88) {
+	},
+
+	'robot camera' : function () {
 		//X - toggle first person
-		if (renderCamera == camera) {
+		if ((renderCamera == camera)) {
 			renderCamera = robotHead.getRobotCamera();
-			renderCamera.lookAt(new THREE.Vector3(cameraTarget.position.x, cameraTarget.position.y, cameraTarget.position.z));
+			renderCamera.lookAt(new THREE.Vector3(10000, 10, 10));
+			lampLight.intensity -= 1500;
 		}
 		else {
 			renderCamera = camera;
+			lampLight.intensity += 1500;
 		}
 	}
-	else if (keyCode == 90) {
-		//headspin animation, make rotate value 0 to start
-		zValue = 0
+}
+interactionFolder.add(settings, 'wave at fish')
+interactionFolder.add(settings, 'spin head')
+cameraFolder.add(settings, 'robot camera').name("Toggle Robot Camera");
+interactionFolder.open();
+
+let animationValue1 = 126;
+let animationValue2 = 126;
+let animationValue3 = 126;
+let zValue = 126;
+let yValue = 126;
+//let pivotValue = 20;
+let tiltDirection = -1;
+function waveAtFish() {
+	//raise arm
+	if (animationValue1 == 44) {
+		animationValue2 = 0;
+		animationValue1 += 2;	
+		clock.getElapsedTime(1);
+		robotLowerArmR.rotation.x += 0.65 * Math.PI/180;
 	}
-};
-*/
+	else if (animationValue1 < 46) {
+		robotHead.rotation.y += 2 * Math.PI/180;
+		robotArmR.rotation.x -= 4 * Math.PI/180;
+		robotLowerArmR.rotation.x += 0.65 * Math.PI/180;
+		animationValue1 += 2;
+		clock.getElapsedTime(1);
+	}
 
-//leyframe animation
-//import { NumberKeyframeTrack } from "three";
+	//spin hand + wave
+	if (animationValue2 == 96) {
+		animationValue3 = 0;
+		animationValue2 += 2;
+		robotLowerArmR.rotation.y = 4 * Math.PI/180;
+		robotLowerArmR.rotation.y = 0 * Math.PI/180;
+		clock.getElapsedTime(1)
+	}
+	else if (animationValue2 < 100) {
+		robotHandR.rotation.y += 20 * Math.PI/180;
+		robotLowerArmR.rotation.y += tiltDirection * 7 * Math.PI/180;
+		if (robotLowerArmR.rotation.y > 20 * Math.PI/180) {
+			tiltDirection = -1;
+			robotLowerArmR.rotation.y = 2 * (20 * Math.PI/180) - robotLowerArmR.rotation.y;
+		}
+		else if (robotLowerArmR.rotation.y < -20 * Math.PI/180) {
+			tiltDirection = 1;
+			robotLowerArmR.rotation.y = 2 * (-20 * Math.PI/180) - robotLowerArmR.rotation.y;
+		}
+		animationValue2 += 2;
+		clock.getElapsedTime(1);
+	}
 
-// const times = [0, 3, 6];
-// const values = [0, 0, 0, 1, 0, 0.3, 0, 0.3, 0, 0.7071, 0, 0.7071];
-// //const values = [0, 0, 0, 1, 0, 0, 0, -1];
+	//lower arm
+	if (animationValue3 == 46) {
+		animationValue3 += 126;
+		robotLowerArmR.rotation.x -= 0.65 * Math.PI/180;
+		clock.getDelta();
+	}
+	else if (animationValue3 < 44) {
+		robotHead.rotation.y -= 2 * Math.PI/180;
+		robotArmR.rotation.x += 4* Math.PI/180;
+		robotLowerArmR.rotation.x -= 0.65 * Math.PI/180;
+		animationValue3 += 2;
+		clock.getDelta();
+	}
+}
 
-// //const opacityKF = new THREE.NumberKeyframeTrack(".material.opacity", times, values);
-// const rotationKF = new THREE.QuaternionKeyframeTrack(".rotation", times, values);
+function spinHead() {
+	if (zValue == 60) {
+		robotHead.rotation.z += 0.1	
+		zValue += 2
+		yValue = 0;
+	} else if (zValue < 64) {
+		robotHead.rotation.z += 0.2
+		zValue += 2
+		//clock.getElapsedTime(1);
+		clock.getDelta();
+	} 
 
-// const times1 = [0, 3, 6];
-// const values1 = [0, 1, 0, 2, 1, 2, 0, 1, 0];
-
-// const positionKF = new THREE.VectorKeyframeTrack(".position", times1, values1);
-
-// // just one track for now
-// //const tracks = [positionKF];
-// // use -1 to automatically calculate
-// // the length from the array of tracks
-// //const length = -1;
-
-// //const clip = new THREE.AnimationClip("slowmove", length, tracks);
-// const moveBlinkClip = new THREE.AnimationClip("move-n-blink", -1, [
-// 	positionKF,
-// 	//opacityKF,
-// 	//rotationKF
-//   ]);
-
-//   // create a normal, static mesh
-//   //const mesh = new Robot();
-//   //scene.add(mesh);
-  
-//   // turn it into an animated mesh by connecting it to a mixer
-//   const mixer = new THREE.AnimationMixer(room.getRobot());
-//   const action = mixer.clipAction(moveBlinkClip);
-//   // immediately set the animation to play
-//   //loop.updatables.push(mesh);
-//   action.play();	
-
-
-//TODO animation where robot turns head, raises hand and waves at fish tank
-//add gui button to trigger animation
-
+	//spin
+	if (yValue < 62) {
+		robotHead.rotation.y += 0.2
+		yValue += 2
+		//clock.getElapsedTime(1);
+		clock.getDelta();
+	}
+}
 
 animate();
 
@@ -1885,32 +1893,17 @@ function animate() {
 	// tank boundary assurance
 	boundaryAssurance();
 
+	//robot animation
+	waveAtFish();
+	spinHead();
+
 	robotHead.getSpotLight().target.updateMatrixWorld();
 	controlsDefault.update();
 	onWindowResize();
+	clock.getDelta();
 	
-	/*
-	//animation check
-	//flip
-	if (zValue == 124) {
-		robotHead.rotation.z += 0.1
-		zValue += 2
-		yValue = 0;
-		// 1 second delay
-		window.cancelAnimationFrame
-	} else if (zValue < 126) {
-		robotHead.rotation.z += 0.1
-		zValue += 2
-		clock.getElapsedTime(1);
-	} 
 
-	//spin
-	if (yValue < 126) {
-		robotHead.rotation.y += 0.1
-		yValue += 2
-		clock.getElapsedTime(1);
-	}
-	*/
+	
 
 	
 
@@ -1948,7 +1941,10 @@ function boundaryAssurance() {
 	}
 }
 
+
+
 // keyboard controls
+const isPov = false;
 document.onkeydown = function() {
 	const key = event.key;
 
