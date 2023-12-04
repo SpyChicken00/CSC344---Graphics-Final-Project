@@ -2030,7 +2030,7 @@ function animate() {
 
 	// make fish camera follow the fish
 	let nemoWorldPosition = tank.getNemo().getWorldPosition(new THREE.Vector3());
-	nemoWorldPosition.y -= 0.5;
+	nemoWorldPosition.y -= 0.75;
 	fishCamera.position.copy(nemoWorldPosition);
 	fishCamera.rotation.y = tank.getNemo().rotation.y + 90*Math.PI/180;
 
@@ -2078,30 +2078,35 @@ function animate() {
 
 // assures that nemo cannot leave the fish tank
 function boundaryAssurance() {
+	let nemo = tank.getNemo();
 	let size = tank.getNemoSize();
+	let w = tank.getWidth();
+	let h = tank.getHeight();
+	let d = tank.getDepth();
 	let buffer = 0.1;
+
 	// x-boundary
-	if (tank.getNemo().position.x < -tank.getWidth()/2+size.x+buffer) {
-		tank.getNemo().position.x = -tank.getWidth()/2+size.x+buffer;
+	if (nemo.position.x < -w/2+size.x+buffer) {
+		nemo.position.x = -w/2+size.x+buffer;
 	}
-	else if (tank.getNemo().position.x > tank.getWidth()/2-size.x-buffer) {
-		tank.getNemo().position.x = tank.getWidth()/2-size.x-buffer;
+	else if (nemo.position.x > w/2-size.x-buffer) {
+		nemo.position.x = w/2-size.x-buffer;
 	}
 
 	// y-boundary
-	if (tank.getNemo().position.y < -tank.getHeight()/2+1+size.y+buffer) {
-		tank.getNemo().position.y = -tank.getHeight()/2+1+size.y+buffer;
+	if (nemo.position.y < -h/2+1+size.y+buffer) {
+		nemo.position.y = -h/2+1+size.y+buffer;
 	}
-	else if (tank.getNemo().position.y > tank.getHeight()/2-2-size.y-buffer) {
-		tank.getNemo().position.y = tank.getHeight()/2-2-size.y-buffer;
+	else if (nemo.position.y > h/2-2-size.y-buffer) {
+		nemo.position.y = h/2-2-size.y-buffer;
 	}
 
 	// z-boundary
-	if (tank.getNemo().position.z < -tank.getDepth()/2+size.x+buffer) {
-		tank.getNemo().position.z = -tank.getDepth()/2+size.x+buffer;
+	if (nemo.position.z < -d/2+size.x+buffer) {
+		nemo.position.z = -d/2+size.x+buffer;
 	}
-	else if (tank.getNemo().position.z > tank.getDepth()/2-size.x-buffer) {
-		tank.getNemo().position.z = tank.getDepth()/2-size.x-buffer;
+	else if (nemo.position.z > d/2-size.x-buffer) {
+		nemo.position.z = d/2-size.x-buffer;
 	}
 }
 
