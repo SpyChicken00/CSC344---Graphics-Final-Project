@@ -4,7 +4,7 @@ import { GUI } from '../modules/dat.gui.module.js';
 
 //TODO Decorations - desklamp, led lights around ceiling
 //TODO include our robots in the fish tank / world as easter eggs
-//Add button for to center room camera to default position
+//Ian needs to add images from fish + add fish + add tank decorations
 
 // creates the tank class
 class Tank extends THREE.Object3D {
@@ -1923,6 +1923,7 @@ const robotLegRight = robot.getRobotLegR();
 const robotLowerLegLeft = robotLegLeft.getLowerLeg();
 const robotLowerLegRight = robotLegRight.getLowerLeg();
 const robotCamera = robotHead.getRobotCamera();
+let nemo = tank.getNemo();
 
 //gui
 const gui = new GUI();
@@ -1974,6 +1975,7 @@ nemoFolder.addColor(nemoColor, 'color')
 nemoFolder.add(tank.getNemo().scale, 'x', 0.025, 0.25).name("Scale Width");
 nemoFolder.add(tank.getNemo().scale, 'y', 0.025, 0.25).name("Scale Height");
 nemoFolder.add(tank.getNemo().scale, 'z', 0.025, 0.25).name("Scale Depth");
+nemoFolder.add(nemo.rotation, 'x', Math.PI * -2, Math.PI * 2 ).name("Rotate Nemo");
 
 
 
@@ -2051,12 +2053,33 @@ const settings = {
 		else {
 			renderCamera = camera;
 		}
+	},
+
+
+	//camera.position.set(0,20,130);
+	'room camera' : function () {
+		if ((renderCamera != camera)) {
+			renderCamera = camera;
+			renderCamera.position.set(0,20,130);
+			//renderCamera.lookAt(new THREE.Vector3(0, 0, 0));
+		}
+		else if ((renderCamera == fishCamera)){
+			renderCamera = camera;
+			renderCamera.position.set(0,20,130);
+			//renderCamera.lookAt(new THREE.Vector3(0, 0, 0));
+		}
+		else {
+			renderCamera = camera;
+			renderCamera.position.set(0,20,130);
+			//renderCamera.lookAt(new THREE.Vector3(0, 0, 0));
+		}
 	}
-}
+} 
 interactionFolder.add(settings, 'wave at fish').name("Wave at Fish");
 interactionFolder.add(settings, 'spin head').name("Spin Robot Head");
 cameraFolder.add(settings, 'robot camera').name("Toggle Robot Camera");
 cameraFolder.add(settings, 'fish camera').name("Toggle Fish Camera");
+cameraFolder.add(settings, 'room camera').name("Toggle Room Camera");
 
 
 let animationValue1 = 126;
@@ -2088,12 +2111,14 @@ function waveAtFish() {
 		animationValue3 = 0;
 		animationValue2 += 2;
 		robotLowerArmR.rotation.y = 4 * Math.PI/180;
-		robotLowerArmR.rotation.y = 0 * Math.PI/180;
+		nemo.rotation.x += 7.3 * Math.PI/180;
 		clock.getElapsedTime(1)
 	}
 	else if (animationValue2 < 100) {
 		robotHandR.rotation.y += 20 * Math.PI/180;
 		robotLowerArmR.rotation.y += tiltDirection * 7 * Math.PI/180;
+		nemo.rotation.x += 7.3 * Math.PI/180;
+
 		if (robotLowerArmR.rotation.y > 20 * Math.PI/180) {
 			tiltDirection = -1;
 			robotLowerArmR.rotation.y = 2 * (20 * Math.PI/180) - robotLowerArmR.rotation.y;
@@ -2110,6 +2135,7 @@ function waveAtFish() {
 	if (animationValue3 == 46) {
 		animationValue3 += 126;
 		robotLowerArmR.rotation.x -= 0.65 * Math.PI/180;
+		nemo.rotation.x = 0 * Math.PI/180;
 		clock.getDelta();
 	}
 	else if (animationValue3 < 44) {
@@ -2160,7 +2186,6 @@ animate();
 
 function animate() {
 	requestAnimationFrame(animate);
-	let nemo = tank.getNemo();
 
 	// animate nemo
 	nemo.propellerAnimation();
