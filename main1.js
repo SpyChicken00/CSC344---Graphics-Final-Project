@@ -3,9 +3,8 @@ import { OrbitControls } from '../modules/OrbitControls.js';
 import { GUI } from '../modules/dat.gui.module.js';
 
 //TODO Decorations - desklamp, led lights around ceiling
-//TODO fish tank camera
 //TODO include our robots in the fish tank / world as easter eggs
-//TODO enable shadows on all objects in room (including fish tank)
+//Add button for to center room camera to default position
 
 // creates the tank class
 class Tank extends THREE.Object3D {
@@ -29,11 +28,12 @@ class Tank extends THREE.Object3D {
 
 		// adds the water
 		const waterG = new THREE.BoxGeometry(this.width, this.height-2, this.depth);
-		const waterM = new THREE.MeshBasicMaterial({
-			color: 0xACEBFF, 
+		const waterM = new THREE.MeshLambertMaterial({
+			//color: 0xACEBFF, 
 			// light: 0xCFF4FF 
 			// medium: 0xACEBFF
 			// darker: 0x91E5FF 
+			color: 0xC00f4FF,
 			opacity: 0.4, 
 			transparent: true,
 			side: THREE.DoubleSide
@@ -111,7 +111,13 @@ class Sand extends THREE.Object3D {
 	oscillation() {
 		// makes a position array without a fixed size
 		const uPosTemp = [];
-
+		var colors = new Float32Array(this.AMOUNTX * this.AMOUNTZ * 3);
+		const sandM = new THREE.PointsMaterial({
+			color: 0xe8d17e,
+			size: 0.1,
+		})
+		
+		
 		// push all the pixels with the oscillating drape on the top
 		// then straight surfaces on the sides and bottom
 		for (let ix = -this.AMOUNTX/2; ix < this.AMOUNTX/2; ix++) {
@@ -119,6 +125,25 @@ class Sand extends THREE.Object3D {
 				let x = ix * 0.05;
 				let y = (Math.cos((iz + this.count) * 0.15) * 0.2) + 0.2;
 				let z = -(iz * 0.04 - ((this.AMOUNTZ * 0.04) / 2));
+
+				//generate a random color for each particle
+				// var randomNumber = Math.floor(Math.random() * 3) + 1;
+				// switch (randomNumber) {
+				// 	case 1:
+				// 		var color = new THREE.Color(0xe8d17e);
+				// 		break;
+				// 	case 2:
+				// 		var color = new THREE.Color(0x7d5b2e);
+				// 		break;
+				// 	case 3:
+				// 		var color = new THREE.Color(0xb79652);
+				// 		break;
+				// }
+		
+				// // Add the color to the colors attribute
+				// colors[ix * 3 + 0] = color.r;
+				// colors[ix * 3 + 1] = color.g;
+				// colors[ix * 3 + 2] = color.b;
 
 				// calculates the coordinates for the top drape
 				// and adds them to the array
@@ -156,10 +181,9 @@ class Sand extends THREE.Object3D {
 		// creates a particle system using the fixed size array
 		const sandG = new THREE.BufferGeometry();
 		sandG.setAttribute('position', new THREE.BufferAttribute(uPositions, 3));
-		const sandM = new THREE.PointsMaterial({
-			color: 0xffaabc,
-			size: 0.1
-		})
+		// Assign the colors attribute to the geometry
+		sandG.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+	
 		this.sand = new THREE.Points(sandG, sandM);
 		this.sand.rotation.y = 90 * Math.PI/180;
 		this.add(this.sand);
@@ -1865,6 +1889,8 @@ const room = new Room();
 const robot = room.getRobot();
 const tank = new Tank(15, 16, 82.5);
 
+enableShadows(tank);
+
 //transformations
 room.position.z += 60;
 room.scale.x = 3;
@@ -2259,6 +2285,14 @@ document.onkeyup = function() {
 	nemo.shouldTailMove = false;
 }
 
+function enableShadows(object) {
+	object.traverse( function( child ) { 
+		if ( child.type == 'Mesh') {
+			child.castShadow = true;
+			child.receiveShadow = true;
+		}
+	} );
+}
 function onWindowResize() {
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
