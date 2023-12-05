@@ -47,13 +47,14 @@ class Tank extends THREE.Object3D {
 
 		// creates the camera fish (nemo)
 		this.nemo = new Fish1();
-		this.nemo.scale.x = 0.1;
-		this.nemo.scale.y = 0.1;
-		this.nemo.scale.z = 0.1;
+		this.nemo.scale.set(0.1, 0.1, 0.1);
 		this.add(this.nemo);
 
-		// tells if nemo should sink
+		// tells if nemo is supposed to be floating
 		this.nemo.shouldFloat = false;
+
+		// tells if nemo is floating at the same position vertically
+		this.nemo.stationaryY = false;
 
 		// tells if nemo's tail should be animated
 		this.nemo.shouldTailMove = false;
@@ -62,6 +63,16 @@ class Tank extends THREE.Object3D {
 		this.sand = new Sand(this.depth/0.05-2, this.width/0.04-2);
 		this.sand.position.set(0, -this.height/2 + 0.04, 0);
 		this.add(this.sand);
+
+		this.fish2 = new Fish2();
+		this.fish2.scale.set(0.1, 0.15, 0.1);
+		this.fish2.position.set(7, -2, 3);
+		this.add(this.fish2);
+
+		this.jellyGroup = new JellyGroup();
+		this.jellyGroup.scale.set(0.25, 0.25, 0.25);
+		this.jellyGroup.position.set(-5, -1, -4);
+		this.add(this.jellyGroup);
 	}
 
 	getWidth() {
@@ -200,8 +211,8 @@ const material3 = new THREE.MeshPhongMaterial({ color: 0x000000, flatShading: fa
 const material4 = new THREE.MeshPhongMaterial({ color: 0xBE4321, flatShading: false });
 const material5 = new THREE.MeshPhongMaterial({ color: 0xBE4321, flatShading: false });
 const material6 = new THREE.MeshPhongMaterial({ color: 0x9B9B9B, flatShading: false });
-const material7 = new THREE.MeshPhongMaterial({ color: 0x2F8899, transparent: true, opacity: 0.5, flatShading: false, side: THREE.DoubleSide });
-const material8 = new THREE.MeshPhongMaterial({ color: 0x7CEAFF, transparent: true, opacity: .95, flatShading: false, side: THREE.DoubleSide });
+const material7 = new THREE.MeshPhongMaterial({ color: 0x2F8899, transparent: false, opacity: 0.5, flatShading: false, side: THREE.DoubleSide });
+const material8 = new THREE.MeshPhongMaterial({ color: 0x7CEAFF, transparent: false, opacity: .95, flatShading: false, side: THREE.DoubleSide });
 const material9 = new THREE.MeshPhongMaterial({ color: 0x585858, flatShading: false });
 const material10 = new THREE.MeshPhongMaterial({ color: 0xCCCCCC, flatShading: false });
 const material11 = new THREE.MeshPhongMaterial({ color: 0x6F4521, flatShading: false });
@@ -529,8 +540,6 @@ class Fish2 extends THREE.Object3D{
 	  this.add(tailFinMesh4);
   
 	  }
-  
-	  scene.add(this);
 	}
   }
   
@@ -566,11 +575,7 @@ class Fish3 extends THREE.Object3D{
 		  var arm3Mesh = new THREE.Mesh(arm3, material7);
 		  arm3Mesh.rotation.y = (90 * Math.PI) / 180;
 		  this.add(arm3Mesh);
-  
-  
-  
 		}
-		scene.add(this);
 	  }
   }
   
@@ -2718,13 +2723,14 @@ animate();
 
 function animate() {
 	requestAnimationFrame(animate);
+	let nemo = tank.getNemo();
 
 	// animate nemo
 	nemo.propellerAnimation();
 	if (nemo.shouldTailMove) nemo.tailAnimation();
 
 	// sink nemo
-	if (!tank.getNemo().shouldFloat) tank.getNemo().position.y -= 0.05;
+	if (!nemo.shouldFloat && !nemo.stationaryY) nemo.position.y -= 0.05;
 
 	// make fish camera follow the fish
 	let nemoWorldPosition = tank.getNemo().getWorldPosition(new THREE.Vector3());
@@ -2823,6 +2829,10 @@ document.onkeydown = function() {
 	else if (key == ' ') {
 		nemo.shouldFloat = true;
 		nemo.position.y += 0.1;
+	}
+	else if (key == 'c') {
+		if (nemo.stationaryY) nemo.stationaryY = false;
+		else nemo.stationaryY = true;
 	}
 	// // change views
 	// else if (!isPov && key == 'c') {
