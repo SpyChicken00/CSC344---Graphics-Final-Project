@@ -2269,21 +2269,21 @@ document.onkeydown = function() {
 	let nemo = tank.getNemo()
 
 	// controls nemo's movements
-	if (key == 'w') {
+	if (key == 'w' || key == 'W') {
 		nemo.shouldTailMove = true;
 		nemo.position.z -= 0.1*Math.cos(nemo.rotation.y + 90*Math.PI/180);
 		nemo.position.x -= 0.1*Math.sin(nemo.rotation.y + 90*Math.PI/180);
 	}
-	else if (key == 'a') {
+	else if (key == 'a' || key == 'A') {
 		nemo.shouldTailMove = true;
 		nemo.rotation.y += 2*Math.PI/180;
 	}
-	else if (key == 's') {
+	else if (key == 's' || key == 'S') {
 		nemo.shouldTailMove = true;
 		nemo.position.z += 0.1*Math.cos(nemo.rotation.y + 90*Math.PI/180);
 		nemo.position.x += 0.1*Math.sin(nemo.rotation.y + 90*Math.PI/180);
 	}
-	else if (key == 'd') {
+	else if (key == 'd' || key == 'D') {
 		nemo.shouldTailMove = true;
 		nemo.rotation.y -= 2*Math.PI/180;
 	}
