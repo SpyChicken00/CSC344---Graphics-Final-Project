@@ -123,7 +123,7 @@ class Sand extends THREE.Object3D {
 		for (let ix = -this.AMOUNTX/2; ix < this.AMOUNTX/2; ix++) {
 			for (let iz = 0; iz < this.AMOUNTZ; iz++) { 
 				let x = ix * 0.05;
-				let y = (Math.cos((iz + this.count) * 0.15) * 0.1) + 0.1;
+				let y = (Math.cos((iz + this.count) * 0.075) * 0.1) + 0.1;
 				let z = -(iz * 0.04 - ((this.AMOUNTZ * 0.04) / 2));
 
 				//generate a random color for each particle
