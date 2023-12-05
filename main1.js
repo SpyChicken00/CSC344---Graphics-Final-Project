@@ -47,9 +47,7 @@ class Tank extends THREE.Object3D {
 
 		// creates the camera fish (nemo)
 		this.nemo = new Fish1();
-		this.nemo.scale.x = 0.1;
-		this.nemo.scale.y = 0.1;
-		this.nemo.scale.z = 0.1;
+		this.nemo.scale.set(0.1, 0.1, 0.1);
 		this.add(this.nemo);
 
 		// tells if nemo should sink
@@ -62,6 +60,11 @@ class Tank extends THREE.Object3D {
 		this.sand = new Sand(this.depth/0.05-2, this.width/0.04-2);
 		this.sand.position.set(0, -this.height/2 + 0.04, 0);
 		this.add(this.sand);
+
+		this.fish2 = new Fish2();
+		this.fish2.scale.set(0.1, 0.15, 0.1);
+		this.fish2.position.set(7, -2, 3);
+		this.add(this.fish2);
 	}
 
 	getWidth() {
@@ -529,8 +532,6 @@ class Fish2 extends THREE.Object3D{
 	  this.add(tailFinMesh4);
   
 	  }
-  
-	  scene.add(this);
 	}
   }
   
