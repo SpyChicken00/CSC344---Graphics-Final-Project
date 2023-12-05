@@ -5,6 +5,7 @@ import { GUI } from '../modules/dat.gui.module.js';
 //TODO Decorations - desklamp, led lights around ceiling
 //TODO fish tank camera
 //TODO include our robots in the fish tank / world as easter eggs
+//TODO enable shadows on all objects in room (including fish tank)
 
 // creates the tank class
 class Tank extends THREE.Object3D {
@@ -370,7 +371,7 @@ class RobotHead extends THREE.Object3D {
 	spotLight = new THREE.SpotLight(0xEDDF96);
 
 	//camera 
-	robotCamera= new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000 );
+	robotCamera= new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
 	cameraTarget = new THREE.Mesh(drawSphereNew(0.3, 16, 16), this.eyeColor);
 
 
@@ -1566,13 +1567,14 @@ class Room extends THREE.Object3D {
 	//lights
 	//lampLight = new THREE.PointLight(0xDDDDDD, 300 , 1000, 2);  -- scale 1 intensity
 	lampLight = new THREE.PointLight(0xDDDDDD, 2800, 1000, 2); 
+	
 
 	constructor() {
 		super()
 
 		//Original Robot Quaternion =  [0,0,0, 1]
 		this.originalQuat = this.robot.quaternion;
-		console.log(this.originalQuat.toJSON());
+		//console.log(this.originalQuat.toJSON());
 
  
 
@@ -1688,17 +1690,55 @@ class Room extends THREE.Object3D {
 		this.robot.rotation.x = 270 * Math.PI/180;
 		this.robot.rotation.z = 90 * Math.PI/180;
 
-
-
-		//this.robot.rotation.x =  * Math.PI/180;
-		//this.robot.getRobotLegL().rotation.x = 270 * Math.PI/180;
-		//this.robot.getRobotLegL().getLowerLeg().rotation.x = 90 * Math.PI/180;
-
-		//[ 0.5000000000000001, -0.5000000000000001, -0.5, -0.5 ]
-		this.newQuat = this.robot.quaternion;
-		console.log(this.newQuat.toJSON());
 		
-
+		this.robot.traverse( function( child ) { 
+			if ( child.type == 'Mesh') {
+				child.castShadow = true;
+				child.receiveShadow = true;
+			}
+		} );
+		this.chest.traverse( function( child ) { 
+			if ( child.type == 'Mesh') {
+				child.castShadow = true;
+				child.receiveShadow = true;
+			}
+		} );
+		this.chair.traverse( function( child ) { 
+			if ( child.type == 'Mesh') {
+				child.castShadow = true;
+				child.receiveShadow = true;
+			}
+		} );
+		this.desk.traverse( function( child ) {
+			if ( child.type == 'Mesh') {
+				child.castShadow = true;
+				child.receiveShadow = true;
+			}
+		} );
+		this.dresser.traverse( function( child ) { 
+			if ( child.type == 'Mesh') {
+				child.castShadow = true;
+				child.receiveShadow = true;
+			}
+		} );
+		this.nightstand.traverse( function( child ) { 
+			if ( child.type == 'Mesh') {
+				child.castShadow = true;
+				child.receiveShadow = true;
+			}
+		} );
+		this.bookshelf.traverse( function( child ) { 
+			if ( child.type == 'Mesh') {
+				child.castShadow = true;
+				child.receiveShadow = true;
+			}
+		} );
+		this.bookshelf2.traverse( function( child ) { 
+			if ( child.type == 'Mesh') {
+				child.castShadow = true;
+				child.receiveShadow = true;
+			}
+		} );
 
 
 		this.wall1.position.z -= 15;
@@ -1714,8 +1754,8 @@ class Room extends THREE.Object3D {
 		this.wall3.receiveShadow = true;
 
 		this.lampLight.castShadow = true;
-		this.lampLight.shadow.mapSize.width = 4096
-		this.lampLight.shadow.mapSize.height = 4096
+		this.lampLight.shadow.mapSize.width = 1024
+		this.lampLight.shadow.mapSize.height = 1024
 		this.lampLight.shadow.camera.near = 0.5
 		this.lampLight.shadow.camera.far = 1000
 		this.lampLight.position.set(0, 12, 0)
@@ -1856,26 +1896,33 @@ const robotLegLeft = robot.getRobotLegL();
 const robotLegRight = robot.getRobotLegR();
 const robotLowerLegLeft = robotLegLeft.getLowerLeg();
 const robotLowerLegRight = robotLegRight.getLowerLeg();
+const robotCamera = robotHead.getRobotCamera();
 
 //gui
 const gui = new GUI();
 gui.getSaveObject();
 //folders
-const robotFolder = gui.addFolder("Robot");
+const interactionFolder = gui.addFolder("Interaction");
+const robotFolder = interactionFolder.addFolder("Robot");
+const nemoFolder = interactionFolder.addFolder("Nemo");
+const lightFolder = interactionFolder.addFolder("Lights");
+const cameraFolder = interactionFolder.addFolder("Camera");
 const headFolder = robotFolder.addFolder("Head");
 const upperBodyFolder = robotFolder.addFolder("Upper Body");
 const leftArmFolder = robotFolder.addFolder("Left Arm");
 const rightArmFolder = robotFolder.addFolder("Right Arm");
 const leftLegFolder = robotFolder.addFolder("Left Leg");
 const rightLegFolder = robotFolder.addFolder("Right Leg");
-const lightFolder = gui.addFolder("Lights");
-const cameraFolder = gui.addFolder("Camera");
-const interactionFolder = gui.addFolder("Interaction");
+
+
+
 // robotFolder.open();
 // headFolder.open();
 // leftArmFolder.open()
 // rightArmFolder.open();
 // lightFolder.open();
+//nemoFolder.open();
+interactionFolder.open();
 //sliders
 leftArmFolder.add(robotHandL.rotation, 'y', 0, Math.PI * 4).name("Rotate Left Hand");
 leftArmFolder.add(robotLowerArmL.rotation, 'x', Math.PI * -0.25, Math.PI * 0.25).name("Rotate Left Elbow");
@@ -1893,7 +1940,6 @@ rightLegFolder.add(robotLegRight.rotation, 'x', Math.PI * -2, Math.PI * 2).name(
 rightLegFolder.add(robotLowerLegRight.rotation, 'x', Math.PI * -2, Math.PI * 2).name("Rotate Lower Right Leg");
 
 // gui to manipulate nemo's color and size
-const nemoFolder = gui.addFolder("Nemo");
 const nemoColor = {
 	color: material1.color.getHex()
 };
@@ -1902,7 +1948,7 @@ nemoFolder.addColor(nemoColor, 'color')
 nemoFolder.add(tank.getNemo().scale, 'x', 0.025, 0.25).name("Scale Width");
 nemoFolder.add(tank.getNemo().scale, 'y', 0.025, 0.25).name("Scale Height");
 nemoFolder.add(tank.getNemo().scale, 'z', 0.025, 0.25).name("Scale Depth");
-nemoFolder.open();
+
 
 
 //change eye color
@@ -1941,17 +1987,22 @@ const settings = {
 		//C- control light 
 		if (robotHead.getSpotLight().visible == true) {
 			robotHead.getSpotLight().visible = false;
-			console.log("false")
+			//console.log("false")
 		}
 		else {
 			robotHead.getSpotLight().visible = true;
-			console.log("true")
+			//console.log("true")
 		}
 	},
 
 	'robot camera' : function () {
-		//X - toggle first person
+		//X - toggle robot camera
 		if ((renderCamera == camera)) {
+			renderCamera = robotHead.getRobotCamera();
+			renderCamera.lookAt(new THREE.Vector3(10000, 10, 10));
+			lampLight.intensity -= 1500;
+		}
+		else if ((renderCamera == fishCamera)){
 			renderCamera = robotHead.getRobotCamera();
 			renderCamera.lookAt(new THREE.Vector3(10000, 10, 10));
 			lampLight.intensity -= 1500;
@@ -1960,18 +2011,34 @@ const settings = {
 			renderCamera = camera;
 			lampLight.intensity += 1500;
 		}
+	},
+
+	'fish camera' : function () {
+		//X - toggle fish camera
+		if ((renderCamera == camera)) {
+			renderCamera = fishCamera;
+		}
+		else if ((renderCamera == robotCamera)){
+			renderCamera = fishCamera;
+			lampLight.intensity += 1500;
+		}
+		else {
+			renderCamera = camera;
+		}
 	}
 }
-interactionFolder.add(settings, 'wave at fish')
-interactionFolder.add(settings, 'spin head')
+interactionFolder.add(settings, 'wave at fish').name("Wave at Fish");
+interactionFolder.add(settings, 'spin head').name("Spin Robot Head");
 cameraFolder.add(settings, 'robot camera').name("Toggle Robot Camera");
-interactionFolder.open();
+cameraFolder.add(settings, 'fish camera').name("Toggle Fish Camera");
+
 
 let animationValue1 = 126;
 let animationValue2 = 126;
 let animationValue3 = 126;
 let zValue = 126;
 let yValue = 126;
+let isPov = false;
 //let pivotValue = 20;
 let tiltDirection = -1;
 function waveAtFish() {
@@ -2049,7 +2116,21 @@ function spinHead() {
 	}
 }
 
+
+// //enable all shadows
+// room.traverse( function( child ) { 
+//     if ( child.type == 'Mesh') {
+//         //child.castShadow = true;
+//         child.receiveShadow = true;
+//     }
+// } );
+
+
+
 animate();
+
+
+
 
 function animate() {
 	requestAnimationFrame(animate);
@@ -2132,7 +2213,6 @@ function boundaryAssurance() {
 
 
 // keyboard controls
-const isPov = false;
 document.onkeydown = function() {
 	const key = event.key;
 	let nemo = tank.getNemo()
@@ -2161,15 +2241,15 @@ document.onkeydown = function() {
 		nemo.shouldFloat = true;
 		nemo.position.y += 0.1;
 	}
-	// change views
-	else if (!isPov && key == 'c') {
-		isPov = true;
-		renderCamera = fishCamera;
-	}
-	else if (isPov && key == 'c') {
-		isPov = false;
-		renderCamera = camera;
-	}
+	// // change views
+	// else if (!isPov && key == 'c') {
+	// 	isPov = true;
+	// 	renderCamera = fishCamera;
+	// }
+	// else if (isPov && key == 'c') {
+	// 	isPov = false;
+	// 	renderCamera = camera;
+	// }
 }
 
 document.onkeyup = function() {
