@@ -67,22 +67,23 @@ class Tank extends THREE.Object3D {
 		this.sand.position.set(0, -this.height/2 + 0.04, 0);
 		this.add(this.sand);
 
+		// adds a point light
+		let dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.5);
+		dirLight.position.set(0, 4, 0);
+		this.add(dirLight);
+
+		// makes a fish2
 		this.fish2 = new Fish2();
-		this.fish2.scale.set(0.1, 0.15, 0.1);
+		this.fish2.scale.set(0.1, 0.15, 0.15);
 		this.fish2.position.set(7, -2, 3);
 		this.add(this.fish2);
 
+		// makes a group of jellyfish
 		this.jellyGroup = new JellyGroup();
 		this.jellyGroup.scale.set(0.25, 0.25, 0.25);
 		this.jellyGroup.position.set(-5, -1, -4);
 		this.add(this.jellyGroup);
-
-
-		//sword
-		this.swordStone = new SwordStone();
-		this.swordStone.scale.set(0.5, 0.5, 0.5);
-		this.swordStone.position.set(5, -4, -2);
-		this.add(this.swordStone);
+		/*
 		//patrickHouse
 		this.patrickHouse = new PatrickHouse();
 		this.patrickHouse.scale.set(0.5, 0.5, 0.5);
@@ -93,6 +94,8 @@ class Tank extends THREE.Object3D {
 		this.squidwardHouse.scale.set(0.5, 0.5, 0.5);
 		this.squidwardHouse.position.set(3, -3.5, 2);
 		this.add(this.squidwardHouse)
+		*/
+
 		//antlion
 		this.antlion = new AntLion();
 		this.antlion.scale.set(0.5, 0.5, 0.5);
@@ -101,6 +104,26 @@ class Tank extends THREE.Object3D {
 
 		this.tanklight.position.set(0, 0, 0);
 		this.add(this.tanklight);
+
+		//sword
+		this.swordStone = new SwordStone();
+		this.swordStone.scale.set(0.5, 0.5, 0.5);
+		this.swordStone.position.set(5, -4, -2);
+		this.add(this.swordStone);
+
+		// makes Patrick's house
+		this.patrickHouse = new PatrickHouse();
+		this.patrickHouse.scale.set(0.5, 0.5, 0.5);
+		this.patrickHouse.position.set(5, -4.4, -4);
+		this.add(this.patrickHouse);
+
+		// makes Squidward's house
+		this.squidwardHouse = new SquidwardHouse();
+		this.squidwardHouse.scale.set(0.5, 0.5, 0.5);
+		this.squidwardHouse.position.set(7, -3.4, -3);
+		this.squidwardHouse.rotation.y = -20*Math.PI/180;
+		this.add(this.squidwardHouse);
+		
 	}
 
 	getWidth() {
@@ -126,6 +149,14 @@ class Tank extends THREE.Object3D {
 	sandOscillation() {
 		this.sand.oscillation();
 	}
+
+	patrickAnimation() {
+		this.patrickHouse.animation();
+	}
+
+	fish2Movement() {
+		this.fish2.movement();
+	}
 }
 
 class Sand extends THREE.Object3D {
@@ -148,14 +179,17 @@ class Sand extends THREE.Object3D {
 	}
 
 	oscillation() {
-		// makes a position array without a fixed size
-		const uPosTemp = [];
-		var colors = new Float32Array(this.AMOUNTX * this.AMOUNTZ * 3);
+		// makes a position array
+		const positions = [];
+
+		// makes a color array
+		const colors = [];
+
+		// makes the sand material
 		const sandM = new THREE.PointsMaterial({
 			color: 0xe8d17e,
 			size: 0.1,
 		})
-		
 		
 		// push all the pixels with the oscillating drape on the top
 		// then straight surfaces on the sides and bottom
@@ -165,64 +199,39 @@ class Sand extends THREE.Object3D {
 				let y = (Math.cos((iz + this.count) * 0.075) * 0.1) + 0.1;
 				let z = -(iz * 0.04 - ((this.AMOUNTZ * 0.04) / 2));
 
-				//generate a random color for each particle
-				// var randomNumber = Math.floor(Math.random() * 3) + 1;
-				// switch (randomNumber) {
-				// 	case 1:
-				// 		var color = new THREE.Color(0xe8d17e);
-				// 		break;
-				// 	case 2:
-				// 		var color = new THREE.Color(0x7d5b2e);
-				// 		break;
-				// 	case 3:
-				// 		var color = new THREE.Color(0xb79652);
-				// 		break;
-				// }
-		
-				// // Add the color to the colors attribute
-				// colors[ix * 3 + 0] = color.r;
-				// colors[ix * 3 + 1] = color.g;
-				// colors[ix * 3 + 2] = color.b;
-
 				// calculates the coordinates for the top drape
 				// and adds them to the array
-				uPosTemp.push(x);
-				uPosTemp.push(y);
-				uPosTemp.push(z);
+				positions.push(x);
+				positions.push(y);
+				positions.push(z);
 
 				// sides
 				if (ix == -this.AMOUNTX/2 || ix == this.AMOUNTX/2-1 || iz == 0 || iz == this.AMOUNTZ-1) {
-					for (let iy = y - 0.1; iy >= 0; iy -= 0.1) {
-						uPosTemp.push(x);
-						uPosTemp.push(iy);
-						uPosTemp.push(z);
+					for (let iy = y - 0.05; iy >= 0; iy -= 0.05) {
+						positions.push(x);
+						positions.push(iy);
+						positions.push(z);
 					}
 				}
 
 				// bottom
-				uPosTemp.push(x);
-				uPosTemp.push(0);
-				uPosTemp.push(z);
-			}
-		}
+				positions.push(x);
+				positions.push(0);
+				positions.push(z);
 
-		// Particle Systems need fixed sized arrays
-		// so copy everything in the temporary array
-		// into the fixed size array
-		const uPositions = new Float32Array(uPosTemp.length);
-		for (let j = 0; j < uPosTemp.length; j++) {
-			uPositions[j] = uPosTemp[j];
+				for (let i = 0; i < 3; i++) {
+					colors.push(Math.floor((Math.random() * 105) + 150), Math.floor((Math.random() * 105) + 150), Math.floor((Math.random() * 105) + 150));
+				}
+			}
 		}
 
 		// replaces the sand geometry every time
 		this.clear();
 
-		// creates a particle system using the fixed size array
+		// creates a particle system 
 		const sandG = new THREE.BufferGeometry();
-		sandG.setAttribute('position', new THREE.BufferAttribute(uPositions, 3));
-		// Assign the colors attribute to the geometry
-		sandG.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-	
+		sandG.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+		sandG.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 		this.sand = new THREE.Points(sandG, sandM);
 		this.sand.rotation.y = 90 * Math.PI/180;
 		this.add(this.sand);
@@ -232,15 +241,14 @@ class Sand extends THREE.Object3D {
 	}
 }
 
-// fish materials and textures
 const material1 = new THREE.MeshPhongMaterial({ color: 0xFFB406, flatShading: false });
 const material2 = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, flatShading: false });
 const material3 = new THREE.MeshPhongMaterial({ color: 0x000000, flatShading: false });
 const material4 = new THREE.MeshPhongMaterial({ color: 0xBE4321, flatShading: false });
 const material5 = new THREE.MeshPhongMaterial({ color: 0xBE4321, flatShading: false });
 const material6 = new THREE.MeshPhongMaterial({ color: 0x9B9B9B, flatShading: false });
-const material7 = new THREE.MeshPhongMaterial({ color: 0x2F8899, transparent: false, opacity: 0.5, flatShading: false, side: THREE.DoubleSide });
-const material8 = new THREE.MeshPhongMaterial({ color: 0x7CEAFF, transparent: false, opacity: .95, flatShading: false, side: THREE.DoubleSide });
+const material7 = new THREE.MeshPhongMaterial({ color: 0x2F8899, transparent: true, opacity: 0.5, flatShading: false, side: THREE.DoubleSide });
+const material8 = new THREE.MeshPhongMaterial({ color: 0x7CEAFF, transparent: true, opacity: .95, flatShading: false, side: THREE.DoubleSide });
 const material9 = new THREE.MeshPhongMaterial({ color: 0x585858, flatShading: false });
 const material10 = new THREE.MeshPhongMaterial({ color: 0xCCCCCC, flatShading: false });
 const material11 = new THREE.MeshPhongMaterial({ color: 0x6F4521, flatShading: false });
@@ -265,8 +273,11 @@ const rockTexture = textureLoader2.load('../pictures/rockTxtr.png');
 const rockMaterial = new THREE.MeshBasicMaterial({color: 0x7777777, map: rockTexture });
 
 const textureLoader4 = new THREE.TextureLoader();
-const squidHouseTexture = textureLoader4.load('squidwardTexture.png');
-const squidHouseMaterial = new THREE.MeshBasicMaterial({ map: squidHouseTexture });
+const squidHouseTexture = textureLoader4.load('../pictures/squidwardTexture.png');
+const squidHouseMaterial = new THREE.MeshBasicMaterial({ 
+	color: 0x29599c,
+	map: squidHouseTexture 
+});
 
 class Fish1 extends THREE.Object3D {
 	constructor() {
@@ -386,8 +397,8 @@ class Fish1 extends THREE.Object3D {
 	  }
 	}
 
-	propellerAnimation() {
-		this.handleMesh.rotation.y += 20*Math.PI/180;
+	propellerAnimation(amount) {
+		this.handleMesh.rotation.y += amount*Math.PI/180;
 	}
 
 	tailAnimation() {
@@ -400,6 +411,16 @@ class Fish1 extends THREE.Object3D {
 class Fish2 extends THREE.Object3D{
 	constructor(){
 	  super();
+
+	  // holds what the fish should be rotated to
+	  this.desiredRotation = 0;
+
+	  // holds if the fish should be moving forwards from its original direction
+	  this.moveForward = true;
+
+	  // holds if the tail should rotate in the positive direction or not
+	  this.tailRPos = true;
+
 	  //body
 	  {
 	  var topBody = new THREE.CylinderGeometry(1, 1, 8, 32);
@@ -544,35 +565,91 @@ class Fish2 extends THREE.Object3D{
 	  rightFin3Mesh.rotation.y = (-45 * Math.PI) / 180;
 	  rightFin3Mesh.rotation.x = (-45 * Math.PI) / 180;
 	  this.add(rightFin3Mesh);
+
+	  this.tail = new THREE.Object3D();
   
 	  var tailFin1 = new THREE.BoxGeometry(2,.8,.1);
 	  var tailFin1Mesh = new THREE.Mesh(tailFin1, blueGemMaterial);
-	  tailFin1Mesh.position.x = 6;
 	  tailFin1Mesh.position.y = .5;
 	  tailFin1Mesh.rotation.z = (45 * Math.PI) / 180;
-	  this.add(tailFin1Mesh);
+	  this.tail.add(tailFin1Mesh);
   
 	  var tailFin2 = new THREE.BoxGeometry(2,.8,.1);
 	  var tailFinMesh2 = new THREE.Mesh(tailFin2, blueGemMaterial);
-	  tailFinMesh2.position.x = 6;
 	  tailFinMesh2.position.y = -.5;
 	  tailFinMesh2.rotation.z = (-45 * Math.PI) / 180;
-	  this.add(tailFinMesh2);
+	  this.tail.add(tailFinMesh2);
   
 	  var tailFin3 = new THREE.BoxGeometry(1,.4,.1);
 	  var tailFinMesh3 = new THREE.Mesh(tailFin3, blueGemMaterial);
-	  tailFinMesh3.position.x = 7;
+	  tailFinMesh3.position.x = 1;
 	  tailFinMesh3.position.y = -.65;
 	  tailFinMesh3.rotation.z = (45 * Math.PI) / 180;
-	  this.add(tailFinMesh3);
+	  this.tail.add(tailFinMesh3);
   
 	  var tailFin4 = new THREE.BoxGeometry(1,.8,.1);
 	  var tailFinMesh4 = new THREE.Mesh(tailFin4, blueGemMaterial);
-	  tailFinMesh4.position.x = 7;
+	  tailFinMesh4.position.x = 1;
 	  tailFinMesh4.position.y = 1.1;
-	  this.add(tailFinMesh4);
-  
+	  this.tail.add(tailFinMesh4);
+
+	  this.tail.position.x = 6;
+	  this.add(this.tail);
 	  }
+	}
+
+	movement() {
+		// makes the tail swing back and forth
+		this.animateTail();
+
+		// checks if its at one of the sides of the tank
+		if (this.position.x < -tank.getWidth()/2 + 1) {
+			this.moveForward = false;
+			this.desiredRotation = 180*Math.PI/180;
+		}
+		else if (this.position.x > tank.getWidth()/2 - 1) {
+			this.moveForward = true;
+			this.desiredRotation = 0;
+		}
+
+		// once it reaches one side of the tank, turns 180 degrees
+		this.turn();
+
+		// repeatedly moves to the other side of the tank then back
+		if (this.moveForward) {
+			this.position.x -= 0.0375;
+		}
+		else {
+			this.position.x += 0.0375;
+		}
+	}
+
+	turn() {
+		// rotates until it reaches its desired rotation
+		if (this.rotation.y < this.desiredRotation - 5*Math.PI/180) {
+			this.rotation.y += 20*Math.PI/180;
+		}
+		else if (this.rotation.y > this.desiredRotation + 5*Math.PI/180) {
+			this.rotation.y -= 20*Math.PI/180;
+		}
+	}
+
+	animateTail() {
+		// tells if the tail should start rotating in the other direction
+		if (this.tail.rotation.y > 30*Math.PI/180) {
+			this.tailRPos = false;
+		}
+		else if (this.tail.rotation.y < -30*Math.PI/180) {
+			this.tailRPos = true;
+		}
+
+		// makes the tail rotate
+		if (this.tailRPos) {
+			this.tail.rotation.y += 5*Math.PI/180;
+		}
+		else {
+			this.tail.rotation.y -= 5*Math.PI/180;
+		}
 	}
   }
   
@@ -638,9 +715,6 @@ class JellyGroup extends THREE.Object3D{
 	  var jelly5 = new Fish3;
 	  jelly5.position.x = -4;
 	  this.add(jelly5);
-  
-  
-	  scene.add(this);
 	}
   
   
@@ -695,57 +769,60 @@ class PatrickHouse extends THREE.Object3D{
 	  var hill = new THREE.SphereGeometry( 2, 32, 16, phiStart, phiEnd, thetaStart, thetaEnd );
 	  var hillMesh = new THREE.Mesh( hill, rockMaterial );
 	  this.add(hillMesh);
+
+	  this.sticks = new THREE.Object3D();
   
 	  var stick1 = new THREE.CylinderGeometry(.05, .05, 1, 32);
 	  var stick1Mesh = new THREE.Mesh(stick1, material13);
 	  stick1Mesh.position.y = 2;
-	  stick1Mesh.position.x = -.2;
-	  this.add(stick1Mesh);
+	  this.sticks.add(stick1Mesh);
   
 	  var stick2 = new THREE.CylinderGeometry(.05, .05, 1, 32);
 	  var stick2Mesh = new THREE.Mesh(stick2, material13);
 	  stick2Mesh.position.y = 2.5;
-	  stick2Mesh.position.x = -.2;
 	  stick2Mesh.rotation.z = (90 * Math.PI) / 180;
-	  this.add(stick2Mesh);
+	  this.sticks.add(stick2Mesh);
   
 	  var stick3 = new THREE.CylinderGeometry(.05, .05, .3, 32);
 	  var stick3Mesh = new THREE.Mesh(stick3, material13);
 	  stick3Mesh.position.y = 2.5;
-	  stick3Mesh.position.x = -.65;
+	  stick3Mesh.position.x = -.45;
 	  stick3Mesh.position.z = .1;
 	  stick3Mesh.rotation.z = (90 * Math.PI) / 180;
 	  stick3Mesh.rotation.y = (-45 * Math.PI) / 180;
-	  this.add(stick3Mesh);
+	  this.sticks.add(stick3Mesh);
   
 	  var stick4 = new THREE.CylinderGeometry(.05, .05, .3, 32);
 	  var stick4Mesh = new THREE.Mesh(stick4, material13);
 	  stick4Mesh.position.y = 2.5;
-	  stick4Mesh.position.x = -.65;
+	  stick4Mesh.position.x = -.45;
 	  stick4Mesh.position.z = -.1;
 	  stick4Mesh.rotation.z = (90 * Math.PI) / 180;
 	  stick4Mesh.rotation.y = (45 * Math.PI) / 180;
-	  this.add(stick4Mesh);
+	  this.sticks.add(stick4Mesh);
   
 	  var stick5 = new THREE.CylinderGeometry(.05, .05, .4, 32);
 	  var stick5Mesh = new THREE.Mesh(stick5, material13);
 	  stick5Mesh.position.y = 2.5;
-	  stick5Mesh.position.x = .23;
+	  stick5Mesh.position.x = .43;
 	  stick5Mesh.rotation.z = (90 * Math.PI) / 180;
 	  stick5Mesh.rotation.y = (90 * Math.PI) / 180;
-	  this.add(stick5Mesh);
+	  this.sticks.add(stick5Mesh);
   
 	  var stick6 = new THREE.CylinderGeometry(.05, .05, .4, 32);
 	  var stick6Mesh = new THREE.Mesh(stick6, material13);
 	  stick6Mesh.position.y = 2.5;
-	  stick6Mesh.position.x = .1;
+	  stick6Mesh.position.x = .3;
 	  stick6Mesh.rotation.z = (90 * Math.PI) / 180;
 	  stick6Mesh.rotation.y = (90 * Math.PI) / 180;
-	  this.add(stick6Mesh);
-  
-  
-  
-	  scene.add(this);
+	  this.sticks.add(stick6Mesh);
+
+	  this.sticks.position.x = -0.2;
+	  this.add(this.sticks);
+	}
+
+	animation() {
+		this.sticks.rotation.y += 5*Math.PI/180;
 	}
   }
   
@@ -823,10 +900,6 @@ class SquidwardHouse extends THREE.Object3D{
 	  door1Mesh.rotation.x = (90 * Math.PI) / 180;
 	  door1Mesh.position.y = -1.6;
 	  this.add(door1Mesh);
-  
-  
-  
-  
 	}
   }
   
@@ -892,15 +965,10 @@ class AntLion extends THREE.Object3D{
 	  rightEyeMesh.position.x = .5;
 	  this.add(rightEyeMesh);
   
-  
-  
 	  var mainBodySphere2 = new THREE.SphereGeometry(.75,32,32);
 	  var mainBodySphere2Mesh = new THREE.Mesh(mainBodySphere2, material17);
 	  mainBodySphere2Mesh.position.y = 2;
 	  this.add(mainBodySphere2Mesh);
-  
-	  scene.add(this);
-  
 	}
 }
 
@@ -910,10 +978,6 @@ class Squid extends THREE.Object3D{
 	  var mainBody = new THREE.CylinderGeometry(1,1,4,32);
 	  var mainBodyMesh = new THREE.Mesh(mainBody, material5);
 	  this.add(mainBodyMesh);
-  
-  
-  
-	  scene.add(this);
 	}
  }
 class RobotHead extends THREE.Object3D {
@@ -2771,17 +2835,23 @@ function animate() {
 	let nemo = tank.getNemo();
 
 	// animate nemo
-	nemo.propellerAnimation();
+	nemo.propellerAnimation(10);
 	if (nemo.shouldTailMove) nemo.tailAnimation();
 
+	// animate Patrick's house
+	tank.patrickAnimation();
+
+	// moves fish2 around
+	tank.fish2Movement();
+
 	// sink nemo
-	if (!nemo.shouldFloat && !nemo.stationaryY) nemo.position.y -= 0.05;
+	if (!nemo.shouldFloat && !nemo.stationaryY) nemo.position.y -= 0.025;
 
 	// make fish camera follow the fish
-	let nemoWorldPosition = tank.getNemo().getWorldPosition(new THREE.Vector3());
+	let nemoWorldPosition = nemo.getWorldPosition(new THREE.Vector3());
 	nemoWorldPosition.y -= tank.getNemoSize().y*0.5+0.3;
 	fishCamera.position.copy(nemoWorldPosition);
-	fishCamera.rotation.y = tank.getNemo().rotation.y + 90*Math.PI/180;
+	fishCamera.rotation.y = nemo.rotation.y + 90*Math.PI/180;
 
 	// tank.sandOscillation();
 
@@ -2872,8 +2942,9 @@ document.onkeydown = function() {
 	}
 	// make nemo float upwards
 	else if (key == ' ') {
+		nemo.propellerAnimation(20);
 		nemo.shouldFloat = true;
-		nemo.position.y += 0.1;
+		nemo.position.y += 0.125;
 	}
 	else if (key == 'c') {
 		if (nemo.stationaryY) nemo.stationaryY = false;
