@@ -784,10 +784,6 @@ class SquidwardHouse extends THREE.Object3D{
 	  door1Mesh.rotation.x = (90 * Math.PI) / 180;
 	  door1Mesh.position.y = -1.6;
 	  this.add(door1Mesh);
-  
-  
-  
-  
 	}
   }
   
@@ -853,15 +849,10 @@ class AntLion extends THREE.Object3D{
 	  rightEyeMesh.position.x = .5;
 	  this.add(rightEyeMesh);
   
-  
-  
 	  var mainBodySphere2 = new THREE.SphereGeometry(.75,32,32);
 	  var mainBodySphere2Mesh = new THREE.Mesh(mainBodySphere2, material17);
 	  mainBodySphere2Mesh.position.y = 2;
 	  this.add(mainBodySphere2Mesh);
-  
-	  scene.add(this);
-  
 	}
 }
 
@@ -871,10 +862,6 @@ class Squid extends THREE.Object3D{
 	  var mainBody = new THREE.CylinderGeometry(1,1,4,32);
 	  var mainBodyMesh = new THREE.Mesh(mainBody, material5);
 	  this.add(mainBodyMesh);
-  
-  
-  
-	  scene.add(this);
 	}
  }
 class RobotHead extends THREE.Object3D {
