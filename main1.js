@@ -73,23 +73,35 @@ class Tank extends THREE.Object3D {
 		dirLight.position.set(0, 4, 0);
 		this.add(dirLight);
 
-		// makes a fish2
+		// makes fish1
+		this.fish1 = new Fish1();
+		this.fish1.scale.set(0.1, 0.1, 0.1);
+		this.fish1.position.set(0, -2, 3);
+		this.add(this.fish1);
+
+		// makes fish2 #0
 		this.fish2 = new Fish2();
 		this.fish2.scale.set(0.1, 0.15, 0.15);
-		this.fish2.position.set(7, -2, 3);
+		this.fish2.position.set(0, -2, 4);
 		this.add(this.fish2);
 
-		// makes another fish2
+		// makes fish2 #1
 		this.fish21 = new Fish2();
 		this.fish21.scale.set(0.1, 0.15, 0.15);
-		this.fish21.position.set(6, -3, 2);
+		this.fish21.position.set(0, -3, 2);
 		this.add(this.fish21);
 
-		// makes another fish2
+		// makes fish2 #2
 		this.fish22 = new Fish2();
 		this.fish22.scale.set(0.1, 0.15, 0.15);
-		this.fish22.position.set(5, -2, 1);
+		this.fish22.position.set(0, -2, 1);
 		this.add(this.fish22);
+
+		// makes fish2 #3
+		this.fish23 = new Fish2();
+		this.fish23.scale.set(0.1, 0.15, 0.15);
+		this.fish23.position.set(0, -1, 2);
+		this.add(this.fish23);
 
 		// makes a group of jellyfish
 		this.jellyGroup = new JellyGroup();
@@ -223,10 +235,12 @@ class Tank extends THREE.Object3D {
 		this.patrickHouse.animation();
 	}
 
-	fish2Movement() {
+	fishMovement() {
 		this.fish2.movement();
 		this.fish21.movement();
 		this.fish22.movement();
+		this.fish23.movement();
+		this.fish1.movement();
 	}
 
 	getTankLight() {
@@ -357,6 +371,20 @@ const squidHouseMaterial = new THREE.MeshBasicMaterial({
 class Fish1 extends THREE.Object3D {
 	constructor() {
 	  super();
+
+	  // holds if the fish should be moving forwards from its original direction
+	  this.moveForward = Math.random() < 0.5;
+
+	  // holds if the tail should rotate in the positive direction or not
+	  this.tailRPos = this.moveForward;
+
+	  // holds what the fish should be rotated to
+	  if (this.moveForward == true) this.desiredRotation = 0;
+	  else this.desiredRotation = Math.PI;
+	
+	  // holds the speed the fish should move at
+	  this.speed = Math.random() * 0.015 + 0.03;
+
 	  //head
 	  {
 	  var mainHead = new THREE.CylinderGeometry(2, 2.5, 2, 32);
@@ -472,6 +500,42 @@ class Fish1 extends THREE.Object3D {
 	  }
 	}
 
+	movement() {
+		// makes the tail swing back and forth
+		this.tailAnimation();
+
+		// checks if its at one of the sides of the tank
+		if (this.position.x < -tank.getWidth()/2 + 1) {
+			this.moveForward = false;
+			this.desiredRotation = Math.PI;
+		}
+		else if (this.position.x > tank.getWidth()/2 - 1) {
+			this.moveForward = true;
+			this.desiredRotation = 0;
+		}
+
+		// once it reaches one side of the tank, turns 180 degrees
+		this.turn();
+
+		// repeatedly moves to the other side of the tank then back
+		if (this.moveForward) {
+			this.position.x -= this.speed;
+		}
+		else {
+			this.position.x += this.speed;
+		}
+	}
+
+	turn() {
+		// rotates until it reaches its desired rotation
+		if (this.rotation.y < this.desiredRotation - 5*Math.PI/180) {
+			this.rotation.y += 20*Math.PI/180;
+		}
+		else if (this.rotation.y > this.desiredRotation + 5*Math.PI/180) {
+			this.rotation.y -= 20*Math.PI/180;
+		}
+	}
+
 	propellerAnimation(amount) {
 		this.handleMesh.rotation.y += amount*Math.PI/180;
 	}
@@ -487,14 +551,15 @@ class Fish2 extends THREE.Object3D{
 	constructor(){
 	  super();
 
-	  // holds what the fish should be rotated to
-	  this.desiredRotation = 0;
-
 	  // holds if the fish should be moving forwards from its original direction
-	  this.moveForward = true;
+	  this.moveForward = Math.random() < 0.5;
 
 	  // holds if the tail should rotate in the positive direction or not
-	  this.tailRPos = true;
+	  this.tailRPos = this.moveForward;
+
+	  // holds what the fish should be rotated to
+	  if (this.moveForward == true) this.desiredRotation = 0;
+	  else this.desiredRotation = Math.PI;
 	
 	  // holds the speed the fish should move at
 	  this.speed = Math.random() * 0.015 + 0.03;
@@ -683,7 +748,7 @@ class Fish2 extends THREE.Object3D{
 		// checks if its at one of the sides of the tank
 		if (this.position.x < -tank.getWidth()/2 + 1) {
 			this.moveForward = false;
-			this.desiredRotation = 180*Math.PI/180;
+			this.desiredRotation = Math.PI;
 		}
 		else if (this.position.x > tank.getWidth()/2 - 1) {
 			this.moveForward = true;
@@ -2931,7 +2996,7 @@ function animate() {
 	tank.patrickAnimation();
 
 	// moves fish2 around
-	tank.fish2Movement();
+	tank.fishMovement();
 
 	// sink nemo
 	if (!nemo.shouldFloat && !nemo.stationaryY) nemo.position.y -= 0.025;
