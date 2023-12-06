@@ -71,7 +71,7 @@ class Tank extends THREE.Object3D {
 
 		// makes a fish2
 		this.fish2 = new Fish2();
-		this.fish2.scale.set(0.1, 0.15, 0.1);
+		this.fish2.scale.set(0.1, 0.15, 0.15);
 		this.fish2.position.set(7, -2, 3);
 		this.add(this.fish2);
 
@@ -381,9 +381,14 @@ class Fish2 extends THREE.Object3D{
 	constructor(){
 	  super();
 
+	  // holds what the fish should be rotated to
 	  this.desiredRotation = 0;
 
+	  // holds if the fish should be moving forwards from its original direction
 	  this.moveForward = true;
+
+	  // holds if the tail should rotate in the positive direction or not
+	  this.tailRPos = true;
 
 	  //body
 	  {
@@ -529,37 +534,44 @@ class Fish2 extends THREE.Object3D{
 	  rightFin3Mesh.rotation.y = (-45 * Math.PI) / 180;
 	  rightFin3Mesh.rotation.x = (-45 * Math.PI) / 180;
 	  this.add(rightFin3Mesh);
+
+	  this.tail = new THREE.Object3D();
   
 	  var tailFin1 = new THREE.BoxGeometry(2,.8,.1);
 	  var tailFin1Mesh = new THREE.Mesh(tailFin1, blueGemMaterial);
-	  tailFin1Mesh.position.x = 6;
 	  tailFin1Mesh.position.y = .5;
 	  tailFin1Mesh.rotation.z = (45 * Math.PI) / 180;
-	  this.add(tailFin1Mesh);
+	  this.tail.add(tailFin1Mesh);
   
 	  var tailFin2 = new THREE.BoxGeometry(2,.8,.1);
 	  var tailFinMesh2 = new THREE.Mesh(tailFin2, blueGemMaterial);
-	  tailFinMesh2.position.x = 6;
 	  tailFinMesh2.position.y = -.5;
 	  tailFinMesh2.rotation.z = (-45 * Math.PI) / 180;
-	  this.add(tailFinMesh2);
+	  this.tail.add(tailFinMesh2);
   
 	  var tailFin3 = new THREE.BoxGeometry(1,.4,.1);
 	  var tailFinMesh3 = new THREE.Mesh(tailFin3, blueGemMaterial);
-	  tailFinMesh3.position.x = 7;
+	  tailFinMesh3.position.x = 1;
 	  tailFinMesh3.position.y = -.65;
 	  tailFinMesh3.rotation.z = (45 * Math.PI) / 180;
-	  this.add(tailFinMesh3);
+	  this.tail.add(tailFinMesh3);
   
 	  var tailFin4 = new THREE.BoxGeometry(1,.8,.1);
 	  var tailFinMesh4 = new THREE.Mesh(tailFin4, blueGemMaterial);
-	  tailFinMesh4.position.x = 7;
+	  tailFinMesh4.position.x = 1;
 	  tailFinMesh4.position.y = 1.1;
-	  this.add(tailFinMesh4);
+	  this.tail.add(tailFinMesh4);
+
+	  this.tail.position.x = 6;
+	  this.add(this.tail);
 	  }
 	}
 
 	movement() {
+		// makes the tail swing back and forth
+		this.animateTail();
+
+		// checks if its at one of the sides of the tank
 		if (this.position.x < -tank.getWidth()/2 + 1) {
 			this.moveForward = false;
 			this.desiredRotation = 180*Math.PI/180;
@@ -568,22 +580,44 @@ class Fish2 extends THREE.Object3D{
 			this.moveForward = true;
 			this.desiredRotation = 0;
 		}
+
+		// once it reaches one side of the tank, turns 180 degrees
 		this.turn();
 
+		// repeatedly moves to the other side of the tank then back
 		if (this.moveForward) {
-			this.position.x -= 0.05;
+			this.position.x -= 0.0375;
 		}
 		else {
-			this.position.x += 0.05;
+			this.position.x += 0.0375;
 		}
 	}
 
 	turn() {
+		// rotates until it reaches its desired rotation
 		if (this.rotation.y < this.desiredRotation - 5*Math.PI/180) {
 			this.rotation.y += 20*Math.PI/180;
 		}
 		else if (this.rotation.y > this.desiredRotation + 5*Math.PI/180) {
 			this.rotation.y -= 20*Math.PI/180;
+		}
+	}
+
+	animateTail() {
+		// tells if the tail should start rotating in the other direction
+		if (this.tail.rotation.y > 30*Math.PI/180) {
+			this.tailRPos = false;
+		}
+		else if (this.tail.rotation.y < -30*Math.PI/180) {
+			this.tailRPos = true;
+		}
+
+		// makes the tail rotate
+		if (this.tailRPos) {
+			this.tail.rotation.y += 5*Math.PI/180;
+		}
+		else {
+			this.tail.rotation.y -= 5*Math.PI/180;
 		}
 	}
   }
