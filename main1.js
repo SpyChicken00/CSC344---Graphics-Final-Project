@@ -123,20 +123,20 @@ class Tank extends THREE.Object3D {
 		//sword
 		this.swordStone = new SwordStone();
 		this.swordStone.scale.set(0.5, 0.5, 0.5);
-		this.swordStone.position.set(-7	, -4, 0);
+		this.swordStone.position.set(-5.5, -4.2, 0);
 		this.swordStone.rotation.y = -45*Math.PI/180;
 		this.add(this.swordStone);
 
 		// makes Patrick's house
 		this.patrickHouse = new PatrickHouse();
 		this.patrickHouse.scale.set(0.5, 0.5, 0.5);
-		this.patrickHouse.position.set(5, -4.4, -2);
+		this.patrickHouse.position.set(4.5, -4.4, -2);
 		this.add(this.patrickHouse);
 
 		// makes Squidward's house
 		this.squidwardHouse = new SquidwardHouse();
 		this.squidwardHouse.scale.set(0.5, 0.5, 0.5);
-		this.squidwardHouse.position.set(7, -3.4, -1);
+		this.squidwardHouse.position.set(6.5, -3.4, -1);
 		this.squidwardHouse.rotation.y = -20*Math.PI/180;
 		this.add(this.squidwardHouse);
 
@@ -185,21 +185,58 @@ class Tank extends THREE.Object3D {
 			console.error(error);
 		});
 
-
-
-
 		//"Corals by Rayaa" (https://sketchfab.com/3d-models/corals-by-rayaa-8e1e9eec16094494967b9a6d731cde3b) by Rayaa
 		loader.load('../3dModels/scene.gltf', function (gltf) {
 			var coral2 = gltf.scene;
 			//rocks.position.set(15, 11.5, 20);
-		
-
-			
 			//rocks.scale.set(0.25, 0.25, 0.25);
 			coral2.position.set(18, 11.5, 25)
 			//rocks.material = rockMaterial;
 			coral2.scale.set(10, 10, 10);
 			scene.add(coral2);
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+		//seaweed2
+		//https://sketchfab.com/3d-models/seaweed-2-93840cff90094924a6383448e8528375 by lyningsknallis
+		loader.load('../3dModels/seaweed_2.glb', function (gltf) {
+			var seaweed = gltf.scene;
+			//rock2.scale.set(25, 25, 30); //25
+			//rock2.position.set(106, -61, 93);// 81
+			seaweed.scale.set(0.025, 0.025, 0.025)
+			seaweed.position.set(22, 11.5,20.5)
+			scene.add(seaweed)	
+			
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+		//TODO 2 more seaweed 2's (different sizes)
+
+		//purple seaweed
+		//https://sketchfab.com/3d-models/seaweed-asset-5444487c06d647dfab90960142b9edc2   by mehgap
+		loader.load('../3dModels/seaweed_asset.glb', function (gltf) {
+			var seaweed = gltf.scene;
+			//rock2.scale.set(25, 25, 30); //25
+			//rock2.position.set(106, -61, 93);// 81
+			seaweed.scale.set(4, 2, 4)
+			seaweed.position.set (8, 13.4, 25)
+			scene.add(seaweed)	
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+
+		//pineapple
+		//https://sketchfab.com/3d-models/pineapple-3debe241ac7e401aa36ae944daa1708e by Lassi Kaukonen
+		loader.load('../3dModels/pineapple.glb', function (gltf) {
+			var pineapple = gltf.scene;
+			//rock2.scale.set(25, 25, 30); //25
+			//rock2.position.set(106, -61, 93);// 81
+			pineapple.scale.set(1, 1, 1)
+			pineapple.position.set(23,11,23)
+			scene.add(pineapple)	
 		}, undefined, function(error) {
 			console.error(error);
 		});
@@ -1144,6 +1181,696 @@ class Squid extends THREE.Object3D{
 	  this.add(mainBodyMesh);
 	}
  }
+ let cubeRenderTarget, cubeCamera;
+ class JoshRobot extends THREE.Object3D {
+	
+	constructor(x, y, z) {
+
+		super();
+
+
+
+		this.shouldWave = false;
+
+		this.walk = false;
+
+		this.sidestep = false;
+
+
+
+		// makes a texture based on what cameras positioned around the scene see
+
+		cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256);
+
+
+
+		// creates 6 cameras that render to cubeRenderTarget
+
+		cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget)
+
+
+
+		const material = new THREE.MeshPhongMaterial({
+
+			color: 0xFFD06B,
+
+			//envMap: cubeRenderTarget.texture
+			map: new THREE.TextureLoader().load('pictures/shiny.jpg')
+
+		});
+
+
+
+		this.head = new Head(material);
+
+		this.head.position.set(0, 3.4, 0);
+
+		this.add(this.head);
+
+
+
+		this.body = new Body(material);
+
+		this.add(this.body);
+
+
+
+		this.leftArmContainer = new THREE.Object3D();
+
+		this.leftArm = new Arm(material);
+
+		this.leftArm.position.set(0, -2.65, 0);
+
+		this.leftArm.rotation.y = 180*Math.PI/180;
+
+		this.leftArmContainer.add(this.leftArm);
+
+		this.leftArmContainer.position.set(2, 1.7, 0);
+
+		this.add(this.leftArmContainer);
+
+
+
+		this.rightArmContainer = new THREE.Object3D();
+
+		this.rightArm = new Arm(material);
+
+		this.rightArm.position.set(0, -2.65, 0);
+
+		this.rightArmContainer.add(this.rightArm);
+
+		this.rightArmContainer.position.set(-2, 1.7, 0);
+
+		this.add(this.rightArmContainer);
+
+
+
+		this.leftLeg = new Leg(material);
+
+		this.leftLeg.position.set(-0.75, -2, 0);
+
+		this.add(this.leftLeg);
+
+
+
+		this.rightLeg = new Leg(material);
+
+		this.rightLeg.position.set(0.75, -2, 0);
+
+		this.add(this.rightLeg);
+
+		this.rightLeg.moveUp = false;
+
+		this.rightLeg.rotation.y = 180*Math.PI/180;
+
+
+
+		this.position.set(x, y, z);
+
+	}
+
+
+
+	getHead() {
+
+		return this.head;
+
+	}
+
+
+
+	getRightArm() {
+
+		return this.rightArmContainer;
+
+	}
+
+
+
+	getLeftArm() {
+
+		return this.leftArmContainer;
+
+	}
+
+
+
+	getLeftArmBelowElbow() {
+
+		return this.leftArm.belowElbow;
+
+	}
+
+
+
+	getLeftHand() {
+
+		return this.leftArm.hand;
+
+	}
+
+
+
+	hideFacialFeatures() {
+
+		this.head.leftEye.visible = false;
+
+		this.head.rightEye.visible = false;
+
+		this.head.mouth.visible = false;
+
+	}
+
+
+
+	showFacialFeatures() {
+
+		this.head.leftEye.visible = true;
+
+		this.head.rightEye.visible = true;
+
+		this.head.mouth.visible = true;
+
+	}
+
+
+
+	wave() {
+
+		if (this.rightArmContainer.rotation.x > -180*Math.PI/180) {
+
+			this.rightArmContainer.rotation.x -= 2*Math.PI/180;
+
+		}
+
+		else {
+
+			this.rightArm.wave();
+
+		}
+
+	}
+
+
+
+	unwave() {
+
+		if (this.rightArm.belowElbow.rotation.z < -1*Math.PI/180) {
+
+			this.rightArm.belowElbow.rotation.z += 1*Math.PI/180;
+
+		}
+
+		else if (this.rightArm.belowElbow.rotation.z > 1*Math.PI/180) {
+
+			this.rightArm.belowElbow.rotation.z -= 1*Math.PI/180;
+
+		}
+
+		else if (this.rightArmContainer.rotation.x < 0) {
+
+			this.rightArmContainer.rotation.x += 1*Math.PI/180;
+
+		}
+
+		else if (this.rightArmContainer.rotation.x > 0) {
+
+			this.rightArmContainer.rotation.x = 0;
+
+		}
+
+		else if (this.rightArm.hand.rotation.z < -1*Math.PI/180) {
+
+			this.rightArm.hand.rotation.z += 1*Math.PI/180;
+
+		}
+
+		else if (this.rightArm.hand.rotation.z > 1*Math.PI/180) {
+
+			this.rightArm.hand.rotation.z -= 1*Math.PI/180;
+
+		}
+
+	}
+
+}
+
+
+
+// makes the Robot's head
+
+class Head extends THREE.Object3D {
+
+	constructor(material) {
+
+		super();
+
+
+
+		const headG = new THREE.CapsuleGeometry(1, 0.9, 4, 32);
+
+		const head = new THREE.Mesh(headG, material);
+
+		this.add(head);
+
+
+
+		const bMaterial = new THREE.MeshBasicMaterial({
+
+			color: 0x000000
+
+		});
+
+		const eyeG = new THREE.SphereGeometry(0.12, 32, 16);
+
+
+
+		this.leftEye = new THREE.Mesh(eyeG, bMaterial);
+
+		this.leftEye.position.set(-0.3, 0.3, 1);
+
+		this.add(this.leftEye);
+
+
+
+		this.rightEye = new THREE.Mesh(eyeG, bMaterial);
+
+		this.rightEye.position.set(0.3, 0.3, 1);
+
+		this.add(this.rightEye);
+
+
+
+		const mouthG = new THREE.BoxGeometry(0.4, 0.1, 0.1);
+
+		this.mouth = new THREE.Mesh(mouthG, bMaterial);
+
+		this.mouth.position.set(0, -0.2, 1);
+
+		this.add(this.mouth);
+
+	}
+
+}
+
+
+
+// makes the Robot's body
+
+class Body extends THREE.Object3D {
+
+	constructor(material) {
+
+		super();
+
+
+
+		const bodyG = new THREE.CylinderGeometry(2, 1.25, 4, 64);
+
+		const body = new THREE.Mesh(bodyG, material);
+
+		body.scale.z = 0.5;
+
+		this.add(body);
+
+
+
+		const shoulderG = new THREE.SphereGeometry(0.75);
+
+		
+
+		const leftShoulder = new THREE.Mesh(shoulderG, material);
+
+		leftShoulder.position.set(-1.9, 1.7, 0);
+
+		this.add(leftShoulder);
+
+
+
+		const rightShoulder = new THREE.Mesh(shoulderG, material);
+
+		rightShoulder.position.set(1.9, 1.7, 0);
+
+		this.add(rightShoulder);
+
+	}
+
+}
+
+
+
+// makes the Robot's arm
+
+class Arm extends THREE.Object3D {
+
+	constructor(material) {
+
+		super();
+
+
+
+		this.armRotUp = true;
+
+
+
+		const bicepG = new THREE.CylinderGeometry(0.5, 0.5, 2, 64);
+
+		const bicep = new THREE.Mesh(bicepG, material);
+
+		bicep.position.set(0, 1.4, 0);
+
+		this.add(bicep);
+
+
+
+		const elbowG = new THREE.SphereGeometry(0.65);
+
+		const elbow = new THREE.Mesh(elbowG, material);
+
+		this.add(elbow);
+
+
+
+		this.belowElbow = new THREE.Object3D();
+
+
+
+		const forearmG = new THREE.CylinderGeometry(0.5, 0.5, 1.5, 64);
+
+		this.forearm = new THREE.Mesh(forearmG, material);
+
+		this.forearm.position.set(0, -1.1, 0);
+
+		this.belowElbow.add(this.forearm);
+
+
+
+		// creates the container that groups everything in the hand
+
+		this.hand = new THREE.Object3D();
+
+		this.hand.position.set(0, -2.2, 0);
+
+		this.belowElbow.add(this.hand);
+
+
+
+		// creates the palm
+
+		const palmG = new THREE.SphereGeometry(0.65);
+
+		this.palm = new THREE.Mesh(palmG, material);
+
+		this.palm.position.set(0, 0, 0);
+
+		this.hand.add(this.palm);
+
+
+
+		// creates the geometry that will be repeated for the fingers
+
+		const fingerG = new THREE.CapsuleGeometry(0.15, 0.3, 4, 8);
+
+
+
+		// creates the thumb
+
+		this.thumb = new THREE.Mesh(fingerG, material);
+
+		this.thumb.position.set(-0.525, -0.4, 0);
+
+		this.hand.add(this.thumb);
+
+
+
+		// creates the pointer finger
+
+		this.pf = new THREE.Mesh(fingerG, material);
+
+		this.pf.position.set(-0.2, -0.75, 0);
+
+		this.hand.add(this.pf);
+
+
+
+		// creates the middle finger
+
+		this.mf = new THREE.Mesh(fingerG, material);
+
+		this.mf.position.set(0.125, -0.8, 0);
+
+		this.hand.add(this.mf);
+
+
+
+		// creates the pinky finger
+
+		this.pinky = new THREE.Mesh(fingerG, material);
+
+		this.pinky.position.set(0.45, -0.5, 0);
+
+		this.hand.add(this.pinky);
+
+
+
+		this.add(this.belowElbow);
+
+
+
+		this.waveBERight = true;
+
+		this.waveHRight = true;
+
+	}
+
+
+
+	getBelowElbow() {
+
+		return this.belowElbow;
+
+	}
+
+
+
+	wave() {
+
+		// waves everything from the elbow down back and forth
+
+		if (this.belowElbow.rotation.z >= 30*Math.PI/180) {
+
+			this.waveBERight = false;
+
+		}
+
+		else if (this.belowElbow.rotation.z <= -30*Math.PI/180) {
+
+			this.waveBERight = true;
+
+		}
+
+		if (this.waveBERight) {
+
+			this.belowElbow.rotation.z += 2*Math.PI/180;
+
+		}
+
+		else {
+
+			this.belowElbow.rotation.z -= 2*Math.PI/180;
+
+		}
+
+
+
+		// waves the hand back and forth as well
+
+		if (this.hand.rotation.z >= 30*Math.PI/180) {
+
+			this.waveHRight = false;
+
+		}
+
+		else if (this.hand.rotation.z <= -30*Math.PI/180) {
+
+			this.waveHRight = true;
+
+		}
+
+		if (this.waveHRight) {
+
+			this.hand.rotation.z += 2*Math.PI/180;
+
+		}
+
+		else {
+
+			this.hand.rotation.z -= 2*Math.PI/180;
+
+		}
+
+	}
+
+}
+
+
+
+// makes the Robot's leg
+
+class Leg extends THREE.Object3D {
+
+	constructor(material) {
+
+		super();
+
+
+
+		const thighG = new THREE.CylinderGeometry(0.5, 0.5, 2, 64);
+
+		const thigh = new THREE.Mesh(thighG, material);
+
+		thigh.position.set(0, -1, 0);
+
+		this.add(thigh);
+
+
+
+		const kneeG = new THREE.SphereGeometry(0.65);
+
+		const knee = new THREE.Mesh(kneeG, material);
+
+		knee.position.set(0, -2.35, 0);
+
+		this.add(knee);
+
+
+
+		const calfG = new THREE.CylinderGeometry(0.5, 0.5, 2, 64);
+
+		const calf = new THREE.Mesh(calfG, material);
+
+		calf.position.set(0, -3.7, 0);
+
+		this.add(calf);
+
+
+
+		const footG = new THREE.SphereGeometry(0.65);
+
+		const foot = new THREE.Mesh(footG, material);
+
+		foot.position.set(0, -4.7, 0);
+
+		this.add(foot);
+
+
+
+		this.moveUp = true;
+
+		this.moveRight = true;
+
+	}
+
+
+
+	walk() {
+
+		if (this.rotation.x >= 30*Math.PI/180) {
+
+			this.moveUp = false;
+
+		}
+
+		else if (this.rotation.x <= -30*Math.PI/180) {
+
+			this.moveUp = true;
+
+		}
+
+		if (this.moveUp) {
+
+			this.rotation.x += 2*Math.PI/180;
+
+		}
+
+		else {
+
+			this.rotation.x -= 2*Math.PI/180;
+
+		}
+
+	}
+
+
+
+	unwalk() {
+
+		if (this.rotation.x < -1*Math.PI/180) {
+
+			this.rotation.x += 1*Math.PI/180;
+
+		}
+
+		else if (this.rotation.x > 1*Math.PI/180) {
+
+			this.rotation.x -= 1*Math.PI/180;
+
+		}
+
+	}
+
+
+
+	sidestep() {
+
+		if (this.rotation.z >= 0*Math.PI/180) {
+
+			this.moveRight = false;
+
+		}
+
+		else if (this.rotation.z <= -10*Math.PI/180) {
+
+			this.moveRight = true;
+
+		}
+
+		if (this.moveRight) {
+
+			this.rotation.z += 1*Math.PI/180;
+
+		}
+
+		else {
+
+			this.rotation.z -= 1*Math.PI/180;
+
+		}
+
+	}
+
+
+
+	unsidestep() {
+
+		if (this.rotation.z < -1*Math.PI/180) {
+
+			this.rotation.z += 1*Math.PI/180;
+
+		}
+
+		else if (this.rotation.z > 1*Math.PI/180) {
+
+			this.rotation.z -= 1*Math.PI/180;
+
+		}
+
+	}
+
+}
+
+
+
 class RobotHead extends THREE.Object3D {
 	//textures
 	teeth = new THREE.TextureLoader().load('../pictures/teeth2.jpg' );
@@ -2383,6 +3110,7 @@ class Room extends THREE.Object3D {
 	chest = new Chest();
 	desk = new Desk();
 	chair = new Chair();
+	joshrobot = new JoshRobot();
 
 	originalQuat = new THREE.Quaternion();
 	newQuat = new THREE.Quaternion();
@@ -2504,6 +3232,11 @@ class Room extends THREE.Object3D {
 		this.robot.scale.y = 1.5;
 		this.robot.scale.z = 1.5;
 
+		this.joshrobot.scale.set(0.25, 0.25, 0.25);
+		this.joshrobot.rotation.y = -45 * Math.PI/180;
+		this.joshrobot.position.set(13, 5, 5)
+		
+
 
 		//sitting on bed, comment out to stand in middle 
 		this.robot.position.x -= 8;
@@ -2614,6 +3347,7 @@ class Room extends THREE.Object3D {
 		this.add(this.chair);
 		// this.add(this.fishtank);
 		this.add(this.lampLight);
+		this.add(this.joshrobot);
 	}
 
 	getLampLight() {
@@ -2704,6 +3438,7 @@ room.scale.y = 3;
 room.scale.z = 3;
 
 tank.position.z -= 60;
+tank.position.y -= 0.2
 
 //add to scene
 scene.add(dirLight);
