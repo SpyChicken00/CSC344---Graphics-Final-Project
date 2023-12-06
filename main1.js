@@ -111,10 +111,10 @@ class Tank extends THREE.Object3D {
 		
 
 		//antlion
-		this.antlion = new AntLion();
-		this.antlion.scale.set(0.5, 0.5, 0.5);
-		this.antlion.position.set(-4.5, -4.5, -3);
-		this.add(this.antlion);
+		this.antLion = new AntLion();
+		this.antLion.scale.set(0.5, 0.5, 0.5);
+		this.antLion.position.set(-4.5, -4.5, -3);
+		this.add(this.antLion);
 
 		//tank light
 		this.tanklight.position.set(0, 0, 0);
@@ -395,6 +395,10 @@ class Tank extends THREE.Object3D {
 
 	getNemo() {
 		return this.nemo;
+	}
+
+	getAntLion() {
+		return this.antLion;
 	}
 
 	getNemoSize() {
@@ -1294,60 +1298,77 @@ class AntLion extends THREE.Object3D{
 	  var hill = new THREE.SphereGeometry( 2, 32, 16, phiStart, phiEnd, thetaStart, thetaEnd );
 	  var hillMesh = new THREE.Mesh( hill, material13 );
 	  this.add(hillMesh);
+
+	  this.body = new THREE.Object3D();
   
 	  var mainBodySphere1 = new THREE.SphereGeometry(.75,32,32);
 	  var mainBodySphere1Mesh = new THREE.Mesh(mainBodySphere1, material17);
-	  mainBodySphere1Mesh.position.y = 3;
-	  this.add(mainBodySphere1Mesh);
+	  mainBodySphere1Mesh.position.y = 0;
+	  this.body.add(mainBodySphere1Mesh);
   
 	  var leftJaw = new THREE.BoxGeometry(.3,1,.3);
 	  var leftJawMesh = new THREE.Mesh(leftJaw, material2);
-	  leftJawMesh.position.y = 4;
+	  leftJawMesh.position.y = 1;
 	  leftJawMesh.position.x = .5;
 	  leftJawMesh.rotation.z = (-20 * Math.PI) / 180;
-	  this.add(leftJawMesh);
+	  this.body.add(leftJawMesh);
   
   
 	  var leftJaw2 = new THREE.BoxGeometry(.3,1,.3);
 	  var leftJaw2Mesh = new THREE.Mesh(leftJaw2, material2);
-	  leftJaw2Mesh.position.y = 4.8;
+	  leftJaw2Mesh.position.y = 1.8;
 	  leftJaw2Mesh.position.x = .5;
 	  leftJaw2Mesh.rotation.z = (20 * Math.PI) / 180;
-	  this.add(leftJaw2Mesh)
+	  this.body.add(leftJaw2Mesh)
   
 	  var rightJaw = new THREE.BoxGeometry(.3,1,.3);
 	  var rightJawMesh = new THREE.Mesh(rightJaw, material2);
-	  rightJawMesh.position.y = 4;
+	  rightJawMesh.position.y = 1;
 	  rightJawMesh.position.x = -.5;
 	  rightJawMesh.rotation.z = (20 * Math.PI) / 180;
-	  this.add(rightJawMesh);
+	  this.body.add(rightJawMesh);
   
   
 	  var rightJaw2 = new THREE.BoxGeometry(.3,1,.3);
 	  var rightJaw2Mesh = new THREE.Mesh(rightJaw2, material2);
-	  rightJaw2Mesh.position.y = 4.8;
+	  rightJaw2Mesh.position.y = 1.8;
 	  rightJaw2Mesh.position.x = -.5;
 	  rightJaw2Mesh.rotation.z = (-20 * Math.PI) / 180;
-	  this.add(rightJaw2Mesh)
+	  this.body.add(rightJaw2Mesh)
   
 	  var leftEye = new THREE.SphereGeometry(.2, 32, 32);
 	  var leftEyeMesh = new THREE.Mesh(leftEye, material18);
-	  leftEyeMesh.position.y = 3.3;
+	  leftEyeMesh.position.y = 0.3;
 	  leftEyeMesh.position.z = .45;
 	  leftEyeMesh.position.x = -.5;
-	  this.add(leftEyeMesh);
+	  this.body.add(leftEyeMesh);
   
 	  var rightEye = new THREE.SphereGeometry(.2, 32, 32);
 	  var rightEyeMesh = new THREE.Mesh(rightEye, material18);
-	  rightEyeMesh.position.y = 3.3;
+	  rightEyeMesh.position.y = 0.3;
 	  rightEyeMesh.position.z = .45;
 	  rightEyeMesh.position.x = .5;
-	  this.add(rightEyeMesh);
+	  this.body.add(rightEyeMesh);
   
 	  var mainBodySphere2 = new THREE.SphereGeometry(.75,32,32);
 	  var mainBodySphere2Mesh = new THREE.Mesh(mainBodySphere2, material17);
-	  mainBodySphere2Mesh.position.y = 2;
-	  this.add(mainBodySphere2Mesh);
+	  mainBodySphere2Mesh.position.y = -1;
+	  this.body.add(mainBodySphere2Mesh);
+
+	  this.body.position.y = -1;
+	  this.add(this.body);
+	}
+
+	animateUp() {
+		if (this.body.position.y < 3) {
+			this.body.position.y += 0.1;
+		}
+	}
+
+	animateDown() {
+		if (this.body.position.y > -1) {
+			this.body.position.y -= 0.1;
+		}
 	}
 }
 
@@ -4166,6 +4187,17 @@ animate();
 function animate() {
 	requestAnimationFrame(animate);
 	let nemo = tank.getNemo();
+	let antLion = tank.getAntLion();
+
+	if (nemo.position.x > antLion.position.x - 1.75 &&
+		nemo.position.x < antLion.position.x + 1.75 &&
+		nemo.position.z > antLion.position.z - 1.75 &&
+		nemo.position.z < antLion.position.z + 1.75) {
+		antLion.animateUp();
+	}
+	else {
+		antLion.animateDown();
+	}
 
 	// animate nemo
 	nemo.propellerAnimation(10);
