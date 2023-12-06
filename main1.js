@@ -80,6 +80,18 @@ class Tank extends THREE.Object3D {
 		this.jellyGroup.scale.set(0.25, 0.25, 0.25);
 		this.jellyGroup.position.set(-5, -1, -4);
 		this.add(this.jellyGroup);
+
+		// makes Patrick's house
+		this.patrickHouse = new PatrickHouse();
+		this.patrickHouse.scale.set(0.5, 0.5, 0.5);
+		this.patrickHouse.position.set(5, -4.4, -4);
+		this.add(this.patrickHouse);
+
+		// makes Squidward's house
+		this.squidwardHouse = new SquidwardHouse();
+		this.squidwardHouse.scale.set(0.5, 0.5, 0.5);
+		this.squidwardHouse.position.set(7, -3.4, -3);
+		this.add(this.squidwardHouse);
 	}
 
 	getWidth() {
@@ -155,7 +167,7 @@ class Sand extends THREE.Object3D {
 
 				// sides
 				if (ix == -this.AMOUNTX/2 || ix == this.AMOUNTX/2-1 || iz == 0 || iz == this.AMOUNTZ-1) {
-					for (let iy = y - 0.1; iy >= 0; iy -= 0.1) {
+					for (let iy = y - 0.05; iy >= 0; iy -= 0.05) {
 						positions.push(x);
 						positions.push(iy);
 						positions.push(z);
@@ -189,31 +201,35 @@ class Sand extends THREE.Object3D {
 	}
 }
 
-// fish materials and textures
 const material1 = new THREE.MeshPhongMaterial({ color: 0xFFB406, flatShading: false });
 const material2 = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, flatShading: false });
 const material3 = new THREE.MeshPhongMaterial({ color: 0x000000, flatShading: false });
 const material4 = new THREE.MeshPhongMaterial({ color: 0xBE4321, flatShading: false });
 const material5 = new THREE.MeshPhongMaterial({ color: 0xBE4321, flatShading: false });
 const material6 = new THREE.MeshPhongMaterial({ color: 0x9B9B9B, flatShading: false });
-const material7 = new THREE.MeshPhongMaterial({ color: 0x2F8899, transparent: false, opacity: 0.5, flatShading: false, side: THREE.DoubleSide });
-const material8 = new THREE.MeshPhongMaterial({ color: 0x7CEAFF, transparent: false, opacity: .95, flatShading: false, side: THREE.DoubleSide });
+const material7 = new THREE.MeshPhongMaterial({ color: 0x2F8899, transparent: true, opacity: 0.5, flatShading: false, side: THREE.DoubleSide });
+const material8 = new THREE.MeshPhongMaterial({ color: 0x7CEAFF, transparent: true, opacity: .95, flatShading: false, side: THREE.DoubleSide });
 const material9 = new THREE.MeshPhongMaterial({ color: 0x585858, flatShading: false });
 const material10 = new THREE.MeshPhongMaterial({ color: 0xCCCCCC, flatShading: false });
 const material11 = new THREE.MeshPhongMaterial({ color: 0x6F4521, flatShading: false });
 const material12 = new THREE.MeshPhongMaterial({ color: 0x6C6C6C, flatShading: false });
 const material13 = new THREE.MeshPhongMaterial({ color: 0xD0C347, flatShading: false });
+const material14 = new THREE.MeshPhongMaterial({ color: 0x61729C, flatShading: false });
+const material15 = new THREE.MeshPhongMaterial({ color: 0x8FB1ED, flatShading: false });
+const material16 = new THREE.MeshPhongMaterial({ color: 0xAC762D, flatShading: false });
+const material17 = new THREE.MeshPhongMaterial({ color: 0xAF650E, flatShading: false });
+const material18 = new THREE.MeshPhongMaterial({ color: 0xB60000, flatShading: false });
 
 const textureLoader1 = new THREE.TextureLoader();
-const redScalesTexture = textureLoader1.load('../pictures/redScales.jpeg');
+const redScalesTexture = textureLoader1.load('redScales.jpeg');
 const redScalesMaterial = new THREE.MeshBasicMaterial({ map: redScalesTexture });
 
 const textureLoader2 = new THREE.TextureLoader();
-const blueGemTexture = textureLoader2.load('../pictures/blueGem.jpeg');
+const blueGemTexture = textureLoader2.load('blueGem.jpeg');
 const blueGemMaterial = new THREE.MeshBasicMaterial({ map: blueGemTexture });
 
 const textureLoader3 = new THREE.TextureLoader();
-const rockTexture = textureLoader2.load('../pictures/rockTxtr.png');
+const rockTexture = textureLoader3.load('rockTxtr.png');
 const rockMaterial = new THREE.MeshBasicMaterial({ map: rockTexture });
 
 const textureLoader4 = new THREE.TextureLoader();
@@ -691,10 +707,6 @@ class PatrickHouse extends THREE.Object3D{
 	  stick6Mesh.rotation.z = (90 * Math.PI) / 180;
 	  stick6Mesh.rotation.y = (90 * Math.PI) / 180;
 	  this.add(stick6Mesh);
-  
-  
-  
-	  scene.add(this);
 	}
   }
   
