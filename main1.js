@@ -8,6 +8,9 @@ import { GUI } from '../modules/dat.gui.module.js';
 
 // creates the tank class
 class Tank extends THREE.Object3D {
+	//tank light 
+	tanklight = new THREE.PointLight(0xffffff, 20, 100);
+
 	constructor(x, y, z) {
 		super();
 
@@ -34,7 +37,7 @@ class Tank extends THREE.Object3D {
 			// medium: 0xACEBFF
 			// darker: 0x91E5FF 
 			color: 0xC00f4FF,
-			opacity: 0.4, 
+			opacity: 0.3, 
 			transparent: true,
 			side: THREE.DoubleSide
 		})
@@ -73,6 +76,31 @@ class Tank extends THREE.Object3D {
 		this.jellyGroup.scale.set(0.25, 0.25, 0.25);
 		this.jellyGroup.position.set(-5, -1, -4);
 		this.add(this.jellyGroup);
+
+
+		//sword
+		this.swordStone = new SwordStone();
+		this.swordStone.scale.set(0.5, 0.5, 0.5);
+		this.swordStone.position.set(5, -4, -2);
+		this.add(this.swordStone);
+		//patrickHouse
+		this.patrickHouse = new PatrickHouse();
+		this.patrickHouse.scale.set(0.5, 0.5, 0.5);
+		this.patrickHouse.position.set(-5, -4.3, 2);
+		this.add(this.patrickHouse)
+		//squidward
+		this.squidwardHouse = new SquidwardHouse();
+		this.squidwardHouse.scale.set(0.5, 0.5, 0.5);
+		this.squidwardHouse.position.set(3, -3.5, 2);
+		this.add(this.squidwardHouse)
+		//antlion
+		this.antlion = new AntLion();
+		this.antlion.scale.set(0.5, 0.5, 0.5);
+		this.antlion.position.set(3, -4.5, -2);
+		this.add(this.antlion);
+
+		this.tanklight.position.set(0, 0, 0);
+		this.add(this.tanklight);
 	}
 
 	getWidth() {
@@ -217,19 +245,24 @@ const material9 = new THREE.MeshPhongMaterial({ color: 0x585858, flatShading: fa
 const material10 = new THREE.MeshPhongMaterial({ color: 0xCCCCCC, flatShading: false });
 const material11 = new THREE.MeshPhongMaterial({ color: 0x6F4521, flatShading: false });
 const material12 = new THREE.MeshPhongMaterial({ color: 0x6C6C6C, flatShading: false });
-const material13 = new THREE.MeshPhongMaterial({ color: 0xD0C347, flatShading: false });
+const material13 = new THREE.MeshPhongMaterial({ color: 0xD0C347, emissive: 0xe8d17e, flatShading: false });
+const material14 = new THREE.MeshPhongMaterial({ color: 0x61729C, flatShading: false });
+const material15 = new THREE.MeshPhongMaterial({ color: 0x8FB1ED, flatShading: false });
+const material16 = new THREE.MeshPhongMaterial({ color: 0xAC762D, flatShading: false });
+const material17 = new THREE.MeshPhongMaterial({ color: 0xAF650E, flatShading: false });
+const material18 = new THREE.MeshPhongMaterial({ color: 0xB60000, flatShading: false });
 
 const textureLoader1 = new THREE.TextureLoader();
 const redScalesTexture = textureLoader1.load('../pictures/redScales.jpeg');
-const redScalesMaterial = new THREE.MeshBasicMaterial({ map: redScalesTexture });
+const redScalesMaterial = new THREE.MeshBasicMaterial({color: 0x999999,map: redScalesTexture });
 
 const textureLoader2 = new THREE.TextureLoader();
 const blueGemTexture = textureLoader2.load('../pictures/blueGem.jpeg');
-const blueGemMaterial = new THREE.MeshBasicMaterial({ map: blueGemTexture });
+const blueGemMaterial = new THREE.MeshBasicMaterial({color: 0x999999, map: blueGemTexture });
 
 const textureLoader3 = new THREE.TextureLoader();
 const rockTexture = textureLoader2.load('../pictures/rockTxtr.png');
-const rockMaterial = new THREE.MeshBasicMaterial({ map: rockTexture });
+const rockMaterial = new THREE.MeshBasicMaterial({color: 0x7777777, map: rockTexture });
 
 const textureLoader4 = new THREE.TextureLoader();
 const squidHouseTexture = textureLoader4.load('squidwardTexture.png');
@@ -1496,6 +1529,10 @@ class Lamp extends THREE.Object3D {
 		this.add(this.lightBall);
 		this.add(this.lightBall2)
 	}
+
+	getShadeMaterial() {
+		return this.shade.material;
+	}
 }
 
 class Bed extends THREE.Object3D {
@@ -2365,6 +2402,10 @@ class Room extends THREE.Object3D {
 	getNew() {
 		return this.newQuat;
 	}
+
+	getLamp() {
+		return this.lamp;
+	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //renderer
@@ -2574,6 +2615,7 @@ const settings = {
 			renderCamera = camera;
 			lampLight.intensity += 1500;
 		}
+		room.getLamp().getShadeMaterial.transparent = true;
 	},
 
 	'fish camera' : function () {
@@ -2588,14 +2630,16 @@ const settings = {
 		else {
 			renderCamera = camera;
 		}
+		room.getLamp().getShadeMaterial.transparent = false;
 	},
 
 
 	//camera.position.set(0,20,130);
 	'room camera' : function () {
-		if ((renderCamera != camera)) {
+		if ((renderCamera == robotCamera)) {
 			renderCamera = camera;
 			renderCamera.position.set(0,20,130);
+			lampLight.intensity += 1500;
 			//renderCamera.lookAt(new THREE.Vector3(0, 0, 0));
 		}
 		else if ((renderCamera == fishCamera)){
@@ -2608,6 +2652,7 @@ const settings = {
 			renderCamera.position.set(0,20,130);
 			//renderCamera.lookAt(new THREE.Vector3(0, 0, 0));
 		}
+		room.getLamp().getShadeMaterial.transparent = true;
 	}
 } 
 interactionFolder.add(settings, 'wave at fish').name("Wave at Fish");
