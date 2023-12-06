@@ -141,9 +141,25 @@ class Tank extends THREE.Object3D {
 		this.add(this.squidwardHouse);
 
 
-		//bubbles?
-		//coral/plants?
-		//rocks
+		this.vent = new Vent();
+		this.vent.scale.set(0.5, 0.5, 0.5)
+		this.vent.position.y -= 3.7;
+		this.vent.position.x -= 2.8;
+		this.add(this.vent);
+
+		this.vent2 = new Vent();
+		this.vent2.scale.set(0.7, 0.7, 0.7)
+		this.vent2.position.y -= 3.9;
+		this.vent2.position.x += 8;
+		this.vent2.position.z += 3;
+		this.add(this.vent2);
+
+		this.vent3 = new Vent();
+		this.vent3.scale.set(0.4, 0.4, 0.4)
+		this.vent3.position.y -= 2.5;
+		this.vent3.position.x -= 0;
+		this.vent3.position.z -= 4;
+		this.add(this.vent3);
 
 
 		//"Coral" (https://sketchfab.com/3d-models/coral-c26e47859f0945d69a4e2944ee80b995) by Sandra_s
@@ -212,6 +228,63 @@ class Tank extends THREE.Object3D {
 			console.error(error);
 		});
 
+		//seaweed2
+		//https://sketchfab.com/3d-models/seaweed-2-93840cff90094924a6383448e8528375 by lyningsknallis
+		loader.load('../3dModels/seaweed_2.glb', function (gltf) {
+			var seaweed = gltf.scene;
+			//rock2.scale.set(25, 25, 30); //25
+			//rock2.position.set(106, -61, 93);// 81
+			seaweed.scale.set(0.010, 0.010, 0.010)
+			seaweed.position.set(14, 10.8,27)
+			scene.add(seaweed)	
+			
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+		
+		//seaweed2
+		//https://sketchfab.com/3d-models/seaweed-2-93840cff90094924a6383448e8528375 by lyningsknallis
+		loader.load('../3dModels/seaweed_2.glb', function (gltf) {
+			var seaweed = gltf.scene;
+			//rock2.scale.set(25, 25, 30); //25
+			//rock2.position.set(106, -61, 93);// 81
+			seaweed.scale.set(0.010, 0.010, 0.010)
+			seaweed.position.set(17.2, 11,24)
+			scene.add(seaweed)	
+			
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+		//seaweed2
+		//https://sketchfab.com/3d-models/seaweed-2-93840cff90094924a6383448e8528375 by lyningsknallis
+		loader.load('../3dModels/seaweed_2.glb', function (gltf) {
+			var seaweed = gltf.scene;
+			//rock2.scale.set(25, 25, 30); //25
+			//rock2.position.set(106, -61, 93);// 81
+			seaweed.scale.set(0.010, 0.010, 0.010)
+			seaweed.position.set(19.1, 10.9,26.5)
+			scene.add(seaweed)	
+			
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+		//seaweed2
+		//https://sketchfab.com/3d-models/seaweed-2-93840cff90094924a6383448e8528375 by lyningsknallis
+		loader.load('../3dModels/seaweed_2.glb', function (gltf) {
+			var seaweed = gltf.scene;
+			//rock2.scale.set(25, 25, 30); //25
+			//rock2.position.set(106, -61, 93);// 81
+			seaweed.scale.set(0.010, 0.010, 0.010)
+			seaweed.position.set(10, 11.1,26)
+			scene.add(seaweed)	
+			
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
 		//TODO 2 more seaweed 2's (different sizes)
 
 		//purple seaweed
@@ -232,14 +305,78 @@ class Tank extends THREE.Object3D {
 		//https://sketchfab.com/3d-models/pineapple-3debe241ac7e401aa36ae944daa1708e by Lassi Kaukonen
 		loader.load('../3dModels/pineapple.glb', function (gltf) {
 			var pineapple = gltf.scene;
-			//rock2.scale.set(25, 25, 30); //25
-			//rock2.position.set(106, -61, 93);// 81
 			pineapple.scale.set(1, 1, 1)
 			pineapple.position.set(23,11,23)
 			scene.add(pineapple)	
 		}, undefined, function(error) {
 			console.error(error);
 		});
+
+
+
+		//more seaweed
+		//https://sketchfab.com/3d-models/seaweed-dec5b256a37f40acb63b0bf30b45d756   by OwenCalingasan
+		loader.load('../3dModels/sea_weed.glb', function (gltf) {
+			var seaweed = gltf.scene;
+			seaweed.scale.set(0.8, 0.8, 0.8)
+			seaweed.position.set(15.2, 11.3, 24)
+			scene.add(seaweed)	
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+		//more seaweed
+		//https://sketchfab.com/3d-models/seaweed-dec5b256a37f40acb63b0bf30b45d756   by OwenCalingasan
+		loader.load('../3dModels/sea_weed.glb', function (gltf) {
+			var seaweed = gltf.scene;
+			seaweed.scale.set(0.8, 0.8, 0.8)
+			seaweed.position.set(12.4, 11.4, 27)
+			scene.add(seaweed)	
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+		//more seaweed
+		//https://sketchfab.com/3d-models/seaweed-dec5b256a37f40acb63b0bf30b45d756   by OwenCalingasan
+		loader.load('../3dModels/sea_weed.glb', function (gltf) {
+			var seaweed = gltf.scene;
+			seaweed.scale.set(0.7, 0.7, 0.7)
+			seaweed.position.set(17.1, 11.2, 27)
+			scene.add(seaweed)	
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+		//more seaweed
+		//https://sketchfab.com/3d-models/seaweed-dec5b256a37f40acb63b0bf30b45d756   by OwenCalingasan
+		loader.load('../3dModels/sea_weed.glb', function (gltf) {
+			var seaweed = gltf.scene;
+			seaweed.scale.set(0.6, 0.6, 0.6)
+			seaweed.position.set(19.6, 11, 24.5)
+			seaweed.rotation.y += 90*Math.PI/180;
+			scene.add(seaweed)	
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+
+		
+		//sunken ship
+		//https://sketchfab.com/3d-models/sunken-shipwreck-2326266a1f3f4b4db76da807f824f76e by DogOnAKeyboard
+		loader.load('../3dModels/sunken_shipwreck.glb', function (gltf) {
+			var seaweed = gltf.scene;
+			seaweed.scale.set(0.009, 0.009, 0.009)
+			//seaweed.position.set(19.6, 11, 24.5)
+			seaweed.position.y += 11.3;
+			seaweed.position.z += 26.5
+			seaweed.position.x += 21;
+			seaweed.rotation.y += 160*Math.PI/180;
+			scene.add(seaweed)	
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+
 
 
 	}
@@ -282,6 +419,18 @@ class Tank extends THREE.Object3D {
 
 	getTankLight() {
 		return this.tanklight;
+	}
+
+	getVent() {
+		return this.vent;
+	}
+
+	getVent2() {
+		return this.vent2;
+	}
+
+	getVent3() {	
+		return this.vent3;
 	}
 }
 
@@ -385,6 +534,7 @@ const material15 = new THREE.MeshPhongMaterial({ color: 0x8FB1ED, flatShading: f
 const material16 = new THREE.MeshPhongMaterial({ color: 0xAC762D, flatShading: false });
 const material17 = new THREE.MeshPhongMaterial({ color: 0xAF650E, flatShading: false });
 const material18 = new THREE.MeshPhongMaterial({ color: 0xB60000, flatShading: false });
+const material19 = new THREE.MeshPhongMaterial({ color: 0xC7EBFC, transparent: true, opacity: .35, flatShading: false, side: THREE.DoubleSide   });
 
 const textureLoader1 = new THREE.TextureLoader();
 const redScalesTexture = textureLoader1.load('../pictures/redScales.jpeg');
@@ -404,6 +554,10 @@ const squidHouseMaterial = new THREE.MeshBasicMaterial({
 	color: 0x29599c,
 	map: squidHouseTexture 
 });
+
+const textureLoader5 = new THREE.TextureLoader();
+const pSoupTexture = textureLoader5.load('../pictures/primordialSoup.jpeg');
+const pSoupMaterial = new THREE.MeshBasicMaterial({ map: pSoupTexture });
 
 class Fish1 extends THREE.Object3D {
 	constructor() {
@@ -1006,6 +1160,51 @@ class PatrickHouse extends THREE.Object3D{
 	}
   }
   
+
+
+  class Vent extends THREE.Object3D{
+	constructor(){
+	  super();
+	  var mainBody = new THREE.CylinderGeometry(.5,1,1.3,32);
+	  var mainBodyMesh = new THREE.Mesh(mainBody, pSoupMaterial);
+	  this.add(mainBodyMesh);
+  
+	  var blackCyl = new THREE.CylinderGeometry(.5,.5,1.31,32);
+	  var blackCylMesh = new THREE.Mesh(blackCyl, material3);
+	  this.add(blackCylMesh);
+  
+	  this.bubble1 = new Bubble();
+	  this.bubble1.position.y = 2;
+	  this.add(this.bubble1);
+  
+	  this.bubble2 = new Bubble();
+	  this.bubble2.position.y = 0;
+	  this.bubble2.position.x = .3;
+	  this.bubble2.position.z = .1;
+	  this.add(this.bubble2);
+  
+	  this.bubble3 = new Bubble();
+	  this.bubble3.position.y = -1;
+	  this.bubble3.position.x = -.3;
+	  this.bubble3.position.z = -.1;
+	  this.add(this.bubble2);
+  
+	  scene.add(this);
+	}
+  }
+  
+  class Bubble extends THREE.Object3D{
+	constructor(){
+	  super();
+	  var bubble = new THREE.SphereGeometry(.2,32,32);
+	  var bubbleMesh = new THREE.Mesh(bubble, material19);
+	  this.add(bubbleMesh);
+  
+	  scene.add(this);
+	}
+  }
+
+
 class SquidwardHouse extends THREE.Object3D{
 	constructor(){
 	  super();
@@ -1160,6 +1359,231 @@ class Squid extends THREE.Object3D{
 	  this.add(mainBodyMesh);
 	}
  }
+
+ class CraneMainBody extends THREE.Object3D{
+
+	constructor(){
+		super();
+	//crane body -------------------------
+	//crane base
+		var craneBase = new THREE.BoxGeometry( 7.5, 1.5, 4 );
+		const craneBaseMesh = new THREE.Mesh(craneBase , material2 );
+
+
+		//craneDome
+		var craneDome = new THREE.BoxGeometry(3, 3, 2);
+		const craneDomeMesh = new THREE.Mesh(craneDome , material2 );
+		craneDomeMesh.position.y = 1;
+		craneDomeMesh.position.x = -2.25;
+		craneDomeMesh.position.z = 1;
+
+		//craneDomeWindowSide
+		var craneDomeWindowSide = new THREE.BoxGeometry(2, 1.5, 2.5);
+		const craneDomeWindowSideMesh = new THREE.Mesh(craneDomeWindowSide, material4);
+		craneDomeWindowSideMesh.position.y = 1.5;
+		craneDomeWindowSideMesh.position.x = -2.35;
+		craneDomeWindowSideMesh.position.z = .9;
+
+		//armPart1
+		var armPart1 = new THREE.CylinderGeometry(1, 1, 3, 10);
+		const armPart1Mesh = new THREE.Mesh(armPart1, material1);
+		armPart1Mesh.position.x = 2;
+		armPart1Mesh.position.y = 1;
+
+
+		//armPart2
+		var armPart2 = new THREE.CylinderGeometry(.75, .75, 5, 10)
+		const armPart2Mesh = new THREE.Mesh(armPart2, material1);
+		armPart2Mesh.position.x = 2;
+		armPart2Mesh.position.y= 3;
+
+		//frontWheels
+		var frontWheels = new THREE.CylinderGeometry(.75, .75, 4.5, 10);
+		const frontWheelsMesh = new THREE.Mesh(frontWheels, material3);
+		frontWheelsMesh.rotation.x = Math.PI / 2;
+		frontWheelsMesh.position.x = -2.5;
+		frontWheelsMesh.position.y = -.5;
+
+		//frontWheelsHub
+		var frontWheelsHub = new THREE.CylinderGeometry(.50, .50, 4.7, 10);
+		const frontWheelsHubMesh = new THREE.Mesh(frontWheelsHub, material1);
+		frontWheelsHubMesh.rotation.x = Math.PI / 2;
+		frontWheelsHubMesh.position.x = -2.5;
+		frontWheelsHubMesh.position.y = -.5;
+
+
+		//backWheels
+		var backWheels = new THREE.CylinderGeometry(.75, .75, 4.5, 10);
+		const backWheelsMesh = new THREE.Mesh(backWheels, material3);
+		backWheelsMesh.rotation.x = Math.PI / 2;
+		backWheelsMesh.position.x = 2.5;
+		backWheelsMesh.position.y = -.5;
+
+		//backWheelsHub
+		var backWheelsHub = new THREE.CylinderGeometry(.50, .50, 4.7, 10);
+		const backWheelsHubMesh = new THREE.Mesh(backWheelsHub, material1);
+		backWheelsHubMesh.rotation.x = Math.PI / 2;
+		backWheelsHubMesh.position.x = 2.5;
+		backWheelsHubMesh.position.y = -.5;
+
+		var parkingArm = new ParkArm();
+		var hinge = new THREE.Object3D();
+		hinge.add(parkingArm);
+		this.add(hinge);
+
+
+		//circle
+		this.add(craneBaseMesh);
+		this.add(craneDomeMesh);
+		this.add(armPart1Mesh);
+		this.add(armPart2Mesh);
+		this.add(frontWheelsMesh);
+		this.add(frontWheelsHubMesh);
+		this.add(backWheelsMesh);
+		this.add(backWheelsHubMesh);
+		this.add(craneDomeWindowSideMesh);
+		scene.add(this);
+	}
+}
+
+class Gripper extends THREE.Object3D{
+	constructor(){
+		super();
+		const textureLoader = new THREE.TextureLoader();
+		//const texture = textureLoader.load('../pictures/spiral.png');
+		//const materialDrill = new THREE.MeshBasicMaterial({ color: 0x777777});
+
+		var thumb = new THREE.ConeGeometry(1,4,32);
+
+		const thumbMesh = new THREE.Mesh(thumb, material1);
+
+		this.add(thumbMesh);
+
+	}
+}
+
+class CraneArmExtention extends THREE.Object3D{
+	constructor(){
+		super();
+		var armExtention = new THREE.BoxGeometry(5,1,1);
+		const armExtentionMesh = new THREE.Mesh(armExtention, material1);
+		armExtentionMesh.position.x = -3;
+		var pivot = new THREE.Object3D();
+
+		var thumb = new Gripper();
+		thumb.position.x = 0;
+		var turningPoint = new THREE.Object3D();
+		turningPoint.position.x = -6;
+		turningPoint.position.y = 0;
+
+
+		turningPoint.add(thumb);
+		this.add(turningPoint);
+
+		pivot.add(armExtentionMesh);
+		scene.add(pivot);
+		this.add(pivot);
+
+	}
+}
+
+class CraneArm extends THREE.Object3D {
+  constructor() {
+    super();
+    var armSegment1 = new THREE.BoxGeometry(5, 1, 1);
+    const armSegment1Mesh = new THREE.Mesh(armSegment1, material1);
+
+		var armExtention = new CraneArmExtention();
+
+		armSegment1Mesh.position.x = -2;
+
+    // Create an Object3D to act as the pivot point
+    var pivot = new THREE.Object3D();
+    pivot.add(armSegment1Mesh);
+
+    // Position the pivot point
+    pivot.position.x = 4;
+    pivot.position.y = -1;
+
+
+
+		var endOfArm = new THREE.Object3D();
+		endOfArm.position.x = -4;
+		endOfArm.position.y = 0;
+
+		//endOfArm.position.x = armSegment1Mesh.position.x + 1;
+    //endOfArm.position.y = armSegment1Mesh.position.y;
+
+		pivot.add(endOfArm);
+		endOfArm.add(armExtention);
+    this.add(pivot);
+		scene.add(this);
+		//---------------------------------------------
+  }
+
+}
+
+class ParkArm extends THREE.Object3D {
+	constructor(){
+		super();
+		var arm = new THREE.BoxGeometry(3,.5,.5);
+		var spike = new THREE.BoxGeometry(.2,1,.2);
+		const spikeMesh = new THREE.Mesh(spike, material1);
+		const armMesh = new THREE.Mesh(arm, material1);
+		spikeMesh.position.x = 5.4;
+		spikeMesh.position.y = -.5;
+		armMesh.position.x = 4;
+
+		var headlight = new THREE.PointLight(0xFFFFFF, 100.0);
+		this.headlight = headlight;
+
+		headlight.position.x = 3;
+		//this.add(headlight);
+		this.add(armMesh);
+		this.add(spikeMesh);
+
+//______________________________________________FINISH
+		this.firstPersonCamera = new THREE.PerspectiveCamera(75, window.innerWidth/ window.innerHeight, 0.1, 10000);
+		this.firstPersonCamera.position.set(0,0,0);
+		this.firstPersonCamera.rotateY(Math.PI);
+		this.add(this.firstPersonCamera);
+	}
+
+	toggleHeadlight() {
+        this.headlight.visible = !this.headlight.visible;
+    }
+}
+
+class Crane extends THREE.Object3D{
+	constructor(){
+		super();
+
+		this.positionControl = { x: 0, y: 0, z: 0 };
+
+		// Assign instances to properties
+	    this.CRM = new CraneMainBody();
+	    this.CA = new CraneArm();
+
+	    // Set positions for clarity
+	    this.CA.position.y = 6;
+	    this.CA.position.x = -2;
+
+	    // Add instances to the crane object
+	    this.add(this.CRM);
+	    this.add(this.CA);
+	    scene.add(this);
+	}
+	updatePosition() {
+        this.position.set(this.positionControl.x, this.positionControl.y, this.positionControl.z);
+    }
+
+	getArm(){
+		return this.CA;
+	}
+}
+
+
+
  let cubeRenderTarget, cubeCamera;
  class JoshRobot extends THREE.Object3D {
 	
@@ -3090,6 +3514,7 @@ class Room extends THREE.Object3D {
 	desk = new Desk();
 	chair = new Chair();
 	joshrobot = new JoshRobot();
+	ianrobot = new Crane();
 
 	originalQuat = new THREE.Quaternion();
 	newQuat = new THREE.Quaternion();
@@ -3214,6 +3639,13 @@ class Room extends THREE.Object3D {
 		this.joshrobot.scale.set(0.25, 0.25, 0.25);
 		this.joshrobot.rotation.y = -45 * Math.PI/180;
 		this.joshrobot.position.set(13, 5, 5)
+
+		this.ianrobot.scale.set(0.3, 0.3, 0.3);
+		this.ianrobot.position.y += 11.5;
+		this.ianrobot.position.x += 13;
+		this.ianrobot.position.z -= 3;
+		this.ianrobot.rotation.y = -90 * Math.PI/180;
+
 		
 
 
@@ -3327,6 +3759,7 @@ class Room extends THREE.Object3D {
 		// this.add(this.fishtank);
 		this.add(this.lampLight);
 		this.add(this.joshrobot);
+		this.add(this.ianrobot);
 	}
 
 	getLampLight() {
@@ -3701,22 +4134,33 @@ function spinHead() {
 	}
 }
 
+function ventBubbles(vent) {
+	if(vent.bubble1.position.y < 5){
+		vent.bubble1.position.y += .01;
+	  }
+	  if(vent.bubble1.position.y > 5){
+		vent.bubble1.position.y = Math.floor(Math.random() * 2.3) - 1;;
+	  }
+	  if(vent.bubble2.position.y < 5){
+		vent.bubble2.position.y += .01;
+	  }
+	  if(vent.bubble2.position.y > 5){
+		vent.bubble2.position.y = Math.floor(Math.random() * 2.3) - 1;;
+	  }
+	  if(vent.bubble3.position.y < 5){
+		vent.bubble3.position.y += .01;
+	  }
+	  if(vent.bubble3.position.y > 5){
+		vent.bubble3.position.y = Math.floor(Math.random() * 2.3) - 1;;
+	  }
+}
 
-// //enable all shadows
-// room.traverse( function( child ) { 
-//     if ( child.type == 'Mesh') {
-//         //child.castShadow = true;
-//         child.receiveShadow = true;
-//     }
-// } );
-
-
-
+const vent1 = tank.getVent();
+const vent2 = tank.getVent2();
+const vent3 = tank.getVent3();
 
 
 animate();
-
-
 
 
 function animate() {
@@ -3750,6 +4194,9 @@ function animate() {
 	//robot animation
 	waveAtFish();
 	spinHead();
+	ventBubbles(vent1);
+	ventBubbles(vent2);
+	ventBubbles(vent3);
 
 	robotHead.getSpotLight().target.updateMatrixWorld();
 	if (isPov) controlsDefault.enabled = false;
