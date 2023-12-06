@@ -34,7 +34,7 @@ class Tank extends THREE.Object3D {
 			// medium: 0xACEBFF
 			// darker: 0x91E5FF 
 			color: 0xC00f4FF,
-			opacity: 0.4, 
+			opacity: 0.3, 
 			transparent: true,
 			side: THREE.DoubleSide
 		})
@@ -64,11 +64,18 @@ class Tank extends THREE.Object3D {
 		this.sand.position.set(0, -this.height/2 + 0.04, 0);
 		this.add(this.sand);
 
+		// adds a point light
+		let dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.5);
+		dirLight.position.set(0, 4, 0);
+		this.add(dirLight);
+
+		// makes a fish2
 		this.fish2 = new Fish2();
 		this.fish2.scale.set(0.1, 0.15, 0.1);
 		this.fish2.position.set(7, -2, 3);
 		this.add(this.fish2);
 
+		// makes a group of jellyfish
 		this.jellyGroup = new JellyGroup();
 		this.jellyGroup.scale.set(0.25, 0.25, 0.25);
 		this.jellyGroup.position.set(-5, -1, -4);
@@ -120,14 +127,17 @@ class Sand extends THREE.Object3D {
 	}
 
 	oscillation() {
-		// makes a position array without a fixed size
-		const uPosTemp = [];
-		var colors = new Float32Array(this.AMOUNTX * this.AMOUNTZ * 3);
+		// makes a position array
+		const positions = [];
+
+		// makes a color array
+		const colors = [];
+
+		// makes the sand material
 		const sandM = new THREE.PointsMaterial({
 			color: 0xe8d17e,
 			size: 0.1,
 		})
-		
 		
 		// push all the pixels with the oscillating drape on the top
 		// then straight surfaces on the sides and bottom
@@ -137,64 +147,39 @@ class Sand extends THREE.Object3D {
 				let y = (Math.cos((iz + this.count) * 0.075) * 0.1) + 0.1;
 				let z = -(iz * 0.04 - ((this.AMOUNTZ * 0.04) / 2));
 
-				//generate a random color for each particle
-				// var randomNumber = Math.floor(Math.random() * 3) + 1;
-				// switch (randomNumber) {
-				// 	case 1:
-				// 		var color = new THREE.Color(0xe8d17e);
-				// 		break;
-				// 	case 2:
-				// 		var color = new THREE.Color(0x7d5b2e);
-				// 		break;
-				// 	case 3:
-				// 		var color = new THREE.Color(0xb79652);
-				// 		break;
-				// }
-		
-				// // Add the color to the colors attribute
-				// colors[ix * 3 + 0] = color.r;
-				// colors[ix * 3 + 1] = color.g;
-				// colors[ix * 3 + 2] = color.b;
-
 				// calculates the coordinates for the top drape
 				// and adds them to the array
-				uPosTemp.push(x);
-				uPosTemp.push(y);
-				uPosTemp.push(z);
+				positions.push(x);
+				positions.push(y);
+				positions.push(z);
 
 				// sides
 				if (ix == -this.AMOUNTX/2 || ix == this.AMOUNTX/2-1 || iz == 0 || iz == this.AMOUNTZ-1) {
 					for (let iy = y - 0.1; iy >= 0; iy -= 0.1) {
-						uPosTemp.push(x);
-						uPosTemp.push(iy);
-						uPosTemp.push(z);
+						positions.push(x);
+						positions.push(iy);
+						positions.push(z);
 					}
 				}
 
 				// bottom
-				uPosTemp.push(x);
-				uPosTemp.push(0);
-				uPosTemp.push(z);
-			}
-		}
+				positions.push(x);
+				positions.push(0);
+				positions.push(z);
 
-		// Particle Systems need fixed sized arrays
-		// so copy everything in the temporary array
-		// into the fixed size array
-		const uPositions = new Float32Array(uPosTemp.length);
-		for (let j = 0; j < uPosTemp.length; j++) {
-			uPositions[j] = uPosTemp[j];
+				for (let i = 0; i < 3; i++) {
+					colors.push(Math.floor((Math.random() * 105) + 150), Math.floor((Math.random() * 105) + 150), Math.floor((Math.random() * 105) + 150));
+				}
+			}
 		}
 
 		// replaces the sand geometry every time
 		this.clear();
 
-		// creates a particle system using the fixed size array
+		// creates a particle system 
 		const sandG = new THREE.BufferGeometry();
-		sandG.setAttribute('position', new THREE.BufferAttribute(uPositions, 3));
-		// Assign the colors attribute to the geometry
-		sandG.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-	
+		sandG.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+		sandG.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 		this.sand = new THREE.Points(sandG, sandM);
 		this.sand.rotation.y = 90 * Math.PI/180;
 		this.add(this.sand);
@@ -605,9 +590,6 @@ class JellyGroup extends THREE.Object3D{
 	  var jelly5 = new Fish3;
 	  jelly5.position.x = -4;
 	  this.add(jelly5);
-  
-  
-	  scene.add(this);
 	}
   
   
