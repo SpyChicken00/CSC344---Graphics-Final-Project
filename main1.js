@@ -79,6 +79,18 @@ class Tank extends THREE.Object3D {
 		this.fish2.position.set(7, -2, 3);
 		this.add(this.fish2);
 
+		// makes another fish2
+		this.fish21 = new Fish2();
+		this.fish21.scale.set(0.1, 0.15, 0.15);
+		this.fish21.position.set(6, -3, 2);
+		this.add(this.fish21);
+
+		// makes another fish2
+		this.fish22 = new Fish2();
+		this.fish22.scale.set(0.1, 0.15, 0.15);
+		this.fish22.position.set(5, -2, 1);
+		this.add(this.fish22);
+
 		// makes a group of jellyfish
 		this.jellyGroup = new JellyGroup();
 		this.jellyGroup.scale.set(0.25, 0.25, 0.25);
@@ -213,6 +225,8 @@ class Tank extends THREE.Object3D {
 
 	fish2Movement() {
 		this.fish2.movement();
+		this.fish21.movement();
+		this.fish22.movement();
 	}
 
 	getTankLight() {
@@ -481,6 +495,9 @@ class Fish2 extends THREE.Object3D{
 
 	  // holds if the tail should rotate in the positive direction or not
 	  this.tailRPos = true;
+	
+	  // holds the speed the fish should move at
+	  this.speed = Math.random() * 0.015 + 0.03;
 
 	  //body
 	  {
@@ -678,10 +695,10 @@ class Fish2 extends THREE.Object3D{
 
 		// repeatedly moves to the other side of the tank then back
 		if (this.moveForward) {
-			this.position.x -= 0.0375;
+			this.position.x -= this.speed;
 		}
 		else {
-			this.position.x += 0.0375;
+			this.position.x += this.speed;
 		}
 	}
 
