@@ -1,6 +1,7 @@
 import * as THREE from '../modules/three.module.js';
 import { OrbitControls } from '../modules/OrbitControls.js';
 import { GUI } from '../modules/dat.gui.module.js';
+import { GLTFLoader } from '../modules/GLTFLoader.js';
 
 //TODO Decorations - desklamp, led lights around ceiling
 //TODO include our robots in the fish tank / world as easter eggs
@@ -83,32 +84,23 @@ class Tank extends THREE.Object3D {
 		this.jellyGroup.scale.set(0.25, 0.25, 0.25);
 		this.jellyGroup.position.set(-5, -1, -4);
 		this.add(this.jellyGroup);
-		/*
-		//patrickHouse
-		this.patrickHouse = new PatrickHouse();
-		this.patrickHouse.scale.set(0.5, 0.5, 0.5);
-		this.patrickHouse.position.set(-5, -4.3, 2);
-		this.add(this.patrickHouse)
-		//squidward
-		this.squidwardHouse = new SquidwardHouse();
-		this.squidwardHouse.scale.set(0.5, 0.5, 0.5);
-		this.squidwardHouse.position.set(3, -3.5, 2);
-		this.add(this.squidwardHouse)
-		*/
+		
 
 		//antlion
 		this.antlion = new AntLion();
 		this.antlion.scale.set(0.5, 0.5, 0.5);
-		this.antlion.position.set(3, -4.5, -2);
+		this.antlion.position.set(-4.5, -4.5, -4);
 		this.add(this.antlion);
 
+		//tank light
 		this.tanklight.position.set(0, 0, 0);
 		this.add(this.tanklight);
 
 		//sword
 		this.swordStone = new SwordStone();
 		this.swordStone.scale.set(0.5, 0.5, 0.5);
-		this.swordStone.position.set(5, -4, -2);
+		this.swordStone.position.set(-7	, -4, -2);
+		this.swordStone.rotation.y = -45*Math.PI/180;
 		this.add(this.swordStone);
 
 		// makes Patrick's house
@@ -123,7 +115,42 @@ class Tank extends THREE.Object3D {
 		this.squidwardHouse.position.set(7, -3.4, -3);
 		this.squidwardHouse.rotation.y = -20*Math.PI/180;
 		this.add(this.squidwardHouse);
+
+
+		//bubbles?
+		//coral/plants?
+		//rocks
+
+
+		//"Coral" (https://sketchfab.com/3d-models/coral-c26e47859f0945d69a4e2944ee80b995) by Sandra_s
+		const loader = new GLTFLoader();
+		loader.load('../3dModels/coral.gltf', function (gltf) {
+			var coral = gltf.scene;
+			coral.position.set(8.4, 11.5, 18);
+			coral.scale.set(0.25, 0.25, 0.25);
+			scene.add(coral);
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+		//"수조 인테리어 돌 어항 바위 / Fish tank Rock" 
+		//(https://sketchfab.com/3d-models/fish-tank-rock-84d48cabb7f8441a9c8121b31a3da73d) by Spark Studio
+		loader.load('../3dModels/scene.gltf', function (gltf) {
+			var rocks = gltf.scene;
+			//rocks.position.set(15, 11.5, 20);
 		
+
+			
+			//rocks.scale.set(0.25, 0.25, 0.25);
+			rocks.position.set(18, 11, 25)
+			//rocks.material = rockMaterial;
+			rocks.scale.set(10, 10, 10);
+			scene.add(rocks);
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+
 	}
 
 	getWidth() {
@@ -2477,6 +2504,7 @@ const renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
+renderer.sortObjects = false;
 document.body.appendChild( renderer.domElement );
 
 //scene + clock
