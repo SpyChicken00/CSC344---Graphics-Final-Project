@@ -3745,10 +3745,10 @@ function animate() {
 	let nemo = tank.getNemo();
 	let antLion = tank.getAntLion();
 
-	if (nemo.position.x > antLion.position.x - 2 &&
-		nemo.position.x < antLion.position.x + 2 &&
-		nemo.position.z > antLion.position.z - 2 &&
-		nemo.position.z < antLion.position.z + 2) {
+	if (nemo.position.x > antLion.position.x - 1.75 &&
+		nemo.position.x < antLion.position.x + 1.75 &&
+		nemo.position.z > antLion.position.z - 1.75 &&
+		nemo.position.z < antLion.position.z + 1.75) {
 		antLion.animateUp();
 	}
 	else {
