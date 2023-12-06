@@ -91,6 +91,7 @@ class Tank extends THREE.Object3D {
 		this.squidwardHouse = new SquidwardHouse();
 		this.squidwardHouse.scale.set(0.5, 0.5, 0.5);
 		this.squidwardHouse.position.set(7, -3.4, -3);
+		this.squidwardHouse.rotation.y = -20*Math.PI/180;
 		this.add(this.squidwardHouse);
 	}
 
@@ -116,6 +117,14 @@ class Tank extends THREE.Object3D {
 
 	sandOscillation() {
 		this.sand.oscillation();
+	}
+
+	patrickAnimation() {
+		this.patrickHouse.animation();
+	}
+
+	fish2Movement() {
+		this.fish2.movement();
 	}
 }
 
@@ -234,7 +243,10 @@ const rockMaterial = new THREE.MeshBasicMaterial({ map: rockTexture });
 
 const textureLoader4 = new THREE.TextureLoader();
 const squidHouseTexture = textureLoader4.load('squidwardTexture.png');
-const squidHouseMaterial = new THREE.MeshBasicMaterial({ map: squidHouseTexture });
+const squidHouseMaterial = new THREE.MeshBasicMaterial({ 
+	color: 0x29599c,
+	map: squidHouseTexture 
+});
 
 class Fish1 extends THREE.Object3D {
 	constructor() {
@@ -354,8 +366,8 @@ class Fish1 extends THREE.Object3D {
 	  }
 	}
 
-	propellerAnimation() {
-		this.handleMesh.rotation.y += 20*Math.PI/180;
+	propellerAnimation(amount) {
+		this.handleMesh.rotation.y += amount*Math.PI/180;
 	}
 
 	tailAnimation() {
@@ -368,6 +380,11 @@ class Fish1 extends THREE.Object3D {
 class Fish2 extends THREE.Object3D{
 	constructor(){
 	  super();
+
+	  this.desiredRotation = 0;
+
+	  this.moveForward = true;
+
 	  //body
 	  {
 	  var topBody = new THREE.CylinderGeometry(1, 1, 8, 32);
@@ -539,8 +556,35 @@ class Fish2 extends THREE.Object3D{
 	  tailFinMesh4.position.x = 7;
 	  tailFinMesh4.position.y = 1.1;
 	  this.add(tailFinMesh4);
-  
 	  }
+	}
+
+	movement() {
+		if (this.position.x < -tank.getWidth()/2 + 1) {
+			this.moveForward = false;
+			this.desiredRotation = 180*Math.PI/180;
+		}
+		else if (this.position.x > tank.getWidth()/2 - 1) {
+			this.moveForward = true;
+			this.desiredRotation = 0;
+		}
+		this.turn();
+
+		if (this.moveForward) {
+			this.position.x -= 0.05;
+		}
+		else {
+			this.position.x += 0.05;
+		}
+	}
+
+	turn() {
+		if (this.rotation.y < this.desiredRotation - 5*Math.PI/180) {
+			this.rotation.y += 20*Math.PI/180;
+		}
+		else if (this.rotation.y > this.desiredRotation + 5*Math.PI/180) {
+			this.rotation.y -= 20*Math.PI/180;
+		}
 	}
   }
   
@@ -660,53 +704,60 @@ class PatrickHouse extends THREE.Object3D{
 	  var hill = new THREE.SphereGeometry( 2, 32, 16, phiStart, phiEnd, thetaStart, thetaEnd );
 	  var hillMesh = new THREE.Mesh( hill, rockMaterial );
 	  this.add(hillMesh);
+
+	  this.sticks = new THREE.Object3D();
   
 	  var stick1 = new THREE.CylinderGeometry(.05, .05, 1, 32);
 	  var stick1Mesh = new THREE.Mesh(stick1, material13);
 	  stick1Mesh.position.y = 2;
-	  stick1Mesh.position.x = -.2;
-	  this.add(stick1Mesh);
+	  this.sticks.add(stick1Mesh);
   
 	  var stick2 = new THREE.CylinderGeometry(.05, .05, 1, 32);
 	  var stick2Mesh = new THREE.Mesh(stick2, material13);
 	  stick2Mesh.position.y = 2.5;
-	  stick2Mesh.position.x = -.2;
 	  stick2Mesh.rotation.z = (90 * Math.PI) / 180;
-	  this.add(stick2Mesh);
+	  this.sticks.add(stick2Mesh);
   
 	  var stick3 = new THREE.CylinderGeometry(.05, .05, .3, 32);
 	  var stick3Mesh = new THREE.Mesh(stick3, material13);
 	  stick3Mesh.position.y = 2.5;
-	  stick3Mesh.position.x = -.65;
+	  stick3Mesh.position.x = -.45;
 	  stick3Mesh.position.z = .1;
 	  stick3Mesh.rotation.z = (90 * Math.PI) / 180;
 	  stick3Mesh.rotation.y = (-45 * Math.PI) / 180;
-	  this.add(stick3Mesh);
+	  this.sticks.add(stick3Mesh);
   
 	  var stick4 = new THREE.CylinderGeometry(.05, .05, .3, 32);
 	  var stick4Mesh = new THREE.Mesh(stick4, material13);
 	  stick4Mesh.position.y = 2.5;
-	  stick4Mesh.position.x = -.65;
+	  stick4Mesh.position.x = -.45;
 	  stick4Mesh.position.z = -.1;
 	  stick4Mesh.rotation.z = (90 * Math.PI) / 180;
 	  stick4Mesh.rotation.y = (45 * Math.PI) / 180;
-	  this.add(stick4Mesh);
+	  this.sticks.add(stick4Mesh);
   
 	  var stick5 = new THREE.CylinderGeometry(.05, .05, .4, 32);
 	  var stick5Mesh = new THREE.Mesh(stick5, material13);
 	  stick5Mesh.position.y = 2.5;
-	  stick5Mesh.position.x = .23;
+	  stick5Mesh.position.x = .43;
 	  stick5Mesh.rotation.z = (90 * Math.PI) / 180;
 	  stick5Mesh.rotation.y = (90 * Math.PI) / 180;
-	  this.add(stick5Mesh);
+	  this.sticks.add(stick5Mesh);
   
 	  var stick6 = new THREE.CylinderGeometry(.05, .05, .4, 32);
 	  var stick6Mesh = new THREE.Mesh(stick6, material13);
 	  stick6Mesh.position.y = 2.5;
-	  stick6Mesh.position.x = .1;
+	  stick6Mesh.position.x = .3;
 	  stick6Mesh.rotation.z = (90 * Math.PI) / 180;
 	  stick6Mesh.rotation.y = (90 * Math.PI) / 180;
-	  this.add(stick6Mesh);
+	  this.sticks.add(stick6Mesh);
+
+	  this.sticks.position.x = -0.2;
+	  this.add(this.sticks);
+	}
+
+	animation() {
+		this.sticks.rotation.y += 5*Math.PI/180;
 	}
   }
   
@@ -2707,17 +2758,23 @@ function animate() {
 	let nemo = tank.getNemo();
 
 	// animate nemo
-	nemo.propellerAnimation();
+	nemo.propellerAnimation(10);
 	if (nemo.shouldTailMove) nemo.tailAnimation();
 
+	// animate Patrick's house
+	tank.patrickAnimation();
+
+	// moves fish2 around
+	tank.fish2Movement();
+
 	// sink nemo
-	if (!nemo.shouldFloat && !nemo.stationaryY) nemo.position.y -= 0.05;
+	if (!nemo.shouldFloat && !nemo.stationaryY) nemo.position.y -= 0.025;
 
 	// make fish camera follow the fish
-	let nemoWorldPosition = tank.getNemo().getWorldPosition(new THREE.Vector3());
+	let nemoWorldPosition = nemo.getWorldPosition(new THREE.Vector3());
 	nemoWorldPosition.y -= tank.getNemoSize().y*0.5+0.3;
 	fishCamera.position.copy(nemoWorldPosition);
-	fishCamera.rotation.y = tank.getNemo().rotation.y + 90*Math.PI/180;
+	fishCamera.rotation.y = nemo.rotation.y + 90*Math.PI/180;
 
 	// tank.sandOscillation();
 
@@ -2808,8 +2865,9 @@ document.onkeydown = function() {
 	}
 	// make nemo float upwards
 	else if (key == ' ') {
+		nemo.propellerAnimation(20);
 		nemo.shouldFloat = true;
-		nemo.position.y += 0.1;
+		nemo.position.y += 0.125;
 	}
 	else if (key == 'c') {
 		if (nemo.stationaryY) nemo.stationaryY = false;
