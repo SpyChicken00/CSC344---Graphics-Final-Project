@@ -142,7 +142,7 @@ class Tank extends THREE.Object3D {
 
 			
 			//rocks.scale.set(0.25, 0.25, 0.25);
-			rocks.position.set(18, 11, 25)
+			rocks.position.set(18, 11.5, 25)
 			//rocks.material = rockMaterial;
 			rocks.scale.set(10, 10, 10);
 			scene.add(rocks);
