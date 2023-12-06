@@ -10,7 +10,7 @@ import { GLTFLoader } from '../modules/GLTFLoader.js';
 // creates the tank class
 class Tank extends THREE.Object3D {
 	//tank light 
-	tanklight = new THREE.PointLight(0xffffff, 20, 100);
+	tanklight = new THREE.PointLight(0xffffff, 40, 100);
 
 	constructor(x, y, z) {
 		super();
@@ -89,7 +89,7 @@ class Tank extends THREE.Object3D {
 		//antlion
 		this.antlion = new AntLion();
 		this.antlion.scale.set(0.5, 0.5, 0.5);
-		this.antlion.position.set(-4.5, -4.5, -4);
+		this.antlion.position.set(-4.5, -4.5, -3);
 		this.add(this.antlion);
 
 		//tank light
@@ -99,20 +99,20 @@ class Tank extends THREE.Object3D {
 		//sword
 		this.swordStone = new SwordStone();
 		this.swordStone.scale.set(0.5, 0.5, 0.5);
-		this.swordStone.position.set(-7	, -4, -2);
+		this.swordStone.position.set(-7	, -4, 0);
 		this.swordStone.rotation.y = -45*Math.PI/180;
 		this.add(this.swordStone);
 
 		// makes Patrick's house
 		this.patrickHouse = new PatrickHouse();
 		this.patrickHouse.scale.set(0.5, 0.5, 0.5);
-		this.patrickHouse.position.set(5, -4.4, -4);
+		this.patrickHouse.position.set(5, -4.4, -2);
 		this.add(this.patrickHouse);
 
 		// makes Squidward's house
 		this.squidwardHouse = new SquidwardHouse();
 		this.squidwardHouse.scale.set(0.5, 0.5, 0.5);
-		this.squidwardHouse.position.set(7, -3.4, -3);
+		this.squidwardHouse.position.set(7, -3.4, -1);
 		this.squidwardHouse.rotation.y = -20*Math.PI/180;
 		this.add(this.squidwardHouse);
 
@@ -126,7 +126,7 @@ class Tank extends THREE.Object3D {
 		const loader = new GLTFLoader();
 		loader.load('../3dModels/coral.gltf', function (gltf) {
 			var coral = gltf.scene;
-			coral.position.set(8.4, 11.5, 18);
+			coral.position.set(8.4, 11.5, 20);
 			coral.scale.set(0.25, 0.25, 0.25);
 			scene.add(coral);
 		}, undefined, function(error) {
@@ -135,17 +135,47 @@ class Tank extends THREE.Object3D {
 
 		//"수조 인테리어 돌 어항 바위 / Fish tank Rock" 
 		//(https://sketchfab.com/3d-models/fish-tank-rock-84d48cabb7f8441a9c8121b31a3da73d) by Spark Studio
+		loader.load('../3dModels/rock.glb', function (gltf) {
+			var rock = gltf.scene;
+			rock.position.set(-59, -46.5, -32);
+			rock.scale.set(20, 20, 20);
+			var rockGroup = new THREE.Group();
+			rockGroup.add(rock);
+			//rockGroup.rotation.y += -45 * Math.PI/180;
+			//rock.rotation.y += 45 * Math.PI/180;
+
+			scene.add(rockGroup);
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+		//"수조 인테리어 돌 어항 바위 / Fish tank Rock" 
+		//(https://sketchfab.com/3d-models/fish-tank-rock-84d48cabb7f8441a9c8121b31a3da73d) by Spark Studio
+		loader.load('../3dModels/rock.glb', function (gltf) {
+			var rock2 = gltf.scene;
+			rock2.scale.set(25, 25, 30); //25
+			rock2.position.set(106, -61, 93);// 81
+			rock2.rotation.y += 180*Math.PI/180;
+			scene.add(rock2)
+		}, undefined, function(error) {
+			console.error(error);
+		});
+
+
+
+
+		//"Corals by Rayaa" (https://sketchfab.com/3d-models/corals-by-rayaa-8e1e9eec16094494967b9a6d731cde3b) by Rayaa
 		loader.load('../3dModels/scene.gltf', function (gltf) {
-			var rocks = gltf.scene;
+			var coral2 = gltf.scene;
 			//rocks.position.set(15, 11.5, 20);
 		
 
 			
 			//rocks.scale.set(0.25, 0.25, 0.25);
-			rocks.position.set(18, 11.5, 25)
+			coral2.position.set(18, 11.5, 25)
 			//rocks.material = rockMaterial;
-			rocks.scale.set(10, 10, 10);
-			scene.add(rocks);
+			coral2.scale.set(10, 10, 10);
+			scene.add(coral2);
 		}, undefined, function(error) {
 			console.error(error);
 		});
@@ -183,6 +213,10 @@ class Tank extends THREE.Object3D {
 
 	fish2Movement() {
 		this.fish2.movement();
+	}
+
+	getTankLight() {
+		return this.tanklight;
 	}
 }
 
@@ -275,7 +309,7 @@ const material4 = new THREE.MeshPhongMaterial({ color: 0xBE4321, flatShading: fa
 const material5 = new THREE.MeshPhongMaterial({ color: 0xBE4321, flatShading: false });
 const material6 = new THREE.MeshPhongMaterial({ color: 0x9B9B9B, flatShading: false });
 const material7 = new THREE.MeshPhongMaterial({ color: 0x2F8899, transparent: true, opacity: 0.5, flatShading: false, side: THREE.DoubleSide });
-const material8 = new THREE.MeshPhongMaterial({ color: 0x7CEAFF, transparent: true, opacity: .95, flatShading: false, side: THREE.DoubleSide });
+const material8 = new THREE.MeshPhongMaterial({ color: 0x7CEAFF, transparent: false, opacity: .95, flatShading: false, side: THREE.DoubleSide });
 const material9 = new THREE.MeshPhongMaterial({ color: 0x585858, flatShading: false });
 const material10 = new THREE.MeshPhongMaterial({ color: 0xCCCCCC, flatShading: false });
 const material11 = new THREE.MeshPhongMaterial({ color: 0x6F4521, flatShading: false });
@@ -2330,6 +2364,7 @@ class Room extends THREE.Object3D {
 		this.dresser.position.z -= 13
 		this.dresser.position.x += 5;
 		this.dresser.position.y += 0.5;
+		this.dresser.scale.z = 1.4
 		this.chest.position.x -= 10.5;
 		this.chest.position.z += 2.5;
 		this.chest.position.y -= 1;
@@ -2591,7 +2626,9 @@ const robotLegRight = robot.getRobotLegR();
 const robotLowerLegLeft = robotLegLeft.getLowerLeg();
 const robotLowerLegRight = robotLegRight.getLowerLeg();
 const robotCamera = robotHead.getRobotCamera();
+const tankLight = tank.getTankLight();
 let nemo = tank.getNemo();
+
 
 //gui
 const gui = new GUI();
@@ -2660,14 +2697,21 @@ var lampLight = room.getLampLight();
 headFolder.add(leftEye.material, 'wireframe').name("Wireframe Eyes");
 lightFolder.add(ambientLight, 'visible').name("Toggle Ambient Light");
 lightFolder.add(dirLight, 'visible').name("Toggle Directional Light");
-lightFolder.add(redSpotlight, 'visible').name("Toggle Spotlight");
 lightFolder.add(lampLight, 'visible').name("Toggle Lamplight");
-lightFolder.add(lampLight, 'intensity', 500, 8000).name("Light Intensity");
+lightFolder.add(tankLight, 'visible').name("Toggle Tanklight");
+lightFolder.add(lampLight, 'intensity', 500, 8000).name("Lamp Intensity");
+lightFolder.add(tankLight, 'intensity', 10, 400).name("Tank Intensity");
 const colorParams = {
 	color: lampLight.color.getHex()
 };
+const tankColorParams = {
+	color: tankLight.color.getHex()
+};
 lightFolder.addColor(colorParams, 'color')
-.onChange((value) =>  lampLight.color.set(value)).name("Light Color");
+.onChange((value) =>  lampLight.color.set(value)).name("Lamp Color");
+
+lightFolder.addColor(tankColorParams, 'color')
+.onChange((value) =>  tankLight.color.set(value)).name("Tank Color");
 const settings = {
 	'wave at fish': function() {
 		animationValue1 = 0;
