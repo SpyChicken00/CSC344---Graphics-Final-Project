@@ -161,6 +161,23 @@ class Tank extends THREE.Object3D {
 		this.vent3.position.z -= 4;
 		this.add(this.vent3);
 
+		// adds a green lego to the tank
+		this.lego = new Lego(0x5aae59);
+		this.lego.position.set(0, -4.35, 0);
+		this.lego.scale.set(0.1, 0.1, 0.1);
+		this.add(this.lego);
+
+		// adds a blue lego to the tank
+		this.lego1 = new Lego(0x1a5bce);
+		this.lego1.position.set(0.5, -4.35, 0);
+		this.lego1.scale.set(0.1, 0.1, 0.1);
+		this.add(this.lego1);
+
+		// adds a red lego to the tank
+		this.lego2 = new Lego(0xFF0000);
+		this.lego2.position.set(0.25, -4.20, 0);
+		this.lego2.scale.set(0.1, 0.1, 0.1);
+		this.add(this.lego2);
 
 		//"Coral" (https://sketchfab.com/3d-models/coral-c26e47859f0945d69a4e2944ee80b995) by Sandra_s
 		const loader = new GLTFLoader();
@@ -440,6 +457,52 @@ class Tank extends THREE.Object3D {
 
 	getVent3() {	
 		return this.vent3;
+	}
+}
+
+class Lego extends 	THREE.Object3D {
+	constructor(color) {
+		super();
+
+		const boxG = new THREE.BoxGeometry(5, 1.5, 2);
+		const material = new THREE.MeshPhongMaterial({
+			color: color,
+		});
+		const box = new THREE.Mesh(boxG, material);
+		this.add(box);
+
+		const cylinderG = new THREE.CylinderGeometry(0.45, 0.45, 0.5);
+		const cylinder1 = new THREE.Mesh(cylinderG, material);
+		cylinder1.position.set(-2.05, 0.75, -0.55);
+		this.add(cylinder1);
+
+		const cylinder2 = new THREE.Mesh(cylinderG, material);
+		cylinder2.position.set(-2.05, 0.75, 0.55);
+		this.add(cylinder2);
+
+		const cylinder3 = new THREE.Mesh(cylinderG, material);
+		cylinder3.position.set(-0.58, 0.75, -0.55);
+		this.add(cylinder3);
+
+		const cylinder4 = new THREE.Mesh(cylinderG, material);
+		cylinder4.position.set(-0.58, 0.75, 0.55);
+		this.add(cylinder4);
+
+		const cylinder5 = new THREE.Mesh(cylinderG, material);
+		cylinder5.position.set(0.58, 0.75, -0.55);
+		this.add(cylinder5);
+
+		const cylinder6 = new THREE.Mesh(cylinderG, material);
+		cylinder6.position.set(0.58, 0.75, 0.55);
+		this.add(cylinder6);
+
+		const cylinder7 = new THREE.Mesh(cylinderG, material);
+		cylinder7.position.set(2.05, 0.75, -0.55);
+		this.add(cylinder7);
+
+		const cylinder8 = new THREE.Mesh(cylinderG, material);
+		cylinder8.position.set(2.05, 0.75, 0.55);
+		this.add(cylinder8);
 	}
 }
 
@@ -4374,7 +4437,7 @@ document.onkeydown = function() {
 	}
 	else if (key == 'a' || key == 'A') {
 		nemo.shouldTailMove = true;
-		nemo.rotation.y += 2*Math.PI/180;
+		nemo.rotation.y += 4*Math.PI/180;
 	}
 	else if (key == 's' || key == 'S') {
 		nemo.shouldTailMove = true;
@@ -4383,7 +4446,7 @@ document.onkeydown = function() {
 	}
 	else if (key == 'd' || key == 'D') {
 		nemo.shouldTailMove = true;
-		nemo.rotation.y -= 2*Math.PI/180;
+		nemo.rotation.y -= 4*Math.PI/180;
 	}
 	// make nemo float upwards
 	else if (key == ' ') {
