@@ -106,7 +106,7 @@ class Tank extends THREE.Object3D {
 		// makes a group of jellyfish
 		this.jellyGroup = new JellyGroup();
 		this.jellyGroup.scale.set(0.25, 0.25, 0.25);
-		this.jellyGroup.position.set(-5, -1, -4);
+		this.jellyGroup.position.set(-4, -1, -3);
 		this.add(this.jellyGroup);
 		
 
@@ -419,6 +419,7 @@ class Tank extends THREE.Object3D {
 		this.fish22.movement();
 		this.fish23.movement();
 		this.fish1.movement();
+		this.jellyGroup.movement();
 	}
 
 	getTankLight() {
@@ -1002,8 +1003,8 @@ class Fish3 extends THREE.Object3D{
 		var thetaEnd = Math.PI / 2;
   
 		var body1 = new THREE.SphereGeometry( 2, 32, 16, phiStart, phiEnd, thetaStart, thetaEnd );
-		var body1Mesh = new THREE.Mesh( body1, material7 );
-		this.add(body1Mesh);
+		this.body1Mesh = new THREE.Mesh( body1, material7 );
+		this.add(this.body1Mesh);
   
 		var body2 = new THREE.SphereGeometry( 1.5, 32, 16, phiStart, phiEnd, thetaStart, thetaEnd );
 		var body2Mesh = new THREE.Mesh(body2, material8 );
@@ -1012,50 +1013,107 @@ class Fish3 extends THREE.Object3D{
 		//arms
 		{
 		  var arm1 = new THREE.BoxGeometry(1.3,1.5,1.3);
-		  var arm1Mesh = new THREE.Mesh(arm1, material7);
-		  this.add(arm1Mesh);
+		  this.arm1Mesh = new THREE.Mesh(arm1, material7);
+		  this.add(this.arm1Mesh);
   
 		  var arm2 = new THREE.BoxGeometry(1,3,.01);
-		  var arm2Mesh = new THREE.Mesh(arm2, material7);
-		  this.add(arm2Mesh);
+		  this.arm2Mesh = new THREE.Mesh(arm2, material7);
+		  this.add(this.arm2Mesh);
   
 		  var arm3 = new THREE.BoxGeometry(1,3,.01);
-		  var arm3Mesh = new THREE.Mesh(arm3, material7);
-		  arm3Mesh.rotation.y = (90 * Math.PI) / 180;
-		  this.add(arm3Mesh);
+		  this.arm3Mesh = new THREE.Mesh(arm3, material7);
+		  this.arm3Mesh.rotation.y = (90 * Math.PI) / 180;
+		  this.add(this.arm3Mesh);
 		}
+	  }
+
+	  transparent() {
+		this.body1Mesh.material.transparent = true;
+		this.arm1Mesh.material.transparent = true;
+		this.arm2Mesh.material.transparent = true;
+		this.arm3Mesh.material.transparent = true;
+
+		this.body1Mesh.material.opacity = 0.5;
+		this.arm1Mesh.material.opacity = 0.5;
+		this.arm2Mesh.material.opacity = 0.5;
+		this.arm3Mesh.material.opacity = 0.5;
+	  }
+
+	  untransparent() {
+		this.body1Mesh.material.transparent = false;
+		this.arm1Mesh.material.transparent = false;
+		this.arm2Mesh.material.transparent = false;
+		this.arm3Mesh.material.transparent = false;
+
+		this.body1Mesh.material.opacity = 1;
+		this.arm1Mesh.material.opacity = 1;
+		this.arm2Mesh.material.opacity = 1;
+		this.arm3Mesh.material.opacity = 1;
 	  }
   }
   
 class JellyGroup extends THREE.Object3D{
 	constructor(){
 	  super();
+
+	  // tells if the jellyfish should move up
+	  this.moveUp = true;
   
-	  var jelly1 = new Fish3;
-	  this.add(jelly1);
+	  this.jelly1 = new Fish3;
+	  this.add(this.jelly1);
   
-	  var jelly2 = new Fish3;
-	  jelly2.position.x = 2;
-	  jelly2.position.y = 3;
-	  this.add(jelly2);
+	  this.jelly2 = new Fish3;
+	  this.jelly2.position.x = 2;
+	  this.jelly2.position.y = 3;
+	  this.add(this.jelly2);
   
-	  var jelly3 = new Fish3;
-	  jelly3.position.x = 4;
-	  jelly3.position.z = 3;
-	  this.add(jelly3);
+	  this.jelly3 = new Fish3;
+	  this.jelly3.position.x = 4;
+	  this.jelly3.position.z = 3;
+	  this.add(this.jelly3);
   
-	  var jelly4 = new Fish3;
-	  jelly4.position.x = -2;
-	  jelly4.position.y = -2;
-	  jelly4.position.z = -3;
-	  this.add(jelly4);
+	  this.jelly4 = new Fish3;
+	  this.jelly4.position.x = -2;
+	  this.jelly4.position.y = -2;
+	  this.jelly4.position.z = -3;
+	  this.add(this.jelly4);
   
-	  var jelly5 = new Fish3;
-	  jelly5.position.x = -4;
-	  this.add(jelly5);
+	  this.jelly5 = new Fish3;
+	  this.jelly5.position.x = -4;
+	  this.add(this.jelly5);
 	}
   
+	movement() {
+		if (this.position.y > 1) {
+			this.moveUp = false;
+		}
+		else if (this.position.y < -1) {
+			this.moveUp = true;
+		}
+
+		if (this.moveUp) {
+			this.position.y += 0.005;
+		}
+		else {
+			this.position.y -= 0.005;
+		}
+	}
   
+	transparent() {
+		this.jelly1.transparent();
+		this.jelly2.transparent();
+		this.jelly3.transparent();
+		this.jelly4.transparent();
+		this.jelly5.transparent();
+	}
+
+	untransparent() {
+		this.jelly1.untransparent();
+		this.jelly2.untransparent();
+		this.jelly3.untransparent();
+		this.jelly4.untransparent();
+		this.jelly5.untransparent();
+	}
   }
   
 class SwordStone extends THREE.Object3D{
@@ -4188,6 +4246,18 @@ function animate() {
 	requestAnimationFrame(animate);
 	let nemo = tank.getNemo();
 	let antLion = tank.getAntLion();
+
+	if (renderCamera.position.x > tank.position.x - tank.getWidth()/2 &&
+		renderCamera.position.x < tank.position.x + tank.getWidth()/2 &&
+		renderCamera.position.y > tank.position.y - tank.getHeight()/2 &&
+		renderCamera.position.y < tank.position.y + tank.getHeight()/2 &&
+		renderCamera.position.z > tank.position.z - tank.getDepth()/2 &&
+		renderCamera.position.z < tank.position.z + tank.getDepth()/2) {
+			tank.jellyGroup.transparent();
+	}
+	else {
+		tank.jellyGroup.untransparent();
+	}
 
 	if (nemo.position.x > antLion.position.x - 1.75 &&
 		nemo.position.x < antLion.position.x + 1.75 &&
