@@ -763,6 +763,9 @@ class Fish1 extends THREE.Object3D {
 		// makes the tail swing back and forth
 		this.tailAnimation();
 
+		// makes the propeller rotate
+		this.propellerAnimation(10);
+
 		// checks if its at one of the sides of the tank
 		if (this.position.x < -tank.getWidth()/2 + 1) {
 			this.moveForward = false;
