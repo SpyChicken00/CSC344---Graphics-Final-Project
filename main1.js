@@ -117,7 +117,7 @@ class Tank extends THREE.Object3D {
 		this.add(this.antLion);
 
 		//tank light
-		this.tanklight.position.set(0, 0, 0);
+		this.tanklight.position.set(0, 2, 0);
 		this.add(this.tanklight);
 
 		//sword
